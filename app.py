@@ -145,26 +145,26 @@ app.layout = html.Div([
 #   return figure
 
 
-# @app.callback(
-#     Output("salida-tabs", "children"),
-#     Input("tabs", "value")
-# )
-# def render_content(value):
-#     if value == "tab_1":
-#         return [html.H1("esta es la tab 1"),
-#                 html.Label("Elegí el tipo de gráfico"),
-#                 dcc.Dropdown(id="dropdown",
-#                     options=[
-#                         dict(label="Línea", value="lines"),
-#                         dict(label="Dispersión", value="markers"),
-#                         dict(label="Línea + Dispersión", value="markers+lines"),
-#                     ],
-#                     value="markers+lines"
-#                 ),
-#                 dcc.Graph(id="graph_1")
-#         ]
-#     else:
-#         return html.H1("esta es la tab 2")
+@app.callback(
+    Output("salida-tabs", "children"),
+    Input("tabs", "value")
+)
+def render_content(value):
+    if value == "tab_1":
+        return [html.H1("esta es la tab 1"),
+                html.Label("Elegí el tipo de gráfico"),
+                dcc.Dropdown(id="dropdown",
+                    options=[
+                        dict(label="Línea", value="lines"),
+                        dict(label="Dispersión", value="markers"),
+                        dict(label="Línea + Dispersión", value="markers+lines"),
+                    ],
+                    value="markers+lines"
+                ),
+                dcc.Graph(id="graph_1")
+        ]
+    else:
+        return html.H1("esta es la tab 2")
 
 
 # @app.callback(
@@ -265,7 +265,6 @@ def torta(data, desde=None, hasta=None):
                       textposition="auto")
     # fig.show()
     return fig
-
 
 
 @app.callback(
