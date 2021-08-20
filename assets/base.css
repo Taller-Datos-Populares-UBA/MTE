@@ -3,6 +3,12 @@
     margin-left: 30%;
   }
 
+.btn-filtro {
+  background-color: #0FA0CE;
+  color: white;
+  margin-top: 3%;
+}
+
 /* DE ACA PARA ABAJO ES EL CSS DE PLOTLY DASH, SIRVE PARA ALGUNAS COSAS(?) */
 
 /* Table of contents
