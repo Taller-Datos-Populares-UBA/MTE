@@ -1,13 +1,973 @@
-.logo-mte {
-    width: 30%;
-    margin-left: 30%;
-  }
+/*
+
+Tabla de contenidos: 
+
+  1) General
+
+  2) Pantalla de Carga
+
+  3) Scrollbar
+
+  4) Navbar
+
+  5) Filtros
+    5.1) Labels
+    5.2) Radioitems de Fecha
+      5.2.1) Calendario
+    5.3) Dropdown de predios
+    5.4) Tabla de precios
+    5.5) Botones de la tabla
+
+  6) Modals
+
+  7) Tabs
+    7.1) Tab Individual
+    7.2) Tab Todxs
+
+
+
+*/
+
+/* 0) Agrego cosas que estaban en el css de la primera app (soy dani) --------------------------------------------------------------------- */
+.logo-mte-panel {
+  width: 30%;
+  margin-left: 30%;
+}
 
 .btn-filtro {
-  background-color: #0FA0CE;
-  color: white;
-  margin-top: 3%;
+background-color: #0FA0CE;
+color: white;
+margin-top: 3%;
 }
+
+/* 1) General ------------------------------------------------------------------------------------------------------------------------------*/
+
+@font-face {
+  font-family: "Rubik";
+  src: url("static/Rubik-Regular.ttf") format("truetype");
+}
+
+*, html, body {
+  font-family: "Rubik",sans;
+}
+
+/* 2) Pantalla de Carga ------------------------------------------------------------------------------------------------------------------------------ */
+
+._dash-loading {
+  content: 'Cargando' !important;
+  height: 100vh;
+  width: 100%;
+  background: rgb(44,85,156);
+  background: linear-gradient(0deg, rgba(44,85,156,1) 0%, rgba(57,108,198,1) 81%, rgba(69,130,236,1) 100%);
+  animation-delay: 3s;
+  font-size: 0px;
+}
+
+._dash-loading::after {
+  content: '';
+  display: flex;
+  width: 10rem;
+  height: 10rem;
+  color: white;
+  vertical-align: text-bottom;
+  margin: 0 auto;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
+  margin-top: calc(50vh - 5rem);
+  animation-delay: 0s;
+  font-size: 50px;
+}
+
+/* 3) Scrollbar ------------------------------------------------------------------------------------------------------------------------------*/
+
+::-webkit-scrollbar {
+  width: 10px;
+  z-index: 1;
+}
+
+::-webkit-scrollbar-track[id="botonera"]{
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(247,247,247,1) 51%, rgba(255,255,255,1) 100%);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+::-webkit-scrollbar-track[id="div-individual"]{
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(247,247,247,1) 51%, rgba(255,255,255,1) 100%);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2c559c;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #263785;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+/* 4) Navbar ------------------------------------------------------------------------------------------------------------------------------*/
+
+#navbar  {
+  position: fixed;
+  top: 0px;
+  list-style-type: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  background-color: #4582ec;
+  height: 45px;
+  z-index: 2 !important;
+  width: 100%;
+}
+
+ul li {
+  float: left;
+}
+
+ul li a {
+  display: block;
+  padding: 10px 16px;
+  transition: 0.3s;
+
+}
+
+li a:hover {
+  background-color: #2c559c;
+  box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+  text-decoration: none;
+}
+.link-active {
+  background-color: #376bc4;
+}
+
+li:last-child{
+  float: right;
+}
+
+li:last-child a{
+  padding: 0px;
+  padding-top: 2px;
+  margin: 0 auto;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+}
+
+ul li a p {
+  display: inline-block;
+  color: white !important;
+  text-align: center;
+  text-decoration: none;
+
+  font-family: Rubik, sans;
+}
+
+ul li a img {
+  display: inline-block;
+  margin-top: -2px;
+  padding-right: 5px;
+}
+
+#logo-mte-finanzas{
+  margin-left: 11px;
+  margin-top: 0px !important;
+  margin-right: 9px;
+  padding: 5px;
+  padding-right: -10px !important;
+  height:43px !important; 
+}
+
+/* 5) Filtros ------------------------------------------------------------------------------------------------------------------------------*/
+#botonera {
+  position: fixed;
+  bottom: 0;
+  top: 50px;
+  float:left;
+  margin:0px;
+  padding-top:0px;
+  width: 40%;
+
+  max-height: calc(100%-50px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(247,247,247,1) 51%, rgba(255,255,255,1) 100%);
+}
+
+#title-botonera {
+  font-size: 30px;
+  padding-left: 10px;
+  font-weight: bold;
+  color: #376bc4;
+}
+    
+    /*5.1) Labels */
+
+    #label-predios {
+      font-size: 20px;
+      font-family: Rubik,monospace;
+      margin-top:10px;
+      margin-left: 10px;
+      color:#2c559c;
+    }
+
+    #label-cartonerxs {
+      font-size: 20px;
+      font-family: Rubik,monospace;
+      margin-top:10px;
+      margin-left: 10px;
+      color:#2c559c;
+    }
+
+
+    #label-fechas {
+      font-size: 20px;
+      font-family: Rubik,monospace;
+      margin-top:10px;
+      margin-left: 10px;
+      color:#2c559c;
+    }
+
+    #label-tabla {
+      font-size: 20px;
+      font-family: Rubik,monospace;
+      margin-top:15px;
+      margin-left: 10px;
+      color:#2c559c;
+      display: inline-block;
+    }
+
+    #help-table {
+      display: inline-block;
+      padding: 18px;
+      padding-left: 10px;
+      margin: 0px;
+      vertical-align: top;
+    }
+
+    #tooltip-table {
+      font-family: Rubik,sans !important;
+      font-size: 20px !important;
+    }
+
+    /*5.2) Selector de fecha*/
+
+    .radio-item {
+      display: inline-block;
+      position: relative;
+      padding: 0 px;
+      margin: -10px 0px 10px;
+      transition: 0.1s;
+    }
+
+    .radio-item input[type='radio'] {
+      display: none;
+      transition: 0.1s;
+    }
+
+    .radio-item label {
+      color: #666;
+      font-weight: normal;
+      transition: 0.1s;
+      margin: 0;
+    }
+
+    .radio-item label:before {
+      content: " ";
+      display: inline-block;
+      position: relative;
+      top: 4px;
+      margin: 12px 5px 0 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 11px;
+      border: 2px solid #2c559c;
+      background-color: transparent;
+      transition: 0.1s;
+    }
+
+
+    #date-range-finanzas-div {
+      width: 100%;
+      display:flex;
+      justify-content: right ;
+      margin:0 auto;
+      margin-left: 10px;
+      margin-top:10px;
+      padding: 0 auto;
+    }
+
+    #date-range-finanzas {
+      width: 100%;
+      font-family: Rubik;
+      font-size:20px;
+      border: 0px solid black;
+      display:block;
+      margin:0 auto ;
+
+    }
+
+    .DateRangePickerInput_arrow {
+      background: none;
+    }
+
+    .DateRangePickerInput {
+      background: none;
+    }
+
+        /*5.2.1) Calendario */
+
+        .DateRangePickerInput  {
+          border:  0px solid white !important;
+        }
+
+        .CalendarDay__selected {
+          background-color: #2c559c !important;
+          border: 1px solid white;
+        }
+
+        .CalendarDay__selected_span {
+          background-color: #4582ec !important;
+          border: 1px solid white;
+        }
+
+        .CalendarDay__selected_span:hover {
+          background-color: #376bc4 !important;
+          border: 1px solid white;
+        }
+
+        .DayPickerKeyboardShortcuts_show__bottomRight::before {
+          border-top: 26px solid transparent;
+          border-right: 33px solid #4582ec;
+          bottom: 0;
+          right: 0
+        }
+
+        .DayPickerKeyboardShortcuts_show__bottomRight:hover::before {
+          border-right: 33px solid #2c559c
+        }
+
+        .DayPickerNavigation_button {
+          border: 1px solid black;
+        }
+
+        .DayPickerNavigation_button:hover {
+          border: 1px solid black;
+          background-color: #bdd5ff;
+        }
+
+        .DayPicker_weekHeader_li {
+          display: hidden;
+        }
+
+        .DayPicker_weekHeader_li:after {
+          visibility: visible;
+          content: Su;
+        }
+
+
+    /*5.3) Dropdown de predios */
+
+    .div-dropdown {
+      width: 100%;
+      display:flex;
+      justify-content: left;
+      margin: 0 auto;
+      margin-left:10px;
+      margin-top:10px;
+      padding: 0 auto;
+    }
+
+    #dropdown-predios {
+      width: 50% !important;
+      font-family: Rubik;
+      font-size:20px;
+      border-radius: 15px;
+    }
+
+
+    #dropdown-cartonerx {
+      width: 50%;
+      font-family: Rubik;
+      font-size:20px;
+      border-radius: 15px;
+    }
+
+    /*5.4) Tabla de precios */
+
+    #table-precios-div {
+      display:block;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:10px;
+      margin-bottom: 20px;
+      padding: 0px;
+      width: 80%;
+    }
+    #table-precios {
+      display:block;
+      margin-top:10px;
+      font-size: 20px;
+      padding: 0px;
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
+
+    tr .dash-delete-cell {
+      font-size: 30px !important;
+    }
+
+    /*5.5) Botones de la tabla*/
+
+    #button-add-row-div {
+      display: flex;
+      justify-content: center;
+      margin: 0;
+
+    }
+
+    #button-add-row-div button{
+      display: inline-block !important;
+      background-color: #4582ec;
+      border: 0px solid white;
+      white-space: pre-wrap;
+      width: 15rem;
+      padding-top: 10px;
+      height: 6rem;
+      margin-bottom: 5rem;
+      bottom: 20px;
+    }
+
+    #button-add-row-div button:hover{
+      background-color: #2c559c;
+      border: 0px solid white;
+      white-space: pre-wrap;
+      padding-top: 10px;
+      height: 6rem;
+      margin-bottom: 5rem;
+      bottom: 20px;
+    }
+
+    .buttons-table {
+      font-family: Rubik, sans;
+      font-size: 15px;
+      display:flex !important;
+      justify-content: center !important;
+      padding: 0 auto !important;
+    }
+
+    .start-button {
+      margin-right: 0px !important;
+      padding-right: 0px !important;
+      border-radius: 15px 0px 0px 15px;
+    }
+
+    .mid-button {
+      margin-left: 0px !important;
+      padding-left: 0px !important;
+      margin-right: 0px !important;
+      padding-right: 0px !important;
+      border-radius: 0px 0px 0px 0px;
+    }
+
+    .end-button {
+      margin-left: 0px !important;
+      padding-left: 0px !important;
+      border-radius: 0px 15px 15px 0px;
+    }
+
+    button img {
+      display: inline-block;
+      vertical-align: center;
+      margin-top: -25px;
+      margin-right: 15px;
+    }
+
+    button p {
+      display: inline-block;
+      vertical-align: center;
+
+      font-family: Rubik, sans;
+    }
+
+    #button-save-file img {
+      display: inline-block;
+      vertical-align: center;
+      margin-top: -25px;
+      margin-right: 15px;
+    }
+
+    #button-save-file p {
+      display: inline-block;
+      vertical-align: center;
+
+      font-family: Rubik, sans;
+    }
+
+    #button-add-row img {
+      display: inline-block;
+      vertical-align: center;
+      margin-top: -25px;
+      margin-right: 15px;
+    }
+
+    #button-add-row p {
+      display: inline-block;
+      vertical-align: center;
+
+      font-family: Rubik, sans;
+    }
+
+    #cargar-text {
+      display: inline-block;
+      margin: 0;
+      padding: 0 auto;
+    }
+
+    #cargar-img {
+      display: inline-block !important;
+      margin: 0 auto;
+      margin-top: 7px;
+      margin-right: 0px;
+      padding: 0 auto;
+      float: left;
+    }
+
+    #button-load-file p {
+      font-family: Rubik, sans;
+      font-size: 15px;
+      display:flex !important;
+      justify-content: center !important;
+      margin: 0 auto !important;
+      margin-top:0px !important;
+      padding: 0 auto !important;
+    }
+
+/* 6) Modals ------------------------------------------------------------------------------------------------------------------------------*/
+
+#close-modal-sin-info-button {
+  font-family: Rubik, sans;
+  font-size: 15px;
+  display:flex !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  margin-top:0px !important;
+  padding-top: 6px !important;
+  background-color: #4582ec;
+}
+
+.ico {
+  margin: 0px;
+  padding: 0px;
+  padding-right: 5px;
+  margin-top: -1px;
+}
+
+#close-modal-sin-info-button:hover {
+  background-color: #2c559c;
+}
+
+#close-modal-data-table-button {
+  font-family: Rubik, sans;
+  font-size: 15px;
+  display:flex !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  margin-top:0px !important;
+  padding-top: 5px !important;
+  background-color: #4582ec;
+}
+
+#close-modal-data-table-button:hover {
+  background-color: #2c559c;
+}
+
+/* 7) Tabs ------------------------------------------------------------------------------------------------------------------------------*/
+
+.tabs-finanzas {
+  background-color: #adb5bd;
+}
+
+.jsx-4017309047 .tab-content {
+  position: relative;
+  bottom: 0px;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  bottom: 0px;
+  min-height: 100% !important;
+  flex: 1;
+}
+
+#tabs-finanzas-parent {
+  position: fixed;
+  width: 60%;
+  height: calc(100% - 50px);
+  bottom: 0px;
+}
+
+.card {
+  border-radius: 15px;
+  border: 1px solid #4582ec;
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(241,241,241,1) 42%, rgba(255,255,255,1) 100%);
+  margin-bottom: 40px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.waves {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 60%;
+  z-index: 0;
+}
+
+.tab-finanzas-header {
+  background: rgb(181,181,181);
+  background: linear-gradient(0deg, rgba(181,181,181,1) 0%, rgba(244,244,244,1) 100%);
+  color:#2c559c;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 0px solid #4582ec;
+  height: 60px;
+  padding: 10px !important;
+  transition: 0.5s;
+}
+
+.tab-finanzas-header:hover {
+  color:#376bc4;
+  transition: 0.2s;
+}
+
+    /*7.1) Tab Individual*/
+
+    #search-div {
+      width: 100%;
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:20px;
+      padding: 0 auto;
+    }
+
+    #search-button {
+      margin-left: 10px;
+      margin-top: 0px !important;
+      font-family: Rubik, sans;
+      font-size: 20px;
+      padding-top: 2px !important;
+      border-radius: 10px !important;
+    }
+
+    #search-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    #search-button img {
+      margin-top: -2px !important;
+    }
+
+    #input-legacyId {
+      font-family: Rubik;
+      font-size: 20px;
+      color:#005370;
+    }
+
+    #label-total {
+      visibility: hidden;
+      margin-top:10px;
+      font-size:1px;
+      font-family: Rubik;
+      color:#2c559c;
+    }
+
+    #div-individual {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+      height: calc(100vh - 150px);
+      max-height: calc(100vh - 170px);
+      padding: 0px 20px;
+    }
+
+    .labels-cartas {
+      font-family: Rubik, sans;
+      font-size: 20px;
+    }
+
+    #label-legajo {
+      font-family: Rubik, sans;
+      font-size: 30px;
+      padding-left: 10px;
+    }
+
+
+
+    /*7.2) Tab Todxs*/
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+      
+    }
+
+    #parent-todxs {
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:100px;
+      font-size:50px;
+      font-family: Rubik;
+      color:#005370;
+      text-align: center;
+      width: 50%
+    }
+
+    #refresh-button {
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      display:flex !important;
+      justify-content: center !important;
+      margin: 0 auto !important;
+      margin-left: 10px;
+      margin-top:20px !important;
+      padding: 0 auto !important;
+      border-radius: 10px !important;
+    }
+
+    #refresh-button p{
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      margin-top: 2px;
+      margin-left: 10px;
+      padding: 0 auto !important;
+    }
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+      
+    }
+
+    #img-refresh {
+      width: 3rem;
+      padding: 0;
+      margin-right: 0px;
+      margin-top: -2px;
+
+    }
+
+/*Al fondo de los dos tabs para que aplique este efecto por arriba de los otros*/
+#tabs-finanzas .tab--selected {
+  background: #e8e8e8;
+  color: #4582ec;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 5px solid #4582ec;
+  padding: 5px;
+  transition: 0.5s;
+}
+
+.expanded-row--empty-cell.dash-delete-header {
+  width: 10.45% !important;
+}
+
+
+@media (max-width: 995px) {
+
+  #button-add-row-div {
+    display: block !important;
+    margin: 0 auto;
+    width: 25rem;
+  }
+
+  #container-buttons{
+    display: flex;
+    justify-content: center;
+  }
+
+  .start-button{
+    width: 25rem !important;
+    display: block !important;
+    margin: 0 auto !important;
+    margin-bottom: 0px !important;
+    border-radius: 15px 15px 0 0;
+
+  }
+
+  .mid-button{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    width: 25rem !important;
+    clear: both;
+    display: block;
+  }
+
+  .end-button{
+    margin-top: 0px !important;
+    width: 25rem !important;
+    clear: both;
+    display: block;
+    border-radius: 0 0 15px 15px;
+  }
+
+  #cargar-img {
+    margin-left: 50px;
+  }
+
+  #cargar-text {
+    display: flex;
+    float: left;
+    padding-left: 15px;
+  }
+
+  .mid-button img {
+    margin-left: -12px;
+  }
+
+  .mid-button p {
+    margin-left: 0px;
+  }
+
+  #input-legacyId{
+    width: 20rem;
+  }
+
+  /*
+  .dash-header {
+    font-size: 17px;
+  }
+
+  .dash-header.column-1 {
+    font-size: 12px;
+  }
+
+  .dash-header.column-2 {
+    font-size: 12px;
+  }
+  */
+}
+
+@media (max-width: 700px) {
+
+  #button-add-row-div {
+    display: block !important;
+    margin: 0 auto;
+    width: 20rem;
+  }
+
+  #container-buttons{
+    display: flex;
+    justify-content: center;
+  }
+
+  .start-button{
+    width: 20rem !important;
+    display: block !important;
+    margin: 0 auto !important;
+    margin-bottom: 0px !important;
+    border-radius: 15px 15px 0 0;
+
+  }
+
+  .mid-button{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    width: 20rem !important;
+    clear: both;
+    display: block;
+  }
+
+  .end-button{
+    margin-top: 0px !important;
+    width: 20rem !important;
+    clear: both;
+    display: block;
+    border-radius: 0 0 15px 15px;
+  }
+
+  #cargar-img {
+    margin-left: 25px;
+  }
+
+  #cargar-text {
+    display: flex;
+    float: left;
+    padding-left: 17px;
+  }
+
+  .mid-button img {
+    margin-left: -12px;
+  }
+
+  .mid-button p {
+    margin-left: 0px;
+  }
+
+  #input-legacyId{
+    width: 20rem;
+    overflow: ellipsis;
+  }
+
+  #search-button {
+    width: 4rem;
+  }
+
+  #search-button img {
+    margin-left: -0.4rem;
+  }
+  
+  #search-button p{
+    visibility: hidden;
+  }
+
+  /*
+  .dash-header {
+    font-size: 12px;
+  }
+
+  .dash-header.column-1 {
+    font-size: 10px;
+  }
+
+  .dash-header.column-2 {
+    font-size: 10px;
+  }
+  */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* DE ACA PARA ABAJO ES EL CSS DE PLOTLY DASH, SIRVE PARA ALGUNAS COSAS(?) */
 

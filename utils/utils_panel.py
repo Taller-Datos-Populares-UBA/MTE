@@ -85,16 +85,3 @@ df = pd.concat([df_1,df_2], ignore_index=True)
 df['fecha'] = pd.to_datetime(df['fecha'])
 df = df.fillna('No especificado')
 
-
-predios = df.predio.unique()
-
-
-rutas = [
-    'R8', 'R16', 'R12', 'E2C', 'E1', 'E2B', 'RIS', 'E5', 'E10', 'EVU',
-    'E13', 'Avellaneda (A)', 'Avellaneda (C)', 'Avellaneda (D)',
-    'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)', 'R1', 'R5',
-    'R11', 'E8C', 'R14', 'R26', 'R22', 'R25', 'R3', 'E8A ', 'E8B',
-    'R6', 'R7', 'R9', 'R15', 'R17', 'R20', 'R21', 'R24', 'E2A',
-]
-
-materiales = df.material.unique()
