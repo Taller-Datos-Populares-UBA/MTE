@@ -103,10 +103,10 @@ def display_page(pathname):
         return panel_control.layout
     elif pathname == '/finanzas':
         return finanzas.layout
-    # else:
-    #     return finanzas.layout
     else:
-        return "404 Page Error! Please choose a link"
+        return finanzas.layout
+    # else:
+    #     return "404 Page Error! Please choose a link"
 
 
 if __name__ == "__main__":
