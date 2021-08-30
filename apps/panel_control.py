@@ -1,29 +1,16 @@
 from datetime import date, datetime
 
-# import pandas as pd
-
-import plotly.graph_objects as go
-# import plotly.express as px
-
-import dash
-import dash_table
 import dash_core_components as dcc
-# from dash_core_components.Dropdown import Dropdown
 import dash_html_components as html
+import dash_table
 from dash.dependencies import Output, Input, State
-# from future.utils import ensure_new_type
-# from dash.exceptions import PreventUpdate
 
-# import sys
-# sys.path.append("..")
-
-from utils.utils_panel import *
-# from utils.utils_panel import predios
-
+import utils.utils_panel as utils_panel
 from app import app
+from mte_dataframe import MTEDataFrame
 
+df = MTEDataFrame.get_instance()
 predios = df.predio.unique()
-
 
 rutas = [
     'R8', 'R16', 'R12', 'E2C', 'E1', 'E2B', 'RIS', 'E5', 'E10', 'EVU',
@@ -35,22 +22,11 @@ rutas = [
 
 materiales = df.material.unique()
 
-# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-# print(df.predio.unique())
+cartoneres = ["LE", "RA", "No especificado"]
 
 
-# app = dash.Dash(__name__)#, external_stylesheets=external_stylesheets)
-
-# app.title = "Tablero MTE"
-# Para que no tire error al principio por las callbacks cruzadas
-# app.config.suppress_callback_exceptions = True
-
-layout = html.Div([
-    html.Div(id="altura-navbar", style={"height": "45px"}),
-    html.Div(id="div-izquierda", children=[
-        html.Img(
-            src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
-        ),
+def SelectDates():
+    return html.Div(children=[
         html.Label("Elegí el rango de fechas"),
         dcc.DatePickerRange(
             id="date-range",
@@ -59,48 +35,39 @@ layout = html.Div([
             max_date_allowed=date(2021, 12, 31),
             start_date=date(2019, 5, 15),
             end_date=date(2021, 8, 10),
-        ),
-        html.Label("Elegí el predio"),
+        )
+    ])
+
+
+def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_option=False, capitalize=False):
+    options = options + ["Todas"] if add_all_as_option else options
+    initial_value = "Todas" if add_all_as_option else options
+    return html.Div(children=[
+        html.Label(label),
         dcc.Dropdown(
-            id="dropdown-predios",
+            id=dropdown_id,
             options=[
-                {"label": predio.capitalize(), "value": predio} for predio in predios
+                {"label": option.capitalize() if capitalize else option, "value": option} for option in options
             ],
-            value=predios,
-            multi=True  # Por ahora lo apago para que funcione la versión preliminar pero después lo necesitamos
+            value=initial_value,
+            multi=True
         ),
-        html.H6(id="salida-predios"),
-        html.Label("Elegí la ruta o etapa"),
-        dcc.Dropdown(
-            id="dropdown-rutas",
-            options=
-            [{"label": "Todas", "value": "TODAS"}]+[{"label": ruta.capitalize(), "value": ruta} for ruta in rutas],
-            
-            multi=True,
-            value=["TODAS"],
+        html.H6(id=response_id)]
+    )
+
+
+layout = html.Div([
+    html.Div(id="altura-navbar", style={"height": "45px"}),
+    html.Div(id="div-izquierda", children=[
+        html.Img(
+            src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
         ),
-        html.H6(id="salida-rutas"),
-        html.Label("Elegí el tipo de material"),
-        dcc.Dropdown(
-            id="dropdown-materiales",
-            options=
-            [{"label": material.capitalize(), "value": material} for material in materiales],
-            
-            multi=True,
-            value=materiales,
-        ),
-        html.H6(id="salida-materiales"),
-        html.Label("Elegí el tipo de cartonere"),
-        dcc.Dropdown(
-            id="dropdown-cartonere",
-            options=[
-                dict(label="LE", value="LE"),
-                dict(label="RA", value="RA"),
-                dict(label="No especificado", value="No especificado")
-            ],
-            multi=True,
-            value=["LE", "RA", "No especificado"],
-        ),
+        SelectDates(),
+        SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
+        SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas", add_all_as_option=True),
+        SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
+                            capitalize=True),
+        SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
         html.Button(
             id="btn-filtro",
             children="Filtrar",
@@ -108,52 +75,33 @@ layout = html.Div([
             className="btn-filtro"
         )
 
-
     ], style={"display": "inline-block", "width": "30%"}
-    ),
+             ),
     html.Div(id="div-derecha", children=[
-    dcc.Tabs(id="tabs",
-        children=[
-            dcc.Tab(label="Pestaña 1", value="tab_1",
-            children=[
-                html.H1("esta es la tab 1"),
-                html.Div("Peso total: 1500kg"),
-                dcc.Graph(id="grafico-historico"),
-                dcc.Graph(id="grafico-torta")
-            ]),
-            dcc.Tab(label="Pestaña 2", value="tab_2",
-            children=[
-                html.H1("esta es la tab 2"),
-                dash_table.DataTable(
-                    id="tabla",
-                    editable=True,
-                    columns=[{"name": i, "id": i} for i in df.columns],
-                    # data=df.to_dict('records'),
-                )
-            ]),
-        ],
-        value="tab_1"
-    ),
-    html.Div(id="salida-tabs"),
+        dcc.Tabs(id="tabs",
+                 children=[
+                     dcc.Tab(label="Pestaña 1", value="tab_1",
+                             children=[
+                                 html.Div("Peso total: 1500kg"),
+                                 dcc.Graph(id="grafico-historico"),
+                                 dcc.Graph(id="grafico-torta")
+                             ]),
+                     dcc.Tab(label="Pestaña 2", value="tab_2",
+                             children=[
+                                 dash_table.DataTable(
+                                     id="tabla",
+                                     editable=True,
+                                     columns=[{"name": i, "id": i} for i in df.columns],
+                                 )
+                             ]),
+                 ],
+                 value="tab_1"
+                 ),
+        html.Div(id="salida-tabs"),
     ], style={"width": "70%", "display": "inline-block", "float": "right"}
-    ),
+             ),
 
 ])
-
-
-# @app.callback(
-#     Output("salida-tabs", "children"),
-#     Input("tabs", "value")
-# )
-# def render_content(value):
-#     if value == "tab_1":
-#         return html.Div([
-#             html.H1("esta es la tab 1"),
-#             dcc.Graph(id="grafico-historico"),
-#             dcc.Graph(id="grafico-torta")
-#         ])
-#     else:
-#         return html.H1("esta es la tab 2"),
 
 
 @app.callback(
@@ -176,11 +124,10 @@ def filtrar(n_clicks, predios, rutas, materiales, cartonere, fecha_inicio, fecha
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
     """
-    global df
-    # if n_clicks >= 0:
-    df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio), datetime.fromisoformat(fecha_fin), materiales, cartonere)
-    fig_hist = pesos_historico(df_filtrado, operacion="suma")
-    fig_torta = torta(df_filtrado)
+
+    df = MTEDataFrame.get_instance()
+    df_filtrado = utils_panel.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+                                                datetime.fromisoformat(fecha_fin), materiales, cartonere)
+    fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
+    fig_torta = utils_panel.torta(df_filtrado)
     return fig_hist, fig_torta, df_filtrado.to_dict("records")
-    # else:
-    #     raise PreventUpdate
