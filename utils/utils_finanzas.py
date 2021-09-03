@@ -1,3 +1,4 @@
+import datetime
 import base64
 import io
 
@@ -14,8 +15,7 @@ def determinar_tipo_cartonero(row):
     else:
         return 'RA'
 
-
-def crear_df_filtrado_old(df, predios, fecha_inicio, fecha_finalizacion, materiales, tipo_cartonero):
+def crear_df_filtrado_old(df, predios, fecha_inicio=datetime.datetime(1,1,1), fecha_finalizacion=datetime.datetime(3000,12,31), materiales=[], tipo_cartonero=[], periodo='otro'):
     df_filtrado = df.copy()
 
     # rellenar nans
@@ -27,15 +27,27 @@ def crear_df_filtrado_old(df, predios, fecha_inicio, fecha_finalizacion, materia
     # aplicar filtros
     if predios != []:
         df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
-
+    if periodo == 'otro':
+      pass
+    elif periodo == 'semana':
+      fecha_finalizacion = datetime.date.today()
+      otra_fecha = datetime.timedelta(6)
+      fecha_inicio = fecha_finalizacion - otra_fecha  
+    elif periodo == 'mes':
+      fecha_finalizacion = datetime.date.today()
+      otra_fecha = datetime.timedelta(30)
+      fecha_inicio = fecha_finalizacion - otra_fecha
+    else: 
+      fecha_finalizacion = datetime.date.today()
+      otra_fecha = datetime.timedelta(364)
+      fecha_inicio = fecha_finalizacion - otra_fecha
     df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
-    if materiales:
+    if materiales != []:
         df_filtrado = df_filtrado.loc[df_filtrado['material'].isin(materiales)]
-    if tipo_cartonero:
+    if tipo_cartonero != []:
         df_filtrado = df_filtrado.loc[df_filtrado['tipoCartonero'].isin(tipo_cartonero)]
 
     return df_filtrado
-
 
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
