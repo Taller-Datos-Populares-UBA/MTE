@@ -280,43 +280,45 @@ layout = html.Div([
                 "Seleccionar el predio",
                 id="label-predios"
             ),
-
-            html.Div(  # Dropdown de los predios
-                children=[
-                    dcc.Dropdown(
-                        id="dropdown-predios",
-                        options=[
-                            {"label": predio.capitalize(), "value": predio} for predio in predios
-                        ],
-                        multi=False,
-                        placeholder="Seleccionar un predio",
-                        className="dropdowns"
-                    )],
-                id="dropdown-predios-div",
-                className="div-dropdown"
-
-            ),
+            SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
+#
+#            html.Div(  # Dropdown de los predios
+#                children=[
+#                    dcc.Dropdown(
+#                        id="dropdown-predios",
+#                        options=[
+#                            {"label": predio.capitalize(), "value": predio} for predio in predios
+#                        ],
+#                        multi=False,
+#                        placeholder="Seleccionar un predio",
+#                        className="dropdowns"
+#                    )],
+#                id="dropdown-predios-div",
+#                className="div-dropdown"
+#
+#            ),
 
             html.Label(  # Label de lxs cartonerxs
                 "Seleccionar el tipo de cartonerx",
                 id="label-cartonerxs"
             ),
+            SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
 
-            html.Div(  # Dropdown de lxs cartonerxs
-                children=[
-                    dcc.Dropdown(
-                        id="dropdown-cartonerx",
-                        options=[
-                            {"label": cartoneres, "value": cartoneres} for cartoneres in cartoneres
-                        ],
-                        multi=False,
-                        placeholder="Seleccionar un tipo de cartonerx",
-                        className="dropdowns"
-                    )],
-                id="dropdown-cartonerxs-div",
-                className="div-dropdown"
-
-            ),
+#            html.Div(  # Dropdown de lxs cartonerxs
+#                children=[
+#                    dcc.Dropdown(
+#                        id="dropdown-cartonerx",
+#                        options=[
+#                            {"label": cartoneres, "value": cartoneres} for cartoneres in cartoneres
+#                        ],
+#                        multi=False,
+#                        placeholder="Seleccionar un tipo de cartonerx",
+#                        className="dropdowns"
+#                    )],
+#                id="dropdown-cartonerxs-div",
+#                className="div-dropdown"
+#
+#            ),
 
             html.Label(  # Label de la tabla
                 "Tabla de precios",

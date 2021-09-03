@@ -12,20 +12,6 @@ from mte_dataframe import MTEDataFrame
 
 df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
-#predios = df.predio.unique()
-#
-#rutas = df.etapa.unique()
-## [
-##    'R8', 'R16', 'R12', 'E2C', 'E1', 'E2B', 'RIS', 'E5', 'E10', 'EVU',
-##    'E13', 'Avellaneda (A)', 'Avellaneda (C)', 'Avellaneda (D)',
-##    'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)', 'R1', 'R5',
-##    'R11', 'E8C', 'R14', 'R26', 'R22', 'R25', 'R3', 'E8A ', 'E8B',
-##    'R6', 'R7', 'R9', 'R15', 'R17', 'R20', 'R21', 'R24', 'E2A',
-##]
-#
-#materiales = df.material.unique()
-#
-#cartoneres = ["LE", "RA", "No especificado"]
 
 
 def SelectDates():
