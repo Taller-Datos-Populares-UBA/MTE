@@ -12,16 +12,14 @@ import utils.utils_finanzas as utils_finanzas
 from app import app
 from mte_dataframe import MTEDataFrame
 
-# Carga de DataFrames
-"""hola lauti"""
-predios = [
-    'BARRACAS', 'SAAVEDRA', 'AVELLANEDA', "No especificado"
-]
-cartoneros = [
-    "RA", "LE"
-]
+from apps.panel_control import SelectDates, SelectFilterOptions
 
+
+# Carga de DataFrames
 df = MTEDataFrame.get_instance()
+predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
+
+
 fig = utils_finanzas.grafico_torta(7023, df)
 df_filtrado = df.dropna()[["fecha", "material", "peso"]].head(10)
 
@@ -245,33 +243,33 @@ layout = html.Div([
                 children=[  # Radiobuttons y picker de fechas
                     dbc.FormGroup(
                         children=[
-                            dbc.RadioItems(
-                                options=[
-                                    {'label': 'Última semana', 'value': 'semana'},
-                                    {'label': 'Último mes', 'value': 'mes'},
-                                    {'label': 'Último año', 'value': 'año'},
-                                    {'label': 'Otro', 'value': 'otro'}
-                                ],
-                                value='semana',
-                                className="radio-item",
-                                style={
-                                    "fontSize": "18px",
-                                    "width": "100%",
-                                },
-                                id="radio-button-fechas"
-                            ),
-
-                            dcc.DatePickerRange(
-                                id="date-range-finanzas",
-                                display_format="D/M/Y",
-                                month_format="MM/YY",
-                                min_date_allowed=date(1995, 8, 5),
-                                max_date_allowed=date(2021, 12, 31),
-                                start_date=date(2021, 8, 27),
-                                end_date=date(2021, 8, 31),
-                                style={"display": "block", "lang": "es"},
-                                with_portal=True
-                            )
+#                            dbc.RadioItems(
+#                                options=[
+#                                    {'label': 'Última semana', 'value': 'semana'},
+#                                    {'label': 'Último mes', 'value': 'mes'},
+#                                    {'label': 'Último año', 'value': 'año'},
+#                                    {'label': 'Otro', 'value': 'otro'}
+#                                ],
+#                                value='semana',
+#                                className="radio-item",
+#                                style={
+#                                    "fontSize": "18px",
+#                                    "width": "100%",
+#                                },
+#                                id="radio-button-fechas"
+#                            ),
+                            SelectDates(),
+#                            dcc.DatePickerRange(                        
+#                                id="date-range-finanzas",
+#                                display_format="D/M/Y",
+#                                month_format="MM/YY",
+#                                min_date_allowed=date(1995, 8, 5),
+#                                max_date_allowed=date(2021, 12, 31),
+#                                start_date=date(2021, 8, 27),
+#                                end_date=date(2021, 8, 31),
+#                                style={"display": "block", "lang": "es"},
+#                                with_portal=True
+#                            )
                         ],
                     ),
                 ],
@@ -309,7 +307,7 @@ layout = html.Div([
                     dcc.Dropdown(
                         id="dropdown-cartonerx",
                         options=[
-                            {"label": cartoneros, "value": cartoneros} for cartoneros in cartoneros
+                            {"label": cartoneres, "value": cartoneres} for cartoneres in cartoneres
                         ],
                         multi=False,
                         placeholder="Seleccionar un tipo de cartonerx",

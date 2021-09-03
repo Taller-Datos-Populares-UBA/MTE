@@ -7,6 +7,7 @@ class MTEDataFrame:
 
     _instance = None
 
+    
     def __init__(self):
         raise Exception("Cannot instanciate a singleton")
 
@@ -36,3 +37,12 @@ class MTEDataFrame:
     @classmethod
     def _read_mte_csv(cls, csv_name, dtypes):
         return pd.read_csv(csv_name, dtype=dtypes, parse_dates=[0])
+
+    @classmethod
+    def create_features(cls):
+        df=cls.get_instance()
+        predios = df.predio.unique()
+        rutas = df.etapa.unique()
+        materiales = df.material.unique()
+        cartoneres = ["LE", "RA", "No especificado"]
+        return predios, rutas, materiales, cartoneres       

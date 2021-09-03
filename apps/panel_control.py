@@ -1,5 +1,6 @@
 from datetime import date, datetime
 
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
@@ -10,37 +11,54 @@ from app import app
 from mte_dataframe import MTEDataFrame
 
 df = MTEDataFrame.get_instance()
-predios = df.predio.unique()
-
-rutas = [
-    'R8', 'R16', 'R12', 'E2C', 'E1', 'E2B', 'RIS', 'E5', 'E10', 'EVU',
-    'E13', 'Avellaneda (A)', 'Avellaneda (C)', 'Avellaneda (D)',
-    'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)', 'R1', 'R5',
-    'R11', 'E8C', 'R14', 'R26', 'R22', 'R25', 'R3', 'E8A ', 'E8B',
-    'R6', 'R7', 'R9', 'R15', 'R17', 'R20', 'R21', 'R24', 'E2A',
-]
-
-materiales = df.material.unique()
-
-cartoneres = ["LE", "RA", "No especificado"]
+predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
+#predios = df.predio.unique()
+#
+#rutas = df.etapa.unique()
+## [
+##    'R8', 'R16', 'R12', 'E2C', 'E1', 'E2B', 'RIS', 'E5', 'E10', 'EVU',
+##    'E13', 'Avellaneda (A)', 'Avellaneda (C)', 'Avellaneda (D)',
+##    'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)', 'R1', 'R5',
+##    'R11', 'E8C', 'R14', 'R26', 'R22', 'R25', 'R3', 'E8A ', 'E8B',
+##    'R6', 'R7', 'R9', 'R15', 'R17', 'R20', 'R21', 'R24', 'E2A',
+##]
+#
+#materiales = df.material.unique()
+#
+#cartoneres = ["LE", "RA", "No especificado"]
 
 
 def SelectDates():
     return html.Div(children=[
-        html.Label("Elegí el rango de fechas"),
-        dcc.DatePickerRange(
-            id="date-range",
-            display_format="D/M/Y",
-            min_date_allowed=date(1995, 8, 5),
-            max_date_allowed=date(2021, 12, 31),
-            start_date=date(2019, 5, 15),
-            end_date=date(2021, 8, 10),
-        )
+            html.Label("Elegí el rango de fechas"),
+            dbc.RadioItems(
+                    options=[
+                            {'label': 'Última semana', 'value': 'semana'},
+                            {'label': 'Último mes', 'value': 'mes'},
+                            {'label': 'Último año', 'value': 'año'},
+                            {'label': 'Otro', 'value': 'otro'}
+                    ],
+                    value='semana',
+                    className="radio-item",
+                    style={
+                            "fontSize": "18px",
+                            "width": "100%",
+                    },
+                    id="radio-button-fechas"
+            ),    
+            dcc.DatePickerRange(
+                id="date-range",
+                display_format="D/M/Y",
+                min_date_allowed=date(1995, 8, 5),
+                max_date_allowed=date(2021, 12, 31),
+                start_date=date(2019, 5, 15),
+                end_date=date(2021, 8, 10),
+            )
     ])
 
 
 def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_option=False, capitalize=False):
-    options = options + ["Todas"] if add_all_as_option else options
+    options = list(options) + ["Todas"] if add_all_as_option else options
     initial_value = "Todas" if add_all_as_option else options
     return html.Div(children=[
         html.Label(label),
