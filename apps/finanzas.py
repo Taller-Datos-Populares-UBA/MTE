@@ -12,7 +12,7 @@ import utils.utils_finanzas as utils_finanzas
 from app import app
 from mte_dataframe import MTEDataFrame
 
-from apps.panel_control import SelectDates, SelectFilterOptions
+from apps.panel_control import SelectDates, SelectFilterOptions,CreateButton
 
 
 # Carga de DataFrames
@@ -234,53 +234,13 @@ layout = html.Div([
                 id="title-botonera"
             ),
 
-            html.Label(  # Label fechas
-                "Seleccionar el rango de fechas",
-                id="label-fechas"
-            ),
-
             html.Div(
                 children=[  # Radiobuttons y picker de fechas
-                    dbc.FormGroup(
-                        children=[
-#                            dbc.RadioItems(
-#                                options=[
-#                                    {'label': 'Última semana', 'value': 'semana'},
-#                                    {'label': 'Último mes', 'value': 'mes'},
-#                                    {'label': 'Último año', 'value': 'año'},
-#                                    {'label': 'Otro', 'value': 'otro'}
-#                                ],
-#                                value='semana',
-#                                className="radio-item",
-#                                style={
-#                                    "fontSize": "18px",
-#                                    "width": "100%",
-#                                },
-#                                id="radio-button-fechas"
-#                            ),
-                            SelectDates(),
-#                            dcc.DatePickerRange(                        
-#                                id="date-range-finanzas",
-#                                display_format="D/M/Y",
-#                                month_format="MM/YY",
-#                                min_date_allowed=date(1995, 8, 5),
-#                                max_date_allowed=date(2021, 12, 31),
-#                                start_date=date(2021, 8, 27),
-#                                end_date=date(2021, 8, 31),
-#                                style={"display": "block", "lang": "es"},
-#                                with_portal=True
-#                            )
-                        ],
-                    ),
-                ],
-                id="date-range-finanzas-div"
-            ),
-
-            html.Label(  # Label de los predios
-                "Seleccionar el predio",
-                id="label-predios"
-            ),
+            SelectDates("date-range-finanzas"),
             SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
+            ]
+            ),
+            SelectFilterOptions(rutas, "Elegí la ruta", "dropdown-rutas", "salida-rutas",add_all_as_option=True, capitalize=True),
 #
 #            html.Div(  # Dropdown de los predios
 #                children=[
@@ -298,11 +258,7 @@ layout = html.Div([
 #
 #            ),
 
-            html.Label(  # Label de lxs cartonerxs
-                "Seleccionar el tipo de cartonerx",
-                id="label-cartonerxs"
-            ),
-            SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
+            SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonerx", "salida-cartoneres"),
 
 #            html.Div(  # Dropdown de lxs cartonerxs
 #                children=[
@@ -473,6 +429,7 @@ layout = html.Div([
         children=[
             dcc.Tabs(  # Almacena las dos tabs adentro
                 id="tabs-finanzas",
+
                 children=[
                     dcc.Tab(  # Tab Individual
                         children=[
@@ -492,21 +449,7 @@ layout = html.Div([
                                             },
                                             autoComplete="off"
                                         ),
-
-                                        html.Button(
-                                            children=[
-                                                html.Img(
-                                                    src=app.get_asset_url("search.svg")
-                                                ),
-
-                                                html.P(
-                                                    "Buscar"
-                                                )
-                                            ],
-                                            id="search-button",
-                                            n_clicks=0,
-                                            className="mr-1 mt-1 btn btn-primary"
-                                        ),
+                                    CreateButton("search-button","Buscar")
                                     ],
                                         id="search-div",
                                         className=""  # Contenedor de la parte de busqueda
@@ -545,7 +488,7 @@ layout = html.Div([
                             ),
                         ],
                         id="tab1-finanzas",
-                        className="tabs-finanzas tab-finanzas-header",
+                        className="tabs tab-finanzas-header tab",
                         label="Individual",
                         value="individual"
                     ),
@@ -600,7 +543,7 @@ layout = html.Div([
                             ),
                         ],
                         id="tab2-finanzas",
-                        className="tabs-finanzas tab-finanzas-header",
+                        className="tabs tab-finanzas-header tab",
                     ),
                 ],
                 value="individual"
@@ -610,8 +553,9 @@ layout = html.Div([
             "width": "60%",
             "display": "inline-block",
             "float": "right"
-        }
+        },
     ),
+    
 
 ])
 
@@ -644,7 +588,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
     """
 
     trigger = callback_context.triggered[0]
-
+    print(trigger)
     if trigger["prop_id"] == "button-add-row.n_clicks":
         if n_clicks_add > 0:
             if rows == None:
@@ -671,6 +615,8 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
         else:
             return rows, None, True
     elif trigger["prop_id"] == "close-modal-data-table-button.n_clicks":
+        return rows, None, False
+    else:
         return rows, None, False
 
 

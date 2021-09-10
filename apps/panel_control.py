@@ -13,33 +13,55 @@ from mte_dataframe import MTEDataFrame
 df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
+def CreateButton(identificacion,txt):
+    return html.Div([
+        html.Button(
+            children=[
+                html.Img(
+                    src=app.get_asset_url("search.svg")
+                ),
 
-def SelectDates():
+                html.P(
+                    txt
+                )
+                ],
+            id=identificacion,
+            n_clicks=0,
+            className="mr-1 mt-1 btn btn-primary search-button"
+
+        ),
+    ],
+    className="button-container")
+
+def SelectDates(identificacion):
     return html.Div(children=[
-            html.Label("Elegí el rango de fechas"),
-            dbc.RadioItems(
-                    options=[
-                            {'label': 'Última semana', 'value': 'semana'},
-                            {'label': 'Último mes', 'value': 'mes'},
-                            {'label': 'Último año', 'value': 'año'},
-                            {'label': 'Otro', 'value': 'otro'}
-                    ],
-                    value='semana',
-                    className="radio-item",
-                    style={
-                            "fontSize": "18px",
-                            "width": "100%",
-                    },
-                    id="radio-button-fechas"
-            ),    
-            dcc.DatePickerRange(
-                id="date-range",
-                display_format="D/M/Y",
-                min_date_allowed=date(1995, 8, 5),
-                max_date_allowed=date(2021, 12, 31),
-                start_date=date(2019, 5, 15),
-                end_date=date(2021, 8, 10),
-            )
+            html.Label("Elegí el rango de fechas",className="labels"),
+            html.Div([
+                dbc.RadioItems(
+                        options=[
+                                {'label': 'Última semana', 'value': 'semana'},
+                                {'label': 'Último mes', 'value': 'mes'},
+                                {'label': 'Último año', 'value': 'año'},
+                                {'label': 'Otro', 'value': 'otro'}
+                        ],
+                        value='semana',
+                        className="radio-item",
+                        style={
+                                "fontSize": "18px",
+                                "width": "100%",
+                        },
+                        id="radio-button-fechas"
+                ),    
+                dcc.DatePickerRange(
+                    id=identificacion,
+                    display_format="D/M/Y",
+                    min_date_allowed=date(1995, 8, 5),
+                    max_date_allowed=date(2021, 12, 31),
+                    start_date=date(2019, 5, 15),
+                    end_date=date(2021, 8, 10),
+                )
+                ],className="dates-container"
+                )
     ])
 
 
@@ -47,9 +69,10 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_opt
     options = list(options) + ["Todas"] if add_all_as_option else options
     initial_value = "Todas" if add_all_as_option else options
     return html.Div(children=[
-        html.Label(label),
+        html.Label(label,className="labels"),
         dcc.Dropdown(
             id=dropdown_id,
+            className="dropdowns",
             options=[
                 {"label": option.capitalize() if capitalize else option, "value": option} for option in options
             ],
@@ -66,18 +89,14 @@ layout = html.Div([
         html.Img(
             src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
         ),
-        SelectDates(),
+        SelectDates("date-range"),
         SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
         SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas", add_all_as_option=True),
         SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
                             capitalize=True),
         SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
-        html.Button(
-            id="btn-filtro",
-            children="Filtrar",
-            n_clicks=0,
-            className="btn-filtro"
-        )
+
+        CreateButton("btn-filtro","Filtrar"),
 
     ], style={"display": "inline-block", "width": "30%"}
              ),

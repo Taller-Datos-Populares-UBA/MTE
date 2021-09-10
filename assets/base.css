@@ -210,40 +210,25 @@ ul li a img {
   padding-left: 10px;
   font-weight: bold;
   color: #376bc4;
+  margin-left: 10px;
 }
     
     /*5.1) Labels */
 
-    #label-predios {
+
+    .labels {
       font-size: 20px;
       font-family: Rubik,monospace;
       margin-top:10px;
-      margin-left: 10px;
-      color:#2c559c;
-    }
-
-    #label-cartonerxs {
-      font-size: 20px;
-      font-family: Rubik,monospace;
-      margin-top:10px;
-      margin-left: 10px;
-      color:#2c559c;
-    }
-
-
-    #label-fechas {
-      font-size: 20px;
-      font-family: Rubik,monospace;
-      margin-top:10px;
-      margin-left: 10px;
-      color:#2c559c;
+      margin-left: 20px !important;
+      color:#2c559c ;
     }
 
     #label-tabla {
       font-size: 20px;
       font-family: Rubik,monospace;
       margin-top:15px;
-      margin-left: 10px;
+      margin-left: 20px !important;
       color:#2c559c;
       display: inline-block;
     }
@@ -297,11 +282,14 @@ ul li a img {
       transition: 0.1s;
     }
 
+    .dates-container {
+      padding: 10px 20px;
+    }
 
     #date-range-finanzas-div {
       width: 100%;
       display:flex;
-      justify-content: right ;
+      justify-content: left ;
       margin:0 auto;
       margin-left: 10px;
       margin-top:10px;
@@ -379,6 +367,11 @@ ul li a img {
 
     /*5.3) Dropdown de predios */
 
+    .dropdowns {
+      margin-top: 10px;
+      padding: 0px 20px ;
+    }
+
     .div-dropdown {
       width: 100%;
       display:flex;
@@ -387,21 +380,6 @@ ul li a img {
       margin-left:10px;
       margin-top:10px;
       padding: 0 auto;
-    }
-
-    #dropdown-predios {
-      width: 50% !important;
-      font-family: Rubik;
-      font-size:20px;
-      border-radius: 15px;
-    }
-
-
-    #dropdown-cartonerx {
-      width: 50%;
-      font-family: Rubik;
-      font-size:20px;
-      border-radius: 15px;
     }
 
     /*5.4) Tabla de precios */
@@ -593,6 +571,7 @@ ul li a img {
   background-color: #2c559c;
 }
 
+
 /* 7) Tabs ------------------------------------------------------------------------------------------------------------------------------*/
 
 .tabs-finanzas {
@@ -663,7 +642,7 @@ ul li a img {
       padding: 0 auto;
     }
 
-    #search-button {
+    .search-button {
       margin-left: 10px;
       margin-top: 0px !important;
       font-family: Rubik, sans;
@@ -672,12 +651,17 @@ ul li a img {
       border-radius: 10px !important;
     }
 
-    #search-button:hover {
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-button:hover {
       background-color: #2c559c;
 
     }
 
-    #search-button img {
+    .search-button img {
       margin-top: -2px !important;
     }
 
