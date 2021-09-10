@@ -13,6 +13,65 @@ from mte_dataframe import MTEDataFrame
 df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
+# Cards
+pago=1234
+first_card = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H6("Resumen", id="monto-card-saldo"),
+            dcc.Tab(label="Pestaña 2", value="tab_2",
+                             children=[
+                                 dash_table.DataTable(
+                                     id="tabla",
+                                     editable=True,
+                                     columns=[{"name": i, "id": i} for i in df.columns],
+                                 )
+                             ]),
+            #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
+        ]
+    )]
+)
+
+
+third_card = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H6("Gráfico temporal"),
+            dcc.Graph(id="grafico-historico"),
+        ],
+    className="card",
+    )]
+)
+
+second_card = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H5("Distribución", className="card-title"),
+            dcc.Graph(id="grafico-torta")
+        ],
+    className="card"
+    )]
+)
+
+cards_panel = html.Div(
+    [
+        dbc.Col(
+            children=[
+                dbc.Row(
+                    children=[
+                        dbc.Col(first_card,),
+                        dbc.Col(second_card,)
+                    ],
+
+                ),
+                dbc.Col(third_card),
+            ],
+            id="ro1"
+        ),
+    ]
+)
+
+
 def CreateButton(identificacion,txt):
     return html.Div([
         html.Button(
@@ -105,9 +164,24 @@ layout = html.Div([
                  children=[
                      dcc.Tab(label="Pestaña 1", value="tab_1",
                              children=[
-                                 html.Div("Peso total: 1500kg"),
-                                 dcc.Graph(id="grafico-historico"),
-                                 dcc.Graph(id="grafico-torta")
+                                 html.Div(children=[
+			          html.Label('Ver por...',className="labels"),
+        			  dcc.Dropdown(
+            				id='dropdown_clasificador_vistas',
+            				className="dropdowns",
+            				options=[
+                			{"label": 'Material', "value": 'material'},
+                			{"label": 'Etapa', "value": 'etapa'}, 
+            				],
+            				value='material',
+            				multi=False
+        ),
+        html.H6(id='dropdown_clasificador_vistas_content')]
+    	),
+    		 		  cards_panel,
+    	                         html.Div("Peso total: 1500kg"),
+                                 #dcc.Graph(id="grafico-historico"),
+                                 #dcc.Graph(id="grafico-torta")
                              ]),
                      dcc.Tab(label="Pestaña 2", value="tab_2",
                              children=[
