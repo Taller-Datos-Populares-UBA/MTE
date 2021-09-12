@@ -27,20 +27,8 @@ def crear_df_filtrado_old(df, predios, fecha_inicio=datetime.datetime(1,1,1), fe
     # aplicar filtros
     if predios != []:
         df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
-    if periodo == 'otro':
-      pass
-    elif periodo == 'semana':
-      fecha_finalizacion = datetime.date.today()
-      otra_fecha = datetime.timedelta(6)
-      fecha_inicio = fecha_finalizacion - otra_fecha  
-    elif periodo == 'mes':
-      fecha_finalizacion = datetime.date.today()
-      otra_fecha = datetime.timedelta(30)
-      fecha_inicio = fecha_finalizacion - otra_fecha
-    else: 
-      fecha_finalizacion = datetime.date.today()
-      otra_fecha = datetime.timedelta(364)
-      fecha_inicio = fecha_finalizacion - otra_fecha
+
+
     df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
     if materiales != []:
         df_filtrado = df_filtrado.loc[df_filtrado['material'].isin(materiales)]

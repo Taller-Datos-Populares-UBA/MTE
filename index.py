@@ -33,6 +33,8 @@ def display_page(pathname):
         return finanzas.layout
     elif pathname == '/bases_de_datos':
         raise Exception("No implementado")
+    elif pathname == "/":
+        return panel_control.layout
 
 
 if __name__ == "__main__":

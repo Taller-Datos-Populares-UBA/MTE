@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
@@ -10,6 +10,8 @@ import utils.utils_panel as utils_panel
 from app import app
 from mte_dataframe import MTEDataFrame
 
+
+
 df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
@@ -18,7 +20,7 @@ pago=1234
 first_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Resumen", id="monto-card-saldo"),
+            html.H6("Resumen", id="monto-card-saldo",className="card-title"),
             dcc.Tab(label="Pestaña 2", value="tab_2",
                              children=[
                                  dash_table.DataTable(
@@ -29,18 +31,18 @@ first_card = dbc.Card([
                              ]),
             #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
         ]
-    )]
+    )],className="card"
 )
 
 
 third_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Gráfico temporal"),
+            html.H6("Gráfico temporal",className="card-title"),
             dcc.Graph(id="grafico-historico"),
         ],
-    className="card",
-    )]
+    
+    )],className="card",
 )
 
 second_card = dbc.Card([
@@ -49,8 +51,7 @@ second_card = dbc.Card([
             html.H5("Distribución", className="card-title"),
             dcc.Graph(id="grafico-torta")
         ],
-    className="card"
-    )]
+    )], className="card"
 )
 
 cards_panel = html.Div(
@@ -59,7 +60,7 @@ cards_panel = html.Div(
             children=[
                 dbc.Row(
                     children=[
-                        dbc.Col(first_card,),
+                        dbc.Col(first_card),
                         dbc.Col(second_card,)
                     ],
 
@@ -199,6 +200,35 @@ layout = html.Div([
              ),
 
 ])
+
+@app.callback(
+    [
+        Output("date-range","start_date"),
+        Output("date-range","end_date")
+    ],
+    [
+        Input("radio-button-fechas","value"),
+        State("date-range","start_date"),
+        State("date-range","end_date"),
+    ]
+)
+def cambiarFechaCalendario(periodo,start_date,end_date):
+    if periodo == 'otro':
+      fecha_inicio = start_date
+      fecha_finalizacion = end_date
+    elif periodo == 'semana':
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(6)
+      fecha_inicio = fecha_finalizacion - otra_fecha  
+    elif periodo == 'mes':
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(30)
+      fecha_inicio = fecha_finalizacion - otra_fecha
+    else: 
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(364)
+      fecha_inicio = fecha_finalizacion - otra_fecha
+    return fecha_inicio,fecha_finalizacion
 
 
 @app.callback(

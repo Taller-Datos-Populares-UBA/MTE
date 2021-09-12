@@ -604,6 +604,14 @@ ul li a img {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.card-title {
+    font-size: 20px;
+    font-family: Rubik,monospace;
+    margin-top:10px;
+    color:#2c559c ;
+
+}
+
 .waves {
   position: fixed;
   bottom: 0px;
@@ -644,11 +652,16 @@ ul li a img {
 
     .search-button {
       margin-left: 10px;
-      margin-top: 0px !important;
+      margin-top: 15px !important;
       font-family: Rubik, sans;
       font-size: 20px;
-      padding-top: 2px !important;
+      padding-top: 2px;
       border-radius: 10px !important;
+    }
+
+    #search-button {
+      margin-top: 0px !important;
+      padding-top: 2px;
     }
 
     .button-container {
@@ -771,6 +784,18 @@ ul li a img {
 .expanded-row--empty-cell.dash-delete-header {
   width: 10.45% !important;
 }
+
+#btn-filtro {
+  margin-top: 20px;
+}
+
+.Select-menu-outer {
+  margin-top: 10px ;
+  border-radius: 5px ;
+  width: calc(100% - 20px) !important;
+  margin: 10px !important;
+}
+
 
 
 @media (max-width: 995px) {
@@ -935,9 +960,6 @@ ul li a img {
   }
   */
 }
-
-
-
 
 
 
