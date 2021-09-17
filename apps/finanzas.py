@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
@@ -568,6 +568,34 @@ Callbacks
 
 """
 
+@app.callback(
+    [
+        Output("date-range-finanzas","start_date"),
+        Output("date-range-finanzas","end_date")
+    ],
+    [
+        Input("radio-button-fechas","value"),
+        State("date-range-finanzas","start_date"),
+        State("date-range-finanzas","end_date"),
+    ]
+)
+def cambiarFechaCalendario(periodo,start_date,end_date):
+    if periodo == 'otro':
+      fecha_inicio = start_date
+      fecha_finalizacion = end_date
+    elif periodo == 'semana':
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(6)
+      fecha_inicio = fecha_finalizacion - otra_fecha  
+    elif periodo == 'mes':
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(30)
+      fecha_inicio = fecha_finalizacion - otra_fecha
+    else: 
+      fecha_finalizacion = date.today()
+      otra_fecha = timedelta(364)
+      fecha_inicio = fecha_finalizacion - otra_fecha
+    return fecha_inicio,fecha_finalizacion
 
 @app.callback(
     Output('table-precios', 'data'),
@@ -624,7 +652,8 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
     [
         Output("label-total", "children"),
         Output("sininfo-modal", "is_open"),
-        Output("parent-todxs", "children")
+        Output("parent-todxs", "children"),
+        Output("graph-legajo","figure"),
     ],
     [
         Input("search-button", "n_clicks"),
@@ -637,11 +666,11 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
         State("input-legacyId", "value"),
         State("table-precios", "data"),
         State("sininfo-modal", "is_open"),
-        State("radio-button-fechas", "value")
+        State("graph-legajo","figure"),
     ]
 )
 def filtrar_rutas(n_clicks, close_n_clicks, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
-                  sininfo_is_open, radio_button_val):
+                  sininfo_is_open,figure):
     """
     Funcion que controla el filtrado de la informacion y devuelve los graficos y metricas correspondientes de la parte de finanzas.
     Llama al trigger para ver de donde viene la señal y segun eso ejecuta un proceso distinto.
@@ -650,26 +679,18 @@ def filtrar_rutas(n_clicks, close_n_clicks, tab, refresh_n_clicks, predios, fech
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
 
-    if trigger["prop_id"] == "search-button.n_clicks":
-        if n_clicks > 0:
-            df_filtrado = utils_finanzas.crear_df_filtrado(df, [predios], datetime.fromisoformat(fecha_inicio),
-                                                           datetime.fromisoformat(fecha_fin), [], [])
-            if df_filtrado.empty:
-                sininfo_is_open = not sininfo_is_open
 
-    elif tab == "todxs":
-        df_filtrado = utils_finanzas.crear_df_filtrado(df, [predios], datetime.fromisoformat(fecha_inicio),
-                                                       datetime.fromisoformat(fecha_fin), [], [])
+    if trigger["prop_id"] in ["search-button.n_clicks","refresh-button.n_clicks"] or tab == "todxs":
+        df_filtrado = utils_finanzas.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+                                            datetime.fromisoformat(fecha_fin), [], [])
         if df_filtrado.empty:
             sininfo_is_open = not sininfo_is_open
 
-    elif trigger["prop_id"] == "refresh-button.n_clicks":
-        df_filtrado = utils_finanzas.crear_df_filtrado(df, [predios], datetime.fromisoformat(fecha_inicio),
-                                                       datetime.fromisoformat(fecha_fin), [], [])
-        if df_filtrado.empty:
-            sininfo_is_open = not sininfo_is_open
+        if trigger["prop_id"] == "search-button.n_clicks":
+            figure = utils_finanzas.grafico_torta(legacy_id,df_filtrado)
 
     elif trigger["prop_id"] == "close-modal-sin-info-button.n_clicks":
         sininfo_is_open = not sininfo_is_open
 
-    return [n_clicks, sininfo_is_open, n_clicks]
+
+    return [n_clicks, sininfo_is_open, n_clicks,figure]

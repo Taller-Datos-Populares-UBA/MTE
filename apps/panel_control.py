@@ -21,14 +21,6 @@ first_card = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Resumen", id="monto-card-saldo",className="card-title"),
-            dcc.Tab(label="Pestaña 2", value="tab_2",
-                             children=[
-                                 dash_table.DataTable(
-                                     id="tabla",
-                                     editable=True,
-                                     columns=[{"name": i, "id": i} for i in df.columns],
-                                 )
-                             ]),
             #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
         ]
     )],className="card"
@@ -56,16 +48,20 @@ second_card = dbc.Card([
 
 cards_panel = html.Div(
     [
-        dbc.Col(
+        dbc.Row(
             children=[
-                dbc.Row(
+                dbc.Col(
                     children=[
-                        dbc.Col(first_card),
-                        dbc.Col(second_card,)
+                        dbc.Col(
+                            first_card,
+                        ),
+                        dbc.Col(
+                            second_card,
+                        )
                     ],
-
+                    width=12
                 ),
-                dbc.Col(third_card),
+                dbc.Col(third_card, width=12),
             ],
             id="ro1"
         ),
@@ -184,18 +180,17 @@ layout = html.Div([
                                  #dcc.Graph(id="grafico-historico"),
                                  #dcc.Graph(id="grafico-torta")
                              ]),
-                     dcc.Tab(label="Pestaña 2", value="tab_2",
-                             children=[
-                                 dash_table.DataTable(
-                                     id="tabla",
-                                     editable=True,
-                                     columns=[{"name": i, "id": i} for i in df.columns],
-                                 )
-                             ]),
+                    # dcc.Tab(label="Pestaña 2", value="tab_2",
+                    #         children=[
+                    #             dash_table.DataTable(
+                    #                 id="tabla",
+                    #                 editable=True,
+                    #                 columns=[{"name": i, "id": i} for i in df.columns],
+                    #             )
+                    #         ]),
                  ],
                  value="tab_1"
                  ),
-        html.Div(id="salida-tabs"),
     ], style={"width": "70%", "display": "inline-block", "float": "right"}
              ),
 
@@ -235,7 +230,7 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
     [
         Output("grafico-historico", "figure"),
         Output("grafico-torta", "figure"),
-        Output("tabla", "data")
+        #Output("tabla", "data")
     ],
     [
         Input("btn-filtro", "n_clicks"),
@@ -257,4 +252,4 @@ def filtrar(n_clicks, predios, rutas, materiales, cartonere, fecha_inicio, fecha
                                                 datetime.fromisoformat(fecha_fin), materiales, cartonere)
     fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
     fig_torta = utils_panel.torta(df_filtrado)
-    return fig_hist, fig_torta, df_filtrado.to_dict("records")
+    return fig_hist, fig_torta #df_filtrado.to_dict("records")
