@@ -3,7 +3,7 @@ import dash_html_components as html
 from app import app
 
 
-def NavbarElement(title, asset_url, href):
+def NavbarElement(title, asset_url, href,identifier):
     return html.Li([
         html.A([
             html.Img(
@@ -13,7 +13,9 @@ def NavbarElement(title, asset_url, href):
         ],
             href=href
         )
-    ])
+    ],        
+    id=identifier,
+    )
 
 
 def LogoMTE():

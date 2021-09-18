@@ -1,16 +1,16 @@
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Output, Input
+from dash.dependencies import Output, Input, State
 
 from app import app
-from apps import panel_control, finanzas
+from apps import panel_control, finanzas, error404
 from elements import NavbarElement, LogoMTE
 
 navbar = (
     html.Ul([
-        NavbarElement("Panel de Control", "settings.svg", "/panel_control"),
-        NavbarElement("Finanzas", "money.svg", "/finanzas"),
-        NavbarElement("Bases de datos", "tune.svg", "/bases_de_datos"),
+        NavbarElement("Panel de Control", "settings.svg", "/panel_control","panel-navbar"),
+        NavbarElement("Finanzas", "money.svg", "/finanzas","finanzas-navbar"),
+        #NavbarElement("Bases de datos", "tune.svg", "/bases_de_datos","bsd-navbar"), Lo dejo comentado porque supuestamente esto no va estar en la 1.0 por ahora
         LogoMTE(),
     ], id="navbar")
 )
@@ -24,17 +24,28 @@ app.layout = html.Div([
 )
 
 
-@app.callback(Output('page-content', 'children'),
-              [Input('url', 'pathname')])
+@app.callback(
+    [
+        Output('page-content', 'children'),
+        Output("panel-navbar","className"),
+        Output("finanzas-navbar","className"),
+        #Output("bsd-navbar","className"),
+    ],
+    [
+        Input('url', 'pathname')
+    ]
+    )
 def display_page(pathname):
     if pathname == '/panel_control':
-        return panel_control.layout
+        return panel_control.layout,"link-active",""#,""
     elif pathname == '/finanzas':
-        return finanzas.layout
-    elif pathname == '/bases_de_datos':
-        raise Exception("No implementado")
+        return finanzas.layout,"","link-active"#,""
+    #elif pathname == '/bases_de_datos':
+    #    raise Exception("No implementado")
     elif pathname == "/":
-        return panel_control.layout
+        return panel_control.layout,"link-active",""#,""
+    else:
+        return error404.layout,"",""
 
 
 if __name__ == "__main__":
