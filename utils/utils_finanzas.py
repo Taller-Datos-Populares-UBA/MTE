@@ -5,7 +5,7 @@ import io
 import dash_html_components as html
 import pandas as pd
 import plotly.express as px
-
+import plotly.graph_objs as go
 
 def determinar_tipo_cartonero(row):
     if row['legacyId'].startswith('LE'):
@@ -40,23 +40,54 @@ def grafico_torta(legajo, df):
     df_cartoneros = df.groupby(by=["cartonero", "material", "legacyId"], ).sum()[["peso"]]
     df_cartoneros.reset_index(inplace=True)
     df_aux = df_cartoneros.loc[df_cartoneros["legacyId"] == str(legajo)]
-    fig = px.pie(df_aux, values='peso', names='material')
 
-    fig.update_traces(
-        hovertemplate='<b>%{label}<b><br><br><b>Peso</b>: %{value} Kg<br>')
+    if df_aux.empty:
+        fig = go.Figure()
 
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        height=300,
-        legend=dict(
-            orientation="v",
-            yanchor="top",
-            y=0,
-            xanchor="center",
-            x=0.5
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=10,
+            legend=dict(
+                orientation="v",
+                yanchor="top",
+                y=0,
+                xanchor="center",
+                x=0.5
+            ),
+        ),
+        fig.update_xaxes(
+            zeroline=False,
+            showgrid=False,
+            tickmode="array",
+            tickvals=[],
+            ticktext=[]
         )
-    )
+        fig.update_yaxes(
+            zeroline=False,
+            showgrid=False,
+            tickmode="array",
+            tickvals=[],
+            ticktext=[]
+            )
+    else:
+        fig = px.pie(df_aux, values='peso', names='material')
+
+        fig.update_traces(
+            hovertemplate='<b>%{label}<b><br><br><b>Peso</b>: %{value} Kg<br>')
+
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            legend=dict(
+                orientation="v",
+                yanchor="top",
+                y=0,
+                xanchor="center",
+                x=0.5
+            )
+        )
     return fig
 
 

@@ -20,33 +20,20 @@ df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
 
-fig = utils_finanzas.grafico_torta(7023, df)
-df_filtrado = df.dropna()[["fecha", "material", "peso"]].head(10)
+fig = utils_finanzas.grafico_torta("NA", df)
 
 # funcion para crear columna de tipo de cartonere
 
 # funcion para calcular pago, dado el dataframe, un legacyId y el dataframe de precios
 
 
-precio_material_dict = {'Mezcla B': [15], 'TELA': [20], 'Vidrio B': [25], 'Chatarra': [10], 'No especificado': [0]}
-precio_material_df = pd.DataFrame.from_dict(precio_material_dict, orient='index')
-df_precio = precio_material_df.reset_index()
-df_precio.rename(columns={"index": "material", 0: "preciora"}, inplace=True)
 
-predios_2 = ['CORTEJARENA', 'SAAVEDRA']
-fecha_inicio = pd.to_datetime('3/11/2020', format='%d/%m/%Y')
-fecha_finalizacion = pd.to_datetime('3/8/2021', format='%d/%m/%Y')
-
-df_filtrado_2 = utils_finanzas.crear_df_filtrado(df, predios_2, fecha_inicio, fecha_finalizacion, [], [])
-
-pago,ultimos_movimientos = utils_finanzas.calcular_pago(df_filtrado_2, '1967', df_precio)
-pago = "$ "+str(pago)
 # Cards
 first_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Monto a pagar", id="monto-card-saldo"),
-            html.P(f"{pago}", id="label-legajo"),
+            html.H6("Monto a pagar", id="monto-card-saldo",className="card-title"),
+            html.P(f"", id="label-legajo"),
         ]
     )]
 )
@@ -54,7 +41,7 @@ first_card = dbc.Card([
 second_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Ultimas cargas"),
+            html.H6("Ultimas cargas",className="card-title"),
             html.Div(children=[
                 DataTable(
                     id="tabla-legajo",
@@ -82,22 +69,28 @@ second_card = dbc.Card([
                             # "format":FormatTemplate.money(2)
                         }
                     ],
-                    data=[df_filtrado.iloc[i].to_dict() for i in range(len(df_filtrado.index))
-                          # {"material": df.material.head(10)
-                          # ,"precioventa": "",
-                          # "preciocompra": ""}
-                          ],
+                    style_cell={
+                            "overflowX":"hidden",
+                            "textOverflow": "ellipsis",
+                            "border": "1px solid black",
+                            "border-left": "2px solid black"
+                        },
+                    style_header={
+                            "backgroundColor": "#4582ec",
+                            "color": "white",
+                            "border": "0px solid #2c559c",
+                        },
                 )
             ])
-        ])],
-    className="card",
+        ],id="tabla-legajo-parent")],
+    className="card last-card",
 )
 
 third_card = dbc.Card(
     dbc.CardBody(
         [
             html.H5("Material recolectado", className="card-title"),
-            dcc.Graph(id="graph-legajo", figure=fig),
+            dcc.Graph(id="graph-legajo", figure=fig,config= {'displaylogo': False,'displayModeBar': False}),
         ]),
     className="card"
 )
@@ -123,7 +116,7 @@ cards_individual = html.Div(
             ],
             id="ro1"
         ),
-    ]
+    ],className="container-cards"
 )
 
 # Tooltip de la tabla
@@ -782,6 +775,7 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
                     pago="$ "+str(pago)
 
                 ultimos_movimientos = ultimos_movimientos.sort_values("fecha",ascending=False)
+
                 if len(ultimos_movimientos.index)>10:
                     ultimos_movimientos = ultimos_movimientos.head(10)
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]

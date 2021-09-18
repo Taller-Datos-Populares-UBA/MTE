@@ -990,14 +990,33 @@ ul li a img {
   */
 }
 
+#table-precios-parent {
+      display:block;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:10px;
+      margin-bottom: 20px;
+      padding: 0px;
+      width: 80%;
+    }
 
+#tabla-legajo {
+      display:block;
+      margin-top:10px;
+      font-size: 20px;
+      padding: 0px;
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
 
+.last-card {
+  margin-bottom: 20px;
+}
 
-
-
-
-
-
+.container-cards{
+  padding-bottom: 50px;
+  margin-bottom: 20px;
+}
 
 
 
