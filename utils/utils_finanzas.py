@@ -15,28 +15,6 @@ def determinar_tipo_cartonero(row):
     else:
         return 'RA'
 
-def crear_df_filtrado_old(df, predios, fecha_inicio=datetime.datetime(1,1,1), fecha_finalizacion=datetime.datetime(3000,12,31), materiales=[], tipo_cartonero=[], periodo='otro'):
-    df_filtrado = df.copy()
-
-    # rellenar nans
-    df_filtrado = df_filtrado.fillna('No especificado')
-
-    # crear columna de tipos de cartoneres
-    df_filtrado['tipoCartonero'] = df_filtrado.apply(determinar_tipo_cartonero, axis=1)
-
-    # aplicar filtros
-    if predios != []:
-        df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
-
-
-    df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
-    if materiales != []:
-        df_filtrado = df_filtrado.loc[df_filtrado['material'].isin(materiales)]
-    if tipo_cartonero != []:
-        df_filtrado = df_filtrado.loc[df_filtrado['tipoCartonero'].isin(tipo_cartonero)]
-
-    return df_filtrado
-
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
 
@@ -87,10 +65,14 @@ def calcular_pago(df, legajo, df_precio):
     df_legajo = df[df['legacyId'] == legajo]
     df_legajo_materiales = df_legajo.groupby(['material'])['peso'].sum().reset_index()
     costo_neto = 0
-    for index, row in df_legajo_materiales.iterrows():
-        costo_material = df_precio[df_precio['material'] == 'Mezcla B']['preciocompra'].values[0] * row['peso']
-        costo_neto += costo_material
-    return costo_neto
+    try:
+        for index, row in df_legajo_materiales.iterrows():
+            costo_material = df_precio[df_precio['material'] == 'Mezcla B']['preciora'].values[0] * row['peso']
+            costo_neto += costo_material
+    except IndexError:
+        costo_neto="Error"
+
+    return costo_neto,df_legajo
 
 
 def crear_df_filtrado(df, predios, fecha_inicio, fecha_finalizacion, materiales, tipo_cartonero):

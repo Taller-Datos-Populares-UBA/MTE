@@ -545,6 +545,35 @@ ul li a img {
   background-color: #4582ec;
 }
 
+#close-modal-legacy_id-button {
+  font-family: Rubik, sans;
+  font-size: 15px;
+  display:flex !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  margin-top:0px !important;
+  padding-top: 6px !important;
+  background-color: #4582ec;
+}
+
+#close-modal-legacy_id-button:hover {
+  background-color: #2c559c;
+}
+
+#close-modal-errorpago-button {
+  font-family: Rubik, sans;
+  font-size: 15px;
+  display:flex !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  margin-top:0px !important;
+  padding-top: 6px !important;
+  background-color: #4582ec;
+}
+
+#close-modal-errorpago-button:hover {
+  background-color: #2c559c;
+}
 .ico {
   margin: 0px;
   padding: 0px;
