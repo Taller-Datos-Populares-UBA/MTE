@@ -179,7 +179,7 @@ ul li a img {
   padding-right: 5px;
 }
 
-#logo-mte-finanzas{
+#logo-mte{
   margin-left: 11px;
   margin-top: 0px !important;
   margin-right: 9px;
@@ -189,14 +189,15 @@ ul li a img {
 }
 
 /* 5) Filtros ------------------------------------------------------------------------------------------------------------------------------*/
-#botonera {
+.botonera {
   position: fixed;
   bottom: 0;
-  top: 50px;
+  top: 45px;
   float:left;
   margin:0px;
   padding-top:0px;
   width: 40%;
+  padding-bottom: 20px;
 
   max-height: calc(100%-50px);
   overflow-x: hidden;
@@ -372,6 +373,11 @@ ul li a img {
       padding: 0px 20px ;
     }
 
+    .Select-placeholder{
+      color: grey;
+      vertical-align: text-bottom;
+    }
+
     .div-dropdown {
       width: 100%;
       display:flex;
@@ -423,7 +429,6 @@ ul li a img {
       width: 15rem;
       padding-top: 10px;
       height: 6rem;
-      margin-bottom: 5rem;
       bottom: 20px;
     }
 
@@ -433,7 +438,7 @@ ul li a img {
       white-space: pre-wrap;
       padding-top: 10px;
       height: 6rem;
-      margin-bottom: 5rem;
+
       bottom: 20px;
     }
 
@@ -775,6 +780,7 @@ ul li a img {
 }
 
 .Select-menu-outer {
+  position: relative;
   margin-top: 10px ;
   border-radius: 5px ;
   width: calc(100% - 20px) !important;
@@ -974,10 +980,30 @@ ul li a img {
   margin-bottom: 20px;
 }
 
+#div-izquierda-panel{
+  width: 30%;
+}
 
+.output {
+  width: 70%;
+  bottom: 0px;
+  float: right;
+}
 
+.tabs-panel-parent {
+  position: fixed;
+  width: 70%;
+  height: calc(100% - 50px);
+  bottom: 0px;
+}
 
-
+.graficos-div-parent {
+  margin-top: 20px;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+  height: calc(100vh - 150px);
+  max-height: calc(100vh - 170px);
+}
 
 /* DE ACA PARA ABAJO ES EL CSS DE PLOTLY DASH, SIRVE PARA ALGUNAS COSAS(?) */
 

@@ -26,8 +26,8 @@ def LogoMTE():
         html.A(
             html.Img(
                 src=app.get_asset_url("logo_blanco.png"),
-                className="logo-mte-finanzas",
-                id="logo-mte-finanzas",
+                className="logo-mte",
+                id="logo-mte",
             ),
             href="https://mteargentina.org.ar/"
         )
@@ -91,6 +91,7 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_opt
     return html.Div(children=[
         html.Label(label,className="labels"),
         dcc.Dropdown(
+            placeholder="Seleccionar",
             id=dropdown_id,
             className="dropdowns",
             options=[

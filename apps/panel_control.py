@@ -75,8 +75,8 @@ cards_panel = html.Div(
 
 
 layout = html.Div([
-    html.Div(id="altura-navbar", style={"height": "45px"}),
-    html.Div(id="div-izquierda", children=[
+
+    html.Div(id="div-izquierda-panel", className="botonera",children=[
         html.Img(
             src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
         ),
@@ -89,15 +89,16 @@ layout = html.Div([
 
         CreateButton("btn-filtro","Filtrar"),
 
-    ], style={"display": "inline-block", "width": "30%"}
+    ],
              ),
-    html.Div(id="div-derecha", children=[
+    html.Div(id="div-derecha",className="output",children=[
+        html.Div(className="tabs-panel-parent",children=[
         dcc.Tabs(id="tabs",
                  children=[
                      dcc.Tab(label="Pestaña 1", value="tab_1",
                              children=[
                                  html.Div(children=[
-			          html.Label('Ver por...',className="labels"),
+			          html.Label('Ver por:',className="labels"),
         			  dcc.Dropdown(
             				id='dropdown_clasificador_vistas',
             				className="dropdowns",
@@ -107,14 +108,13 @@ layout = html.Div([
             				],
             				value='material',
             				multi=False
-        ),
-        html.H6(id='dropdown_clasificador_vistas_content')]
+        ),]
     	),
+        html.Div(className="graficos-div-parent",children=[
     		 		  cards_panel,
     	                         html.Div("Peso total: 1500kg"),
-                                 #dcc.Graph(id="grafico-historico"),
-                                 #dcc.Graph(id="grafico-torta")
                              ]),
+        ]),
                     # dcc.Tab(label="Pestaña 2", value="tab_2",
                     #         children=[
                     #             dash_table.DataTable(
@@ -126,8 +126,9 @@ layout = html.Div([
                  ],
                  value="tab_1"
                  ),
-    ], style={"width": "70%", "display": "inline-block", "float": "right"}
+    ],
              ),
+    ])
 
 ])
 

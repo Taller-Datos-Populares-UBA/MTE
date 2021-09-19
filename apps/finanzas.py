@@ -165,6 +165,7 @@ layout = html.Div([
 
     html.Div(
         id="botonera",
+        className="botonera",
         children=[
 
             html.H6(  # Titulo Botonera
@@ -332,6 +333,7 @@ layout = html.Div([
     # Tabs ----------------------------------------------------------------------------------------------------------------------------
 
     html.Div(
+        className="output",
         children=[
             dcc.Tabs(  # Almacena las dos tabs adentro
                 id="tabs-finanzas",
