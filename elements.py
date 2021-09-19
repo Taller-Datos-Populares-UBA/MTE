@@ -101,3 +101,39 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_opt
         ),
         html.H6(id=response_id)]
     )
+
+def CreateModal(idModal:str,titleModal:str,bodyModal:str):
+    return dbc.Modal(  # Modal sin informacion
+        children=[
+            dbc.ModalHeader(
+                titleModal,
+                style={
+                    "font-size": "30px"
+                }
+            ),
+
+            dbc.ModalBody(
+                bodyModal,
+                style={
+                    "font-size": "20px"
+                }
+            ),
+
+            dbc.ModalFooter(
+                dbc.Button(
+                    children=[
+                        html.Img(
+                            src=app.get_asset_url("close.svg"),
+                            className="ico"),
+                        "Cerrar"
+                    ],
+                    id=f"close-modal-{idModal}-button",
+                    className="mr-1 mt-1 btn btn-primary modal-button",
+                    n_clicks=0,
+                )
+            ),
+        ],
+        id=f"{idModal}-modal",
+        is_open=False,
+        backdrop="static"  # Modal sin informacion
+    )

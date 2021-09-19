@@ -12,7 +12,7 @@ import utils.utils_finanzas as utils_finanzas
 from app import app
 from mte_dataframe import MTEDataFrame
 
-from elements import CreateButton, SelectDates, SelectFilterOptions
+from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
 # Carga de DataFrames
 df = MTEDataFrame.get_instance()
@@ -150,143 +150,14 @@ layout = html.Div([
 
     # navbar,
 
-    dbc.Modal(  # Modal sin informacion
-        children=[
-            dbc.ModalHeader(
-                "No se encontró información",
-                style={
-                    "font-size": "30px"
-                }
-            ),
+    CreateModal("sininfo","No se encontró información","Revisá si estám correctamente seleccionados los filtros."),
 
-            dbc.ModalBody(
-                "Revisá si está correctamente seleccionado el rango de fechas y el predio.",
-                style={
-                    "font-size": "20px"
-                }
-            ),
+    CreateModal("errorpago","Faltan precios","Revisá si está completa la tabla de precios."),
 
-            dbc.ModalFooter(
-                dbc.Button(
-                    children=[
-                        html.Img(
-                            src=app.get_asset_url("close.svg"),
-                            className="ico"),
-                        "Cerrar"
-                    ],
-                    id="close-modal-sin-info-button",
-                    className="mr-1 mt-1 btn btn-primary",
-                    n_clicks=0,
-                )
-            ),
-        ],
-        id="sininfo-modal",
-        is_open=False,
-        backdrop="static"  # Modal sin informacion
-    ),
+    CreateModal("legacy_id","No se encontró el número de legajo","Revisá si está correctamente colocado el número de legajo."),
 
-    dbc.Modal(  # Modal error pago
-        children=[
-            dbc.ModalHeader(
-                "Faltan precios",
-                style={
-                    "font-size": "30px"
-                }
-            ),
+    CreateModal("archivoerror","Problemas con el archivo","El archivo parece estar dañado, vacio, o con un formato no soportado."),
 
-            dbc.ModalBody(
-                "Revisá si está completa la tabla de precios.",
-                style={
-                    "font-size": "20px"
-                }
-            ),
-
-            dbc.ModalFooter(
-                dbc.Button(
-                    children=[
-                        html.Img(
-                            src=app.get_asset_url("close.svg"),
-                            className="ico"),
-                        "Cerrar"
-                    ],
-                    id="close-modal-errorpago-button",
-                    className="mr-1 mt-1 btn btn-primary",
-                    n_clicks=0,
-                )
-            ),
-        ],
-        id="errorpago-modal",
-        is_open=False,
-        backdrop="static"  # Modal sin informacion
-    ),
-
-    dbc.Modal(  # Modal legacyid
-        children=[
-            dbc.ModalHeader(
-                "No se encontró el número de legajo",
-                style={
-                    "font-size": "30px"
-                }
-            ),
-
-            dbc.ModalBody(
-                "Revisá si está correctamente colocado el número de legajo.",
-                style={
-                    "font-size": "20px"
-                }
-            ),
-
-            dbc.ModalFooter(
-                dbc.Button(
-                    children=[
-                        html.Img(
-                            src=app.get_asset_url("close.svg"),
-                            className="ico"),
-                        "Cerrar"
-                    ],
-                    id="close-modal-legacy_id-button",
-                    className="mr-1 mt-1 btn btn-primary",
-                    n_clicks=0,
-                )
-            ),
-        ],
-        id="legacy_id-modal",
-        is_open=False,
-        backdrop="static"
-    ),
-
-    dbc.Modal(  # Modal error archivo #Modal archivo fallado
-        children=[
-            dbc.ModalHeader(
-                "Problemas con el archivo",
-                style={
-                    "font-size": "30px"}
-            ),
-
-            dbc.ModalBody(
-                "El archivo parece estar dañado, vacio, o con un formato no soportado. Ingresá los valores a mano.",
-                style={
-                    "font-size": "20px"
-                }
-            ),
-
-            dbc.ModalFooter(
-                dbc.Button(
-                    children=[
-                        html.Img(
-                            src=app.get_asset_url("close.svg"),
-                            className="ico"),
-                        "Cerrar"],
-                    id="close-modal-data-table-button",
-                    className="mr-1 mt-1 btn btn-primary",
-                    n_clicks=0,
-                )
-            ),
-        ],
-        id="tabla-error-modal",
-        is_open=False,
-        backdrop="static"
-    ),
 
     dcc.Download(id="download"),
 
@@ -653,11 +524,11 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
 @app.callback(
     Output('table-precios', 'data'),
     Output("download", "data"),
-    Output("tabla-error-modal", "is_open"),
+    Output("archivoerror-modal", "is_open"),
     Input('button-save-file', 'n_clicks'),
     Input('button-add-row', 'n_clicks'),
     Input('upload-comp', 'contents'),
-    Input("close-modal-data-table-button", "n_clicks"),
+    Input("close-modal-archivoerror-button", "n_clicks"),
     State('table-precios', 'data'),
     State('table-precios', 'columns'),
     State('upload-comp', 'filename'), )
@@ -698,7 +569,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
             return rows, None, True
 
     #Si llame a la función del boton del modal, solo cierra el modal y deja el resto igual
-    elif trigger["prop_id"] == "close-modal-data-table-button.n_clicks":
+    elif trigger["prop_id"] == "close-modal-archivoerror-button.n_clicks":
         return rows, None, False
     else:
         return rows, None, False
@@ -717,7 +588,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
     ],
     [
         Input("search-button", "n_clicks"),
-        Input("close-modal-sin-info-button", "n_clicks"),
+        Input("close-modal-sininfo-button", "n_clicks"),
         Input("close-modal-legacy_id-button", "n_clicks"),
         Input("close-modal-errorpago-button", "n_clicks"),
         Input("tabs-finanzas", "value"),
@@ -777,7 +648,7 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
             legacy_id_no_encontrado_is_open = not legacy_id_no_encontrado_is_open
 
     #Los siguientes 3 elif son para cerrar los modals
-    elif trigger["prop_id"] == "close-modal-sin-info-button.n_clicks":
+    elif trigger["prop_id"] == "close-modal-sininfo-button.n_clicks":
         sininfo_is_open = not sininfo_is_open
 
     elif trigger["prop_id"] == "close-modal-legacy_id-button.n_clicks":
