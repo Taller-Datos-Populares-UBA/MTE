@@ -12,23 +12,22 @@ import utils.utils_finanzas as utils_finanzas
 from app import app
 from mte_dataframe import MTEDataFrame
 
-from apps.panel_control import SelectDates, SelectFilterOptions,CreateButton
-
+from elements import CreateButton, SelectDates, SelectFilterOptions
 
 # Carga de DataFrames
 df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
 
-fig = utils_finanzas.grafico_torta("NA", df)
+fig = utils_finanzas.grafico_torta("NA", df) #Creo una figura vacia rellenar la card que lleva el grafico
 
-# funcion para crear columna de tipo de cartonere
-
-# funcion para calcular pago, dado el dataframe, un legacyId y el dataframe de precios
-
-
+#--------------------------------------------------------------------------------------------------------------------------
 
 # Cards
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+#Card con el saldo
 first_card = dbc.Card([
     dbc.CardBody(
         [
@@ -38,6 +37,7 @@ first_card = dbc.Card([
     )]
 )
 
+#Card con la tabla de ultimos movimientos
 second_card = dbc.Card([
     dbc.CardBody(
         [
@@ -86,6 +86,7 @@ second_card = dbc.Card([
     className="card last-card",
 )
 
+#Card con el grafico
 third_card = dbc.Card(
     dbc.CardBody(
         [
@@ -95,6 +96,7 @@ third_card = dbc.Card(
     className="card"
 )
 
+#Estructura que almacena todas las cards
 cards_individual = html.Div(
     [
         dbc.Row(
@@ -306,40 +308,8 @@ layout = html.Div([
             ]
             ),
             SelectFilterOptions(rutas, "Elegí la ruta", "dropdown-rutas", "salida-rutas",add_all_as_option=True, capitalize=True),
-#
-#            html.Div(  # Dropdown de los predios
-#                children=[
-#                    dcc.Dropdown(
-#                        id="dropdown-predios",
-#                        options=[
-#                            {"label": predio.capitalize(), "value": predio} for predio in predios
-#                        ],
-#                        multi=False,
-#                        placeholder="Seleccionar un predio",
-#                        className="dropdowns"
-#                    )],
-#                id="dropdown-predios-div",
-#                className="div-dropdown"
-#
-#            ),
 
             SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonerx", "salida-cartoneres"),
-
-#            html.Div(  # Dropdown de lxs cartonerxs
-#                children=[
-#                    dcc.Dropdown(
-#                        id="dropdown-cartonerx",
-#                        options=[
-#                            {"label": cartoneres, "value": cartoneres} for cartoneres in cartoneres
-#                        ],
-#                        multi=False,
-#                        placeholder="Seleccionar un tipo de cartonerx",
-#                        className="dropdowns"
-#                    )],
-#                id="dropdown-cartonerxs-div",
-#                className="div-dropdown"
-#
-#            ),
 
             html.Label(  # Label de la tabla
                 "Tabla de precios",
@@ -624,6 +594,7 @@ layout = html.Div([
 
 ])
 
+
 """
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -633,6 +604,8 @@ Callbacks
 
 """
 
+
+#Funcion que controla los radiobuttons de las fechas y la fecha que aparece en el calendario
 @app.callback(
     [
         Output("date-range-finanzas","start_date"),
@@ -648,10 +621,14 @@ Callbacks
 def cambiarFechaCalendario(periodo,start_date,end_date):
     trigger = callback_context.triggered[0]
 
+    #Si llamo a la función desde los input de las fechas se tendria que cambiar a otro automaticamente el periodo
     if trigger["prop_id"] == "date-range-finanzas.start_date" or trigger["prop_id"] == "date-range-finanzas.end_date" :
         fecha_inicio = start_date
         fecha_finalizacion = end_date
         periodo = "otro"
+    
+    #Si no viene de los input, viene de los radiobutton. 
+    #Luego que modifique la fecha de los input con la opcion del radiobutton que llega
     else:
         if periodo == 'otro':
           fecha_inicio = start_date
@@ -671,12 +648,13 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
 
     return fecha_inicio,fecha_finalizacion,periodo
 
+
+#Funcion que controla todos los botones de la tabla de precios
 @app.callback(
     Output('table-precios', 'data'),
     Output("download", "data"),
     Output("tabla-error-modal", "is_open"),
     Input('button-save-file', 'n_clicks'),
-    # Input("button-load-file","n_clicks"),
     Input('button-add-row', 'n_clicks'),
     Input('upload-comp', 'contents'),
     Input("close-modal-data-table-button", "n_clicks"),
@@ -684,13 +662,10 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
     State('table-precios', 'columns'),
     State('upload-comp', 'filename'), )
 def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns, filename):
-    """
-    Funcion que controla la carga, descarga e información de la tabla. Llama al trigger para chequear
-    de donde viene el callback y con ese ejecuta la logica correspondiente.
-    """
-
     trigger = callback_context.triggered[0]
-    print(trigger)
+
+    #Si llame a la función del boton de añadir fila toma las filas que ya teniamos, y le agrega una fila nueva.
+    #Si no habia ninguna, crea directamente la primer fila
     if trigger["prop_id"] == "button-add-row.n_clicks":
         if n_clicks_add > 0:
             if rows == None:
@@ -699,29 +674,36 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
                 rows.append(({c['id']: '' for c in columns}))
         return rows, None, False
 
+    #Si llame a la funcion del boton de guardar los archivos, Guarda el archivo como un csv ()
     elif trigger["prop_id"] == "button-save-file.n_clicks":
         df_file = pd.DataFrame(rows).to_csv(index=False)
         return rows, dict(content=df_file, filename="Precios.csv"), False
 
+    #Si llame a la funcion del boton de cargar archivo:
     elif trigger["prop_id"] == "upload-comp.contents":
+        #Si no ancele la carga de archivo (Que dispara el callback igual):
         if content is not None:
+            #Intente parsearlo, y convertirlo a un dataframe, y luego convertirlo en la lista de diccionarios que necesita dash
             try:
                 df = utils_finanzas.parse_contents(content, filename)
-                if not df.empty:
+                if not df.empty: #Si el df que parseamos no esta vacio:
                     df_table = [df.iloc[i].to_dict() for i in range(len(df.index))]
                     return df_table, None, False
-                else:
+                else: #Sino no hace nada, pero activa el modal que te avisa que el archivo esta mal
                     return rows, None, True
+            #Sino, no hace nada, pero activa el modal que te avisa que el archivo esta mal
             except:
                 return rows, None, True
-        else:
+        else: #Si el content esta vacio, te avisa con el modal tambien
             return rows, None, True
+
+    #Si llame a la función del boton del modal, solo cierra el modal y deja el resto igual
     elif trigger["prop_id"] == "close-modal-data-table-button.n_clicks":
         return rows, None, False
     else:
         return rows, None, False
 
-
+#Función que controla todo lo que muestra en la parte de Individual y Todxs
 @app.callback(
     [
         Output("label-total", "children"),
@@ -755,32 +737,30 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
 )
 def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
                   sininfo_is_open,figure,pago,legacy_id_no_encontrado_is_open,ultimos_movimientos,errorpago_is_open):
-    """
-    Funcion que controla el filtrado de la informacion y devuelve los graficos y metricas correspondientes de la parte de finanzas.
-    Llama al trigger para ver de donde viene la señal y segun eso ejecuta un proceso distinto.
-    """
 
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
 
-
+    #Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
     if trigger["prop_id"] in ["search-button.n_clicks","refresh-button.n_clicks"] or tab == "todxs":
+        #Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
         df_filtrado = utils_finanzas.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
                                             datetime.fromisoformat(fecha_fin), [], [])
         
+        #Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
         cond2 = legacy_id in list(df_filtrado["legacyId"])
 
-        if cond1 and cond2:
+        if cond1 and cond2: #Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar 
 
             if trigger["prop_id"] == "search-button.n_clicks":
                 figure = utils_finanzas.grafico_torta(legacy_id,df_filtrado)
                 pago,ultimos_movimientos = utils_finanzas.calcular_pago(df_filtrado,legacy_id,df_precios)
 
-                if pago=="Error":
+                if pago=="Error": #Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
-                else:
+                else: #Modificamos el formato del pago
                     pago="$ "+str(pago)
 
                 ultimos_movimientos = ultimos_movimientos.sort_values("fecha",ascending=False)
@@ -790,12 +770,13 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
                     
 
-        elif not cond1:
+        elif not cond1: #Si el df esta vacio, te avisa con el modal de que esta vacio
             sininfo_is_open = not sininfo_is_open
 
-        elif not cond2:
+        elif not cond2: #Si la persona no esta en el df, te avisa con el modal
             legacy_id_no_encontrado_is_open = not legacy_id_no_encontrado_is_open
 
+    #Los siguientes 3 elif son para cerrar los modals
     elif trigger["prop_id"] == "close-modal-sin-info-button.n_clicks":
         sininfo_is_open = not sininfo_is_open
 
