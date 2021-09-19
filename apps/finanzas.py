@@ -150,7 +150,7 @@ layout = html.Div([
 
     # navbar,
 
-    CreateModal("sininfo","No se encontró información","Revisá si estám correctamente seleccionados los filtros."),
+    CreateModal("sininfo","No se encontró información","Revisá si estan correctamente seleccionados los filtros."),
 
     CreateModal("errorpago","Faltan precios","Revisá si está completa la tabla de precios."),
 

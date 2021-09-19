@@ -11,7 +11,7 @@ import utils.utils_panel as utils_panel
 from app import app
 from mte_dataframe import MTEDataFrame
 
-from elements import CreateButton, SelectDates, SelectFilterOptions
+from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
 
 df = MTEDataFrame.get_instance()
@@ -75,6 +75,8 @@ cards_panel = html.Div(
 
 
 layout = html.Div([
+
+    CreateModal("sininfopanel","No se encontró información","Revisá si estan correctamente seleccionados los filtros."),
 
     html.Div(id="div-izquierda-panel", className="botonera",children=[
         html.Img(
@@ -175,26 +177,44 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
     [
         Output("grafico-historico", "figure"),
         Output("grafico-torta", "figure"),
-        #Output("tabla", "data")
+        Output("sininfopanel-modal","is_open")
     ],
     [
         Input("btn-filtro", "n_clicks"),
+        Input("close-modal-sininfopanel-button","n_clicks"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
         State("date-range-panel", "start_date"),
         State("date-range-panel", "end_date"),
+        State("sininfopanel-modal","is_open"),
+        State("grafico-historico","figure"),
+        State("grafico-torta","figure")
     ]
 )
-def filtrar(n_clicks, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
+def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, cartonere, fecha_inicio, 
+    fecha_fin,open_sininfopanel_modal,fig_hist,fig_torta):
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
     """
 
-    df = MTEDataFrame.get_instance()
-    df_filtrado = utils_panel.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
-                                                datetime.fromisoformat(fecha_fin), materiales, cartonere)
-    fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
-    fig_torta = utils_panel.torta(df_filtrado)
-    return fig_hist, fig_torta #df_filtrado.to_dict("records")
+    trigger = callback_context.triggered[0]
+
+    print(trigger)
+
+    if trigger["prop_id"] in ['.',"btn-filtro.n_clicks"]:
+        df = MTEDataFrame.get_instance()
+        df_filtrado = utils_panel.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+                                                    datetime.fromisoformat(fecha_fin), materiales, cartonere)
+        if df_filtrado.empty:
+            open_sininfopanel_modal = not open_sininfopanel_modal
+
+        else:
+            fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
+            fig_torta = utils_panel.torta(df_filtrado)
+
+    elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
+        open_sininfopanel_modal = not open_sininfopanel_modal
+
+    return fig_hist, fig_torta,open_sininfopanel_modal #df_filtrado.to_dict("records")
