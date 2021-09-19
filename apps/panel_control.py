@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
+from dash import callback_context
 from dash.dependencies import Output, Input, State
 
 import utils.utils_panel as utils_panel
@@ -57,11 +58,13 @@ cards_panel = html.Div(
                         ),
                         dbc.Col(
                             second_card,
-                        )
+                        ),
+                        dbc.Col(
+                            third_card
+                        ),
                     ],
                     width=12
                 ),
-                dbc.Col(third_card, width=12),
             ],
             id="ro1"
         ),
@@ -89,7 +92,7 @@ def CreateButton(identificacion,txt):
     ],
     className="button-container")
 
-def SelectDates(identificacion):
+def SelectDates(identificacion,indentificacion_radio):
     return html.Div(children=[
             html.Label("Elegí el rango de fechas",className="labels"),
             html.Div([
@@ -106,7 +109,7 @@ def SelectDates(identificacion):
                                 "fontSize": "18px",
                                 "width": "100%",
                         },
-                        id="radio-button-fechas"
+                        id=indentificacion_radio
                 ),    
                 dcc.DatePickerRange(
                     id=identificacion,
@@ -115,6 +118,7 @@ def SelectDates(identificacion):
                     max_date_allowed=date(2021, 12, 31),
                     start_date=date(2019, 5, 15),
                     end_date=date(2021, 8, 10),
+                    className="date-range"
                 )
                 ],className="dates-container"
                 )
@@ -145,7 +149,7 @@ layout = html.Div([
         html.Img(
             src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
         ),
-        SelectDates("date-range"),
+        SelectDates("date-range-panel","radio-button-fechas-panel"),
         SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
         SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas", add_all_as_option=True),
         SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
@@ -198,32 +202,41 @@ layout = html.Div([
 
 @app.callback(
     [
-        Output("date-range","start_date"),
-        Output("date-range","end_date")
+        Output("date-range-panel","start_date"),
+        Output("date-range-panel","end_date"),
+        Output("radio-button-fechas-panel","value")
     ],
     [
-        Input("radio-button-fechas","value"),
-        State("date-range","start_date"),
-        State("date-range","end_date"),
+        Input("radio-button-fechas-panel","value"),
+        Input("date-range-panel","start_date"),
+        Input("date-range-panel","end_date"),
     ]
 )
 def cambiarFechaCalendario(periodo,start_date,end_date):
-    if periodo == 'otro':
-      fecha_inicio = start_date
-      fecha_finalizacion = end_date
-    elif periodo == 'semana':
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(6)
-      fecha_inicio = fecha_finalizacion - otra_fecha  
-    elif periodo == 'mes':
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(30)
-      fecha_inicio = fecha_finalizacion - otra_fecha
-    else: 
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(364)
-      fecha_inicio = fecha_finalizacion - otra_fecha
-    return fecha_inicio,fecha_finalizacion
+    trigger = callback_context.triggered[0]
+
+    if trigger["prop_id"] == "date-range-panel.start_date" or trigger["prop_id"] == "date-range-panel.end_date" :
+        fecha_inicio = start_date
+        fecha_finalizacion = end_date
+        periodo = "otro"
+    else:
+        if periodo == 'otro':
+          fecha_inicio = start_date
+          fecha_finalizacion = end_date
+        elif periodo == 'semana':
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(6)
+          fecha_inicio = fecha_finalizacion - otra_fecha  
+        elif periodo == 'mes':
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(30)
+          fecha_inicio = fecha_finalizacion - otra_fecha
+        else: 
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(364)
+          fecha_inicio = fecha_finalizacion - otra_fecha
+
+    return fecha_inicio,fecha_finalizacion,periodo
 
 
 @app.callback(
@@ -238,8 +251,8 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
-        State("date-range", "start_date"),
-        State("date-range", "end_date"),
+        State("date-range-panel", "start_date"),
+        State("date-range-panel", "end_date"),
     ]
 )
 def filtrar(n_clicks, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):

@@ -301,7 +301,7 @@ layout = html.Div([
 
             html.Div(
                 children=[  # Radiobuttons y picker de fechas
-            SelectDates("date-range-finanzas"),
+            SelectDates("date-range-finanzas","radio-button-fechas-finanzas"),
             SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
             ]
             ),
@@ -636,31 +636,40 @@ Callbacks
 @app.callback(
     [
         Output("date-range-finanzas","start_date"),
-        Output("date-range-finanzas","end_date")
+        Output("date-range-finanzas","end_date"),
+        Output("radio-button-fechas-finanzas","value")
     ],
     [
-        Input("radio-button-fechas","value"),
-        State("date-range-finanzas","start_date"),
-        State("date-range-finanzas","end_date"),
+        Input("radio-button-fechas-finanzas","value"),
+        Input("date-range-finanzas","start_date"),
+        Input("date-range-finanzas","end_date"),
     ]
 )
 def cambiarFechaCalendario(periodo,start_date,end_date):
-    if periodo == 'otro':
-      fecha_inicio = start_date
-      fecha_finalizacion = end_date
-    elif periodo == 'semana':
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(6)
-      fecha_inicio = fecha_finalizacion - otra_fecha  
-    elif periodo == 'mes':
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(30)
-      fecha_inicio = fecha_finalizacion - otra_fecha
-    else: 
-      fecha_finalizacion = date.today()
-      otra_fecha = timedelta(364)
-      fecha_inicio = fecha_finalizacion - otra_fecha
-    return fecha_inicio,fecha_finalizacion
+    trigger = callback_context.triggered[0]
+
+    if trigger["prop_id"] == "date-range-finanzas.start_date" or trigger["prop_id"] == "date-range-finanzas.end_date" :
+        fecha_inicio = start_date
+        fecha_finalizacion = end_date
+        periodo = "otro"
+    else:
+        if periodo == 'otro':
+          fecha_inicio = start_date
+          fecha_finalizacion = end_date
+        elif periodo == 'semana':
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(6)
+          fecha_inicio = fecha_finalizacion - otra_fecha  
+        elif periodo == 'mes':
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(30)
+          fecha_inicio = fecha_finalizacion - otra_fecha
+        else: 
+          fecha_finalizacion = date.today()
+          otra_fecha = timedelta(364)
+          fecha_inicio = fecha_finalizacion - otra_fecha
+
+    return fecha_inicio,fecha_finalizacion,periodo
 
 @app.callback(
     Output('table-precios', 'data'),

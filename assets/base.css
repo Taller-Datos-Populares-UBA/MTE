@@ -286,7 +286,7 @@ ul li a img {
       padding: 10px 20px;
     }
 
-    #date-range-finanzas-div {
+    .date-range {
       width: 100%;
       display:flex;
       justify-content: left ;
@@ -296,7 +296,7 @@ ul li a img {
       padding: 0 auto;
     }
 
-    #date-range-finanzas {
+    .date-range {
       width: 100%;
       font-family: Rubik;
       font-size:20px;
