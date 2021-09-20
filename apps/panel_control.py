@@ -18,8 +18,8 @@ df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
 # Cards
-pago=1234
-first_card = dbc.Card([
+
+card_resumen = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Resumen", id="monto-card-saldo",className="card-title"),
@@ -29,24 +29,34 @@ first_card = dbc.Card([
 )
 
 
-third_card = dbc.Card([
+card_historico = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Gráfico temporal",className="card-title"),
-            dcc.Graph(id="grafico-historico"),
+            dcc.Graph(id="grafico-historico",config= {'displaylogo': False,'displayModeBar': True}),
         ],
     
     )],className="card",
 )
 
-second_card = dbc.Card([
+card_torta = dbc.Card([
     dbc.CardBody(
         [
             html.H5("Distribución", className="card-title"),
-            dcc.Graph(id="grafico-torta")
+            dcc.Graph(id="grafico-torta",config= {'displaylogo': False,'displayModeBar': False})
         ],
     )], className="card"
 )
+
+card_barras = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H5("Distribución", className="card-title"),
+            dcc.Graph(id="grafico-barras",config= {'displaylogo': False,'displayModeBar': False})
+        ],
+    )], className="card"
+)
+
 
 cards_panel = html.Div(
     [
@@ -55,13 +65,21 @@ cards_panel = html.Div(
                 dbc.Col(
                     children=[
                         dbc.Col(
-                            first_card,
+                            card_resumen,
                         ),
-                        dbc.Col(
-                            second_card,
+
+                        dbc.Row([                        
+                            dbc.Col(
+                                card_torta,
+                                width=6
+                            ),
+                            dbc.Col(card_barras,width=6
+                            )
+                            ]
                         ),
+
                         dbc.Col(
-                            third_card
+                            card_historico
                         ),
                     ],
                     width=12
@@ -79,9 +97,15 @@ layout = html.Div([
     CreateModal("sininfopanel","No se encontró información","Revisá si estan correctamente seleccionados los filtros."),
 
     html.Div(id="div-izquierda-panel", className="botonera",children=[
-        html.Img(
-            src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
+        #html.Img(
+        #    src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
+        #),
+
+        html.H6(  # Titulo Botonera
+                "Filtros",
+                className="title-botonera"
         ),
+
         SelectDates("date-range-panel","radio-button-fechas-panel"),
         SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
         SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas", add_all_as_option=True),
@@ -177,7 +201,8 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
     [
         Output("grafico-historico", "figure"),
         Output("grafico-torta", "figure"),
-        Output("sininfopanel-modal","is_open")
+        Output("grafico-barras","figure"),
+        Output("sininfopanel-modal","is_open"),
     ],
     [
         Input("btn-filtro", "n_clicks"),
@@ -190,18 +215,17 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         State("date-range-panel", "end_date"),
         State("sininfopanel-modal","is_open"),
         State("grafico-historico","figure"),
-        State("grafico-torta","figure")
+        State("grafico-torta","figure"),
+        State("grafico-barras","figure")
     ]
 )
 def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, cartonere, fecha_inicio, 
-    fecha_fin,open_sininfopanel_modal,fig_hist,fig_torta):
+    fecha_fin,open_sininfopanel_modal,fig_hist,fig_torta,fig_barras):
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
     """
 
     trigger = callback_context.triggered[0]
-
-    print(trigger)
 
     if trigger["prop_id"] in ['.',"btn-filtro.n_clicks"]:
         df = MTEDataFrame.get_instance()
@@ -213,8 +237,9 @@ def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, ca
         else:
             fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
             fig_torta = utils_panel.torta(df_filtrado)
+            fig_barras = utils_panel.pesos_historico_predios(df_filtrado)
 
     elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
         open_sininfopanel_modal = not open_sininfopanel_modal
 
-    return fig_hist, fig_torta,open_sininfopanel_modal #df_filtrado.to_dict("records")
+    return fig_hist, fig_torta,fig_barras,open_sininfopanel_modal #df_filtrado.to_dict("records")

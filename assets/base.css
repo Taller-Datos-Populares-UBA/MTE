@@ -206,7 +206,7 @@ ul li a img {
   background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(247,247,247,1) 51%, rgba(255,255,255,1) 100%);
 }
 
-#title-botonera {
+.title-botonera {
   font-size: 30px;
   padding-left: 10px;
   font-weight: bold;
@@ -592,6 +592,10 @@ ul li a img {
   background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(241,241,241,1) 42%, rgba(255,255,255,1) 100%);
   margin-bottom: 40px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.row {
+  padding: 0px 15px;
 }
 
 .card-title {

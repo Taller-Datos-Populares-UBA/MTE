@@ -170,7 +170,7 @@ layout = html.Div([
 
             html.H6(  # Titulo Botonera
                 "Filtros",
-                id="title-botonera"
+                className="title-botonera"
             ),
 
             html.Div(
