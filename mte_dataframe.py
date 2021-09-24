@@ -1,5 +1,6 @@
 import pandas as pd
 
+from utils.utils import determinar_tipo_cartonero
 
 class MTEDataFrame:
     FILES_TO_LOAD = ["data/pesajes-01-01-2019-31-12-2020_anonimizado.csv",
@@ -7,7 +8,7 @@ class MTEDataFrame:
 
     _instance = None
 
-    
+
     def __init__(self):
         raise Exception("Cannot instanciate a singleton")
 
@@ -32,6 +33,7 @@ class MTEDataFrame:
         df = pd.concat(dfs_per_date, ignore_index=True)
         df['fecha'] = pd.to_datetime(df['fecha'])
         df = df.fillna('No especificado')
+        df['tipoCartonero'] = df.apply(determinar_tipo_cartonero, axis=1)
         return df
 
     @classmethod
@@ -45,4 +47,4 @@ class MTEDataFrame:
         rutas = df.etapa.unique()
         materiales = df.material.unique()
         cartoneres = ["LE", "RA", "No especificado"]
-        return predios, rutas, materiales, cartoneres       
+        return predios, rutas, materiales, cartoneres

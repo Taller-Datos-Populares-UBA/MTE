@@ -8,7 +8,9 @@ from dash import callback_context
 from dash.dependencies import Output, Input, State
 from dash_table import DataTable, FormatTemplate
 
-import utils.utils_finanzas as utils_finanzas
+from utils.utils import crear_df_filtrado
+from utils.utils_finanzas import grafico_torta, parse_contents, calcular_pago
+
 from app import app
 from mte_dataframe import MTEDataFrame
 
@@ -16,10 +18,10 @@ from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
 # Carga de DataFrames
 df = MTEDataFrame.get_instance()
-predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
+predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
 
 
-fig = utils_finanzas.grafico_torta("NA", df) #Creo una figura vacia rellenar la card que lleva el grafico
+fig = grafico_torta("NA", df) #Creo una figura vacia rellenar la card que lleva el grafico
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -558,7 +560,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
         if content is not None:
             #Intente parsearlo, y convertirlo a un dataframe, y luego convertirlo en la lista de diccionarios que necesita dash
             try:
-                df = utils_finanzas.parse_contents(content, filename)
+                df = parse_contents(content, filename)
                 if not df.empty: #Si el df que parseamos no esta vacio:
                     df_table = [df.iloc[i].to_dict() for i in range(len(df.index))]
                     return df_table, None, False
@@ -610,7 +612,6 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
 )
 def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
                   sininfo_is_open,figure,pago,legacy_id_no_encontrado_is_open,ultimos_movimientos,errorpago_is_open):
-
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
 
@@ -618,8 +619,8 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
     if trigger["prop_id"] in ["search-button.n_clicks","refresh-button.n_clicks"] or tab == "todxs":
         #Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
-        df_filtrado = utils_finanzas.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
-                                            datetime.fromisoformat(fecha_fin), [], [])
+        df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+                                        datetime.fromisoformat(fecha_fin), [], [])
         
         #Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
@@ -628,8 +629,8 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
         if cond1 and cond2: #Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar 
 
             if trigger["prop_id"] == "search-button.n_clicks":
-                figure = utils_finanzas.grafico_torta(legacy_id,df_filtrado)
-                pago,ultimos_movimientos = utils_finanzas.calcular_pago(df_filtrado,legacy_id,df_precios)
+                figure = grafico_torta(legacy_id,df_filtrado)
+                pago,ultimos_movimientos = calcular_pago(df_filtrado,legacy_id,df_precios)
 
                 if pago=="Error": #Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
@@ -640,6 +641,7 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
 
                 if len(ultimos_movimientos.index)>10:
                     ultimos_movimientos = ultimos_movimientos.head(10)
+                    ultimos_movimientos["fecha"] = [fecha.isoformat()[:-9] for fecha in ultimos_movimientos.fecha]
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
                     
 

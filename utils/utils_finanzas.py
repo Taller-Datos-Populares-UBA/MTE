@@ -7,13 +7,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
 
-def determinar_tipo_cartonero(row):
-    if row['legacyId'].startswith('LE'):
-        return 'LE'
-    elif row['legacyId'] == 'No especificado':
-        return 'No especificado'
-    else:
-        return 'RA'
 
 def parse_contents(contents, filename):
     content_type, content_string = contents.split(',')
@@ -105,26 +98,3 @@ def calcular_pago(df, legajo, df_precio):
 
     return costo_neto,df_legajo
 
-
-def crear_df_filtrado(df, predios, fecha_inicio, fecha_finalizacion, materiales, tipo_cartonero):
-    df_filtrado = df.copy()
-
-    # rellenar nans
-    df_filtrado = df_filtrado.fillna('No especificado')
-
-    # crear columna de tipos de cartoneres
-    df_filtrado['tipoCartonero'] = df_filtrado.apply(determinar_tipo_cartonero, axis=1)
-
-    # aplicar filtros
-    if predios:
-        df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
-
-    df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
-
-    if materiales:
-        df_filtrado = df_filtrado.loc[df_filtrado['material'].isin(materiales)]
-
-    if tipo_cartonero:
-        df_filtrado = df_filtrado.loc[df_filtrado['tipoCartonero'].isin(tipo_cartonero)]
-
-    return df_filtrado

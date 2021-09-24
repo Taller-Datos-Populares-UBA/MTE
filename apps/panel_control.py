@@ -7,7 +7,9 @@ import dash_table
 from dash import callback_context
 from dash.dependencies import Output, Input, State
 
-import utils.utils_panel as utils_panel
+from utils.utils import crear_df_filtrado
+from utils.utils_panel import pesos_historico, torta, pesos_historico_predios
+
 from app import app
 from mte_dataframe import MTEDataFrame
 
@@ -229,15 +231,15 @@ def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, ca
 
     if trigger["prop_id"] in ['.',"btn-filtro.n_clicks"]:
         df = MTEDataFrame.get_instance()
-        df_filtrado = utils_panel.crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+        df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
                                                     datetime.fromisoformat(fecha_fin), materiales, cartonere)
         if df_filtrado.empty:
             open_sininfopanel_modal = not open_sininfopanel_modal
 
         else:
-            fig_hist = utils_panel.pesos_historico(df_filtrado, operacion="suma")
-            fig_torta = utils_panel.torta(df_filtrado)
-            fig_barras = utils_panel.pesos_historico_predios(df_filtrado)
+            fig_hist = pesos_historico(df_filtrado, operacion="suma")
+            fig_torta = torta(df_filtrado)
+            fig_barras = pesos_historico_predios(df_filtrado)
 
     elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
         open_sininfopanel_modal = not open_sininfopanel_modal
