@@ -1,14 +1,11 @@
 
 def determinar_tipo_cartonero(row):
-    """
-    Si eventualmente hubiera otro tipo de cartonere devolvería no especificado.
-    """
     if row['legacyId'].startswith('LE'):
         val = 'LE'
-    elif row['legacyId'].startswith('RA'):
-        val = 'RA'
-    else:
+    elif row['legacyId'] == 'No especificado':
         val = 'No especificado'
+    else:
+        val = 'RA'
     return val
 
 
