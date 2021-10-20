@@ -10,7 +10,7 @@ app = dash.Dash()
 app.layout = html.Div([
     html.H1("Probando store"),
     dcc.Store(
-        id="store",
+        id="store-precios",
         storage_type="local"
     ),
     html.Div(
@@ -49,8 +49,7 @@ app.layout = html.Div([
                     }
                 ],
                 data=[
-                    {"material": ""
-                        , "preciora": "",
+                    {"material": "", "preciora": "",
                         "preciole": "",
                         "sede": ""}
                 ],
@@ -99,12 +98,12 @@ app.layout = html.Div([
 
 @app.callback(
     Output("tabla", "data"),
-    Output("store", "data"),
+    Output("store-precios", "data"),
     Input("agregar-fila", "n_clicks"),
     Input("tabla", "selected_cells"),
     State("tabla", "data"),
     State("tabla", "columns"),
-    State("store", "data")
+    State("store-precios", "data")
 )
 def agregar_fila(click_add, selected_cells, rows, columns, store_data):
     if store_data:
@@ -113,8 +112,11 @@ def agregar_fila(click_add, selected_cells, rows, columns, store_data):
         return rows, rows
     if click_add:
         if rows == None:
-            rows = store_data
-            rows.append(({c['id']: '' for c in columns}))
+            if store_data:
+                rows = store_data
+                rows.append(({c['id']: '' for c in columns}))
+            else:
+                rows = [{c['id']: '' for c in columns}]
         else:
             rows.append(({c['id']: '' for c in columns}))
         print((rows, rows))
@@ -125,8 +127,6 @@ def agregar_fila(click_add, selected_cells, rows, columns, store_data):
         else:
             rows = None
         return rows, rows
-
-
 
 
 if __name__ == "__main__":

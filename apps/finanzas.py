@@ -21,7 +21,7 @@ df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
 
 
-fig = grafico_torta("NA", df) #Creo una figura vacia rellenar la card que lleva el grafico
+fig = grafico_torta("NA", df)  # Creo una figura vacia rellenar la card que lleva el grafico
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -29,21 +29,21 @@ fig = grafico_torta("NA", df) #Creo una figura vacia rellenar la card que lleva 
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-#Card con el saldo
+# Card con el saldo
 first_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Monto a pagar", id="monto-card-saldo",className="card-title"),
+            html.H6("Monto a pagar", id="monto-card-saldo", className="card-title"),
             html.P(f"", id="label-legajo"),
         ]
     )]
 )
 
-#Card con la tabla de ultimos movimientos
+# Card con la tabla de ultimos movimientos
 second_card = dbc.Card([
     dbc.CardBody(
         [
-            html.H6("Ultimas cargas",className="card-title"),
+            html.H6("Ultimas cargas", className="card-title"),
             html.Div(children=[
                 DataTable(
                     id="tabla-legajo",
@@ -72,33 +72,33 @@ second_card = dbc.Card([
                         }
                     ],
                     style_cell={
-                            "overflowX":"hidden",
-                            "textOverflow": "ellipsis",
-                            "border": "1px solid black",
-                            "border-left": "2px solid black"
+                        "overflowX": "hidden",
+                        "textOverflow": "ellipsis",
+                        "border": "1px solid black",
+                        "border-left": "2px solid black"
                         },
                     style_header={
-                            "backgroundColor": "#4582ec",
-                            "color": "white",
-                            "border": "0px solid #2c559c",
+                        "backgroundColor": "#4582ec",
+                        "color": "white",
+                        "border": "0px solid #2c559c",
                         },
                 )
             ])
-        ],id="tabla-legajo-parent")],
+        ], id="tabla-legajo-parent")],
     className="card last-card",
 )
 
-#Card con el grafico
+# Card con el grafico
 third_card = dbc.Card(
     dbc.CardBody(
         [
             html.H5("Material recolectado", className="card-title"),
-            dcc.Graph(id="graph-legajo", figure=fig,config= {'displaylogo': False,'displayModeBar': False}),
+            dcc.Graph(id="graph-legajo", figure=fig, config={'displaylogo': False, 'displayModeBar': False}),
         ]),
     className="card"
 )
 
-#Estructura que almacena todas las cards
+# Estructura que almacena todas las cards
 cards_individual = html.Div(
     [
         dbc.Row(
@@ -120,7 +120,7 @@ cards_individual = html.Div(
             ],
             id="ro1"
         ),
-    ],className="container-cards"
+    ], className="container-cards"
 )
 
 # Tooltip de la tabla
@@ -152,13 +152,13 @@ layout = html.Div([
 
     # navbar,
 
-    CreateModal("sininfo","No se encontró información","Revisá si estan correctamente seleccionados los filtros."),
+    CreateModal("sininfo", "No se encontró información", "Revisá si estan correctamente seleccionados los filtros."),
 
-    CreateModal("errorpago","Faltan precios","Revisá si está completa la tabla de precios."),
+    CreateModal("errorpago", "Faltan precios", "Revisá si está completa la tabla de precios."),
 
-    CreateModal("legacy_id","No se encontró el número de legajo","Revisá si está correctamente colocado el número de legajo."),
+    CreateModal("legacy_id", "No se encontró el número de legajo", "Revisá si está correctamente colocado el número de legajo."),
 
-    CreateModal("archivoerror","Problemas con el archivo","El archivo parece estar dañado, vacio, o con un formato no soportado."),
+    CreateModal("archivoerror", "Problemas con el archivo", "El archivo parece estar dañado, vacio, o con un formato no soportado."),
 
 
     dcc.Download(id="download"),
@@ -177,11 +177,11 @@ layout = html.Div([
 
             html.Div(
                 children=[  # Radiobuttons y picker de fechas
-            SelectDates("date-range-finanzas","radio-button-fechas-finanzas"),
-            SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
-            ]
+                    SelectDates("date-range-finanzas", "radio-button-fechas-finanzas"),
+                    SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
+                    ]
             ),
-            SelectFilterOptions(rutas, "Elegí la ruta", "dropdown-rutas", "salida-rutas",add_all_as_option=True, capitalize=True),
+            SelectFilterOptions(rutas, "Elegí la ruta", "dropdown-rutas", "salida-rutas", add_all_as_option=True, capitalize=True),
 
             SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonerx", "salida-cartoneres"),
 
@@ -201,6 +201,10 @@ layout = html.Div([
 
             html.Div(
                 children=[  # Tabla
+                    dcc.Store(
+                        id="store-precios",
+                        storage_type="local"
+                    ),
                     DataTable(
                         id='table-precios',
                         columns=[
@@ -234,8 +238,7 @@ layout = html.Div([
                             }
                         ],
                         data=[
-                            {"material": ""
-                                , "preciora": "",
+                            {"material": "", "preciora": "",
                              "preciole": "",
                              "sede": ""}
                         ],
@@ -359,7 +362,7 @@ layout = html.Div([
                                             },
                                             autoComplete="off"
                                         ),
-                                    CreateButton("search-button","Buscar")
+                                        CreateButton("search-button", "Buscar")
                                     ],
                                         id="search-div",
                                         className=""  # Contenedor de la parte de busqueda
@@ -465,7 +468,7 @@ layout = html.Div([
             "float": "right"
         },
     ),
-    
+
 
 ])
 
@@ -480,115 +483,129 @@ Callbacks
 """
 
 
-#Funcion que controla los radiobuttons de las fechas y la fecha que aparece en el calendario
+# Funcion que controla los radiobuttons de las fechas y la fecha que aparece en el calendario
 @app.callback(
     [
-        Output("date-range-finanzas","start_date"),
-        Output("date-range-finanzas","end_date"),
-        Output("radio-button-fechas-finanzas","value")
+        Output("date-range-finanzas", "start_date"),
+        Output("date-range-finanzas", "end_date"),
+        Output("radio-button-fechas-finanzas", "value")
     ],
     [
-        Input("radio-button-fechas-finanzas","value"),
-        Input("date-range-finanzas","start_date"),
-        Input("date-range-finanzas","end_date"),
+        Input("radio-button-fechas-finanzas", "value"),
+        Input("date-range-finanzas", "start_date"),
+        Input("date-range-finanzas", "end_date"),
     ]
 )
-def cambiarFechaCalendario(periodo,start_date,end_date):
+def cambiarFechaCalendario(periodo, start_date, end_date):
     trigger = callback_context.triggered[0]
 
-    #Si llamo a la función desde los input de las fechas se tendria que cambiar a otro automaticamente el periodo
-    if trigger["prop_id"] == "date-range-finanzas.start_date" or trigger["prop_id"] == "date-range-finanzas.end_date" :
+    # Si llamo a la función desde los input de las fechas se tendria que cambiar a otro automaticamente el periodo
+    if trigger["prop_id"] == "date-range-finanzas.start_date" or trigger["prop_id"] == "date-range-finanzas.end_date":
         fecha_inicio = start_date
         fecha_finalizacion = end_date
         periodo = "otro"
-    
-    #Si no viene de los input, viene de los radiobutton. 
-    #Luego que modifique la fecha de los input con la opcion del radiobutton que llega
+
+    # Si no viene de los input, viene de los radiobutton.
+    # Luego que modifique la fecha de los input con la opcion del radiobutton que llega
     else:
         if periodo == 'otro':
-          fecha_inicio = start_date
-          fecha_finalizacion = end_date
+            fecha_inicio = start_date
+            fecha_finalizacion = end_date
         elif periodo == 'semana':
-          fecha_finalizacion = date.today()
-          otra_fecha = timedelta(6)
-          fecha_inicio = fecha_finalizacion - otra_fecha  
+            fecha_finalizacion = date.today()
+            otra_fecha = timedelta(6)
+            fecha_inicio = fecha_finalizacion - otra_fecha
         elif periodo == 'mes':
-          fecha_finalizacion = date.today()
-          otra_fecha = timedelta(30)
-          fecha_inicio = fecha_finalizacion - otra_fecha
-        else: 
-          fecha_finalizacion = date.today()
-          otra_fecha = timedelta(364)
-          fecha_inicio = fecha_finalizacion - otra_fecha
+            fecha_finalizacion = date.today()
+            otra_fecha = timedelta(30)
+            fecha_inicio = fecha_finalizacion - otra_fecha
+        else:
+            fecha_finalizacion = date.today()
+            otra_fecha = timedelta(364)
+            fecha_inicio = fecha_finalizacion - otra_fecha
 
-    return fecha_inicio,fecha_finalizacion,periodo
+    return fecha_inicio, fecha_finalizacion, periodo
 
 
-#Funcion que controla todos los botones de la tabla de precios
+# Funcion que controla todos los botones de la tabla de precios
 @app.callback(
     Output('table-precios', 'data'),
     Output("download", "data"),
     Output("archivoerror-modal", "is_open"),
+    Output("store-precios", "data"),
     Input('button-save-file', 'n_clicks'),
     Input('button-add-row', 'n_clicks'),
     Input('upload-comp', 'contents'),
     Input("close-modal-archivoerror-button", "n_clicks"),
+    Input("table-precios", "selected_cells"),
     State('table-precios', 'data'),
     State('table-precios', 'columns'),
-    State('upload-comp', 'filename'), )
-def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns, filename):
+    State('upload-comp', 'filename'),
+    State("store-precios", "data")
+)
+def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells, rows, columns, filename, store_data):
     trigger = callback_context.triggered[0]
 
-    #Si llame a la función del boton de añadir fila toma las filas que ya teniamos, y le agrega una fila nueva.
-    #Si no habia ninguna, crea directamente la primer fila
+    # Para que se autoguarde la tabla al desplazarse por la misma
+    # OJO: no se guarda si no te moviste de la celda que acabas de escribir
+    if selected_cells:
+        return rows, None, False, rows
+
+    # Si llame a la función del boton de añadir fila toma las filas que ya teniamos, y le agrega una fila nueva.
+    # Si no habia ninguna, crea directamente la primer fila
     if trigger["prop_id"] == "button-add-row.n_clicks":
         if n_clicks_add > 0:
             if rows == None:
                 rows = [({c['id']: '' for c in columns})]
             else:
                 rows.append(({c['id']: '' for c in columns}))
-        return rows, None, False
+        return rows, None, False, rows
 
-    #Si llame a la funcion del boton de guardar los archivos, Guarda el archivo como un csv ()
+    # Si llame a la funcion del boton de guardar los archivos, Guarda el archivo como un csv ()
     elif trigger["prop_id"] == "button-save-file.n_clicks":
         df_file = pd.DataFrame(rows).to_csv(index=False)
-        return rows, dict(content=df_file, filename="Precios.csv"), False
+        return rows, dict(content=df_file, filename="Precios.csv"), False, rows
 
-    #Si llame a la funcion del boton de cargar archivo:
+    # Si llame a la funcion del boton de cargar archivo:
     elif trigger["prop_id"] == "upload-comp.contents":
-        #Si no ancele la carga de archivo (Que dispara el callback igual):
+        # Si no ancele la carga de archivo (Que dispara el callback igual):
         if content is not None:
-            #Intente parsearlo, y convertirlo a un dataframe, y luego convertirlo en la lista de diccionarios que necesita dash
+            # Intente parsearlo, y convertirlo a un dataframe, y luego convertirlo en la lista de diccionarios que necesita dash
             try:
                 df = parse_contents(content, filename)
-                if not df.empty: #Si el df que parseamos no esta vacio:
+                if not df.empty:  # Si el df que parseamos no esta vacio:
                     df_table = [df.iloc[i].to_dict() for i in range(len(df.index))]
-                    return df_table, None, False
-                else: #Sino no hace nada, pero activa el modal que te avisa que el archivo esta mal
-                    return rows, None, True
-            #Sino, no hace nada, pero activa el modal que te avisa que el archivo esta mal
+                    return df_table, None, False, df_table
+                else:  # Sino no hace nada, pero activa el modal que te avisa que el archivo esta mal
+                    return rows, None, True, rows
+            # Sino, no hace nada, pero activa el modal que te avisa que el archivo esta mal
             except:
-                return rows, None, True
-        else: #Si el content esta vacio, te avisa con el modal tambien
-            return rows, None, True
+                return rows, None, True, rows
+        else:  # Si el content esta vacio, te avisa con el modal tambien
+            return rows, None, True, rows
 
-    #Si llame a la función del boton del modal, solo cierra el modal y deja el resto igual
+    # Si llame a la función del boton del modal, solo cierra el modal y deja el resto igual
     elif trigger["prop_id"] == "close-modal-archivoerror-button.n_clicks":
-        return rows, None, False
+        return rows, None, False, rows
     else:
-        return rows, None, False
+        if store_data:
+            rows = store_data
+        return rows, None, False, rows
 
-#Función que controla todo lo que muestra en la parte de Individual y Todxs
+# Función
+
+
+# Función que controla todo lo que muestra en la parte de Individual y Todxs
 @app.callback(
     [
         Output("label-total", "children"),
         Output("sininfo-modal", "is_open"),
         Output("parent-todxs", "children"),
-        Output("graph-legajo","figure"),
-        Output("label-legajo","children"),
-        Output("legacy_id-modal","is_open"),
-        Output("tabla-legajo","data"),
-        Output("errorpago-modal","is_open"),
+        Output("graph-legajo", "figure"),
+        Output("label-legajo", "children"),
+        Output("legacy_id-modal", "is_open"),
+        Output("tabla-legajo", "data"),
+        Output("errorpago-modal", "is_open"),
     ],
     [
         Input("search-button", "n_clicks"),
@@ -603,55 +620,54 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, rows, columns,
         State("input-legacyId", "value"),
         State("table-precios", "data"),
         State("sininfo-modal", "is_open"),
-        State("graph-legajo","figure"),
-        State("label-legajo","children"),
+        State("graph-legajo", "figure"),
+        State("label-legajo", "children"),
         State("legacy_id-modal", "is_open"),
-        State("tabla-legajo","data"),
-        State("errorpago-modal","is_open")
+        State("tabla-legajo", "data"),
+        State("errorpago-modal", "is_open")
     ]
 )
-def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
-                  sininfo_is_open,figure,pago,legacy_id_no_encontrado_is_open,ultimos_movimientos,errorpago_is_open):
+def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
+                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open):
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
 
-    #Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
-    if trigger["prop_id"] in ["search-button.n_clicks","refresh-button.n_clicks"] or tab == "todxs":
-        #Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
+    # Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
+    if trigger["prop_id"] in ["search-button.n_clicks", "refresh-button.n_clicks"] or tab == "todxs":
+        # Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
         df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
                                         datetime.fromisoformat(fecha_fin), [], [])
-        
-        #Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
+
+        # Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
         cond2 = legacy_id in list(df_filtrado["legacyId"])
 
-        if cond1 and cond2: #Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar 
+        if cond1 and cond2:  # Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar
 
             if trigger["prop_id"] == "search-button.n_clicks":
-                figure = grafico_torta(legacy_id,df_filtrado)
-                pago,ultimos_movimientos = calcular_pago(df_filtrado,legacy_id,df_precios)
+                figure = grafico_torta(legacy_id, df_filtrado)
+                pago, ultimos_movimientos = calcular_pago(df_filtrado, legacy_id, df_precios)
 
-                if pago=="Error": #Del hecho de que la tabla de precios esta vacio
+                if pago=="Error":  # Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
-                else: #Modificamos el formato del pago
+                else:  # Modificamos el formato del pago
                     pago="$ "+str(pago)
 
-                ultimos_movimientos = ultimos_movimientos.sort_values("fecha",ascending=False)
+                ultimos_movimientos = ultimos_movimientos.sort_values("fecha", ascending=False)
 
                 if len(ultimos_movimientos.index)>10:
                     ultimos_movimientos = ultimos_movimientos.head(10)
                     ultimos_movimientos["fecha"] = [fecha.isoformat()[:-9] for fecha in ultimos_movimientos.fecha]
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
-                    
 
-        elif not cond1: #Si el df esta vacio, te avisa con el modal de que esta vacio
+        elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
             sininfo_is_open = not sininfo_is_open
 
-        elif not cond2: #Si la persona no esta en el df, te avisa con el modal
+        elif not cond2:  # Si la persona no esta en el df, te avisa con el modal
             legacy_id_no_encontrado_is_open = not legacy_id_no_encontrado_is_open
 
-    #Los siguientes 3 elif son para cerrar los modals
+    # Los siguientes 3 elif son para cerrar los modals
     elif trigger["prop_id"] == "close-modal-sininfo-button.n_clicks":
         sininfo_is_open = not sininfo_is_open
 
@@ -661,5 +677,4 @@ def filtrar_rutas(n_clicks, close_n_clicks,close_n_clicks_2,close_n_clicks_3, ta
     elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
         errorpago_is_open = not errorpago_is_open
 
-
-    return [n_clicks, sininfo_is_open, n_clicks,figure,pago,legacy_id_no_encontrado_is_open,ultimos_movimientos,errorpago_is_open]
+    return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open]
