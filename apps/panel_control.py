@@ -6,9 +6,11 @@ import dash_html_components as html
 import dash_table
 from dash import callback_context
 from dash.dependencies import Output, Input, State
+from dash_table import DataTable
+
 
 from utils.utils import crear_df_filtrado
-from utils.utils_panel import pesos_historico, torta, pesos_historico_predios
+from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios,pesos_historico_materiales,datos_tabla
 
 from app import app
 from mte_dataframe import MTEDataFrame
@@ -25,8 +27,39 @@ card_resumen = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Resumen", id="monto-card-saldo",className="card-title"),
+            html.Div(children=[
+            DataTable(
+                    id="tabla-Resumen",
+                    columns=[{"name": "Sede", "id": "predio"},
+                             {"name": "Peso", "id": "peso"}
+                             
+                             ],
+                    editable=False,
+                    row_deletable=False,
+                    style_cell={
+                            "textOverflow": "ellipsis",
+                            "whiteSpace": "nowrap",
+                            "border": "1px solid black",
+                            "border-left": "2px solid black"
+                        },
+                    style_header={
+                            "backgroundColor": "#4582ec",
+                            "color": "white",
+                            "border": "0px solid #2c559c",
+                        },
+                    style_table={
+                            "height": "200px",
+                            "minHeight": "200px",
+                            "maxHeight": "200px",
+                            "overflowX": "auto"
+                        },
+                    fixed_rows={'headers': True},
+
+                )],
+                    id="tabla-Resumen-parent")]
+            
             #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
-        ]
+        
     )],className="card"
 )
 
@@ -66,22 +99,13 @@ cards_panel = html.Div(
             children=[
                 dbc.Col(
                     children=[
-                        dbc.Col(
-                            card_resumen,
+                        dbc.Col( card_resumen,
                         ),
-
-                        dbc.Row([                        
-                            dbc.Col(
-                                card_torta,
-                                width=6
-                            ),
-                            dbc.Col(card_barras,width=6
-                            )
-                            ]
+                        dbc.Col( card_torta,       
                         ),
-
-                        dbc.Col(
-                            card_historico
+                        dbc.Col( card_barras,       
+                        ),
+                        dbc.Col( card_historico
                         ),
                     ],
                     width=12
@@ -205,6 +229,8 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         Output("grafico-torta", "figure"),
         Output("grafico-barras","figure"),
         Output("sininfopanel-modal","is_open"),
+        Output("tabla-Resumen","data"),
+
     ],
     [
         Input("btn-filtro", "n_clicks"),
@@ -237,11 +263,17 @@ def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, ca
             open_sininfopanel_modal = not open_sininfopanel_modal
 
         else:
-            fig_hist = pesos_historico(df_filtrado, operacion="suma")
+            fig_hist = pesos_historico_promedio(df_filtrado)
             fig_torta = torta(df_filtrado)
             fig_barras = pesos_historico_predios(df_filtrado)
+            tabla_resumen=datos_tabla(df_filtrado)[1]
+            #tabla_resumen = [tabla_resumen.iloc[i].to_dict() for i in range(len(tabla_resumen.index))]
+
+            tabla_resumen=tabla_resumen.reset_index().to_dict('records')
+            print(tabla_resumen)
+
 
     elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
         open_sininfopanel_modal = not open_sininfopanel_modal
 
-    return fig_hist, fig_torta,fig_barras,open_sininfopanel_modal #df_filtrado.to_dict("records")
+    return fig_hist, fig_torta,fig_barras,open_sininfopanel_modal,tabla_resumen #df_filtrado.to_dict("records")
