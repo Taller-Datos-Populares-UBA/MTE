@@ -99,10 +99,12 @@ cards_panel = html.Div(
             children=[
                 dbc.Col(
                     children=[
-                        dbc.Col( card_resumen,
+                        dbc.Row(children=[
+                        dbc.Col( card_resumen,width=6
                         ),
-                        dbc.Col( card_torta,       
-                        ),
+                        dbc.Col( card_torta,width=6       
+                        )
+                        ]),
                         dbc.Col( card_barras,       
                         ),
                         dbc.Col( card_historico
