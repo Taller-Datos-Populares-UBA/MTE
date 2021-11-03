@@ -9,7 +9,8 @@ from dash.dependencies import Output, Input, State
 from dash_table import DataTable, FormatTemplate
 
 from utils.utils import crear_df_filtrado
-from utils.utils_finanzas import grafico_torta, parse_contents, calcular_pago
+from utils.utils_finanzas import grafico_torta, parse_contents  # , calcular_pago
+from utils.utils_finanzas import pago_por_compa, pago_individual
 
 from app import app
 from mte_dataframe import MTEDataFrame
@@ -34,7 +35,7 @@ first_card = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Monto a pagar", id="monto-card-saldo", className="card-title"),
-            html.P(f"", id="label-legajo"),
+            html.P(id="label-legajo"),
         ]
     )]
 )
@@ -647,8 +648,13 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
             if trigger["prop_id"] == "search-button.n_clicks":
                 figure = grafico_torta(legacy_id, df_filtrado)
-                pago, ultimos_movimientos = calcular_pago(df_filtrado, legacy_id, df_precios)
-
+                # pago, ultimos_movimientos = calcular_pago(df_filtrado, legacy_id, df_precios)
+                try:
+                    df_pagos = pago_por_compa(df_filtrado, df_precios)
+                    pago = pago_individual(df_pagos, legacy_id)[0]
+                except Exception as e:
+                    print("No pude calcular el pago, error:", e)
+                ultimos_movimientos = df_filtrado[df_filtrado.legacyId==legacy_id]
                 if pago=="Error":  # Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
                 else:  # Modificamos el formato del pago
@@ -676,5 +682,4 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
     elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
         errorpago_is_open = not errorpago_is_open
-
     return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open]

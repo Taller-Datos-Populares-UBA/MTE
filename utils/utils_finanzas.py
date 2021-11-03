@@ -84,17 +84,49 @@ def grafico_torta(legajo, df):
     return fig
 
 
-def calcular_pago(df, legajo, df_precio):
-    """recibe df filtrado"""
-    df_legajo = df[df['legacyId'] == legajo]
-    df_legajo_materiales = df_legajo.groupby(['material'])['peso'].sum().reset_index()
-    costo_neto = 0
-    try:
-        for index, row in df_legajo_materiales.iterrows():
-            costo_material = df_precio[df_precio['material'] == 'Mezcla B']['preciora'].values[0] * row['peso']
-            costo_neto += costo_material
-    except IndexError:
-        costo_neto="Error"
+# def calcular_pago(df, legajo, df_precio):
+#     """recibe df filtrado.
+#     creo que hay q borrarla esta funcion!"""
+#     df_legajo = df[df['legacyId'] == legajo]
+#     df_legajo_materiales = df_legajo.groupby(['material'])['peso'].sum().reset_index()
+#     costo_neto = 0
+#     try:
+#         for index, row in df_legajo_materiales.iterrows():
+#             costo_material = df_precio[df_precio['material'] == 'Mezcla B']['preciora'].values[0] * row['peso']
+#             costo_neto += costo_material
+#     except IndexError:
+#         costo_neto="Error"
 
-    return costo_neto,df_legajo
+#     return costo_neto, df_legajo
 
+
+def retornar_df_pagos(df_filtrado, df_precios):
+    df_pagos = df_filtrado.copy()
+    df_pagos["precio/kg"] = 0
+    df_pagos["precio"] = 0
+    for index, row in df_precios.iterrows():
+        sede = row["sede"]
+        material = row["material"]
+#         tipoCartonero = row["tipoCartonero"]
+
+        indices_LE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "LE")].index
+        indices_RA = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "RA")].index
+#         indices_NE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == tipoCartonero)].index
+
+        precio_LE = row["preciole"]
+        precio_RA = row["preciora"]
+        df_pagos.loc[indices_LE, "precio/kg"] = precio_LE
+        df_pagos.loc[indices_RA, "precio/kg"] = precio_RA
+
+    df_pagos["precio"] = df_pagos["precio/kg"]*df_pagos["peso"]
+    return df_pagos
+
+
+def pago_por_compa(df_filtrado, df_precios):
+    df_pagos = retornar_df_pagos(df_filtrado, df_precios)
+    df_pagos = df_pagos.groupby(['legacyId']).sum('precio')
+    return df_pagos[['precio']]
+
+
+def pago_individual(df_pagos, legajo):
+    return df_pagos.loc[legajo]
