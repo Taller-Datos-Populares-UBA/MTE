@@ -31,8 +31,8 @@ card_resumen = dbc.Card([
             DataTable(
                     id="tabla-Resumen",
                     columns=[{"name": "Sede", "id": "predio"},
-                             {"name": "Peso", "id": "peso"}
-                             
+                             {"name": "Peso (kilos)", "id": "peso"}
+
                              ],
                     editable=False,
                     row_deletable=False,
@@ -57,9 +57,9 @@ card_resumen = dbc.Card([
 
                 )],
                     id="tabla-Resumen-parent")]
-            
+
             #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
-        
+
     )],className="card"
 )
 
@@ -68,17 +68,19 @@ card_historico = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Gráfico temporal",className="card-title"),
-            dcc.Graph(id="grafico-historico",config= {'displaylogo': False,'displayModeBar': True}),
+            html.P("Promedio por 2 semanas",className="card-subtitle"),
+            dcc.Graph(id="grafico-historico",config= {'displaylogo': False,'displayModeBar': True, 'locale': 'es'}),
         ],
-    
+
     )],className="card",
 )
+
 
 card_torta = dbc.Card([
     dbc.CardBody(
         [
-            html.H5("Distribución", className="card-title"),
-            dcc.Graph(id="grafico-torta",config= {'displaylogo': False,'displayModeBar': False})
+            html.H5("Porcentajes", className="card-title"),
+            dcc.Graph(id="grafico-torta",config= {'displaylogo': False,'displayModeBar': False, 'locale': 'es'})
         ],
     )], className="card"
 )
@@ -86,8 +88,8 @@ card_torta = dbc.Card([
 card_barras = dbc.Card([
     dbc.CardBody(
         [
-            html.H5("Distribución", className="card-title"),
-            dcc.Graph(id="grafico-barras",config= {'displaylogo': False,'displayModeBar': False})
+            html.H5("Distribución por fecha", className="card-title"),
+            dcc.Graph(id="grafico-barras",config= {'displaylogo': False,'displayModeBar': False, 'locale': 'es'})
         ],
     )], className="card"
 )
@@ -102,10 +104,10 @@ cards_panel = html.Div(
                         dbc.Row(children=[
                         dbc.Col( card_resumen,width=6
                         ),
-                        dbc.Col( card_torta,width=6       
+                        dbc.Col( card_torta,width=6
                         )
                         ]),
-                        dbc.Col( card_barras,       
+                        dbc.Col( card_barras,
                         ),
                         dbc.Col( card_historico
                         ),
@@ -123,7 +125,6 @@ cards_panel = html.Div(
 layout = html.Div([
 
     CreateModal("sininfopanel","No se encontró información","Revisá si estan correctamente seleccionados los filtros."),
-
     html.Div(id="div-izquierda-panel", className="botonera",children=[
         #html.Img(
         #    src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
@@ -158,16 +159,19 @@ layout = html.Div([
             				className="dropdowns",
             				options=[
                 			{"label": 'Material', "value": 'material'},
-                			{"label": 'Etapa', "value": 'etapa'}, 
+                			{"label": 'Etapa', "value": 'etapa'},
             				],
             				value='material',
             				multi=False
         ),]
     	),
-        html.Div(className="graficos-div-parent",children=[
-    		 		  cards_panel,
-    	                         html.Div("Peso total: 1500kg"),
-                             ]),
+        dcc.Loading(
+                    id="loading-1",
+                    children=[html.Div(className="graficos-div-parent",children=[
+                		 		  cards_panel
+                                  ])],
+                    type="circle",
+                ),
         ]),
                     # dcc.Tab(label="Pestaña 2", value="tab_2",
                     #         children=[
@@ -212,12 +216,12 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         elif periodo == 'semana':
           fecha_finalizacion = date.today()
           otra_fecha = timedelta(6)
-          fecha_inicio = fecha_finalizacion - otra_fecha  
+          fecha_inicio = fecha_finalizacion - otra_fecha
         elif periodo == 'mes':
           fecha_finalizacion = date.today()
           otra_fecha = timedelta(30)
           fecha_inicio = fecha_finalizacion - otra_fecha
-        else: 
+        else:
           fecha_finalizacion = date.today()
           otra_fecha = timedelta(364)
           fecha_inicio = fecha_finalizacion - otra_fecha
@@ -249,7 +253,7 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         State("grafico-barras","figure")
     ]
 )
-def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, cartonere, fecha_inicio, 
+def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, cartonere, fecha_inicio,
     fecha_fin,open_sininfopanel_modal,fig_hist,fig_torta,fig_barras):
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
@@ -272,8 +276,6 @@ def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, ca
             #tabla_resumen = [tabla_resumen.iloc[i].to_dict() for i in range(len(tabla_resumen.index))]
 
             tabla_resumen=tabla_resumen.reset_index().to_dict('records')
-            print(tabla_resumen)
-
 
     elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
         open_sininfopanel_modal = not open_sininfopanel_modal

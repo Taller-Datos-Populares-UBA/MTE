@@ -10,3 +10,7 @@ instance/
 .webassets-cache
 
 venv/
+
+# Intellij
+.idea/
+*.iml

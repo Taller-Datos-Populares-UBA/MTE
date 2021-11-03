@@ -1,6 +1,6 @@
 /*
 
-Tabla de contenidos: 
+Tabla de contenidos:
 
   1) General
 
@@ -185,7 +185,7 @@ ul li a img {
   margin-right: 9px;
   padding: 5px;
   padding-right: -10px !important;
-  height:43px !important; 
+  height:43px !important;
 }
 
 /* 5) Filtros ------------------------------------------------------------------------------------------------------------------------------*/
@@ -213,7 +213,7 @@ ul li a img {
   color: #376bc4;
   margin-left: 10px;
 }
-    
+
     /*5.1) Labels */
 
 
@@ -603,7 +603,11 @@ ul li a img {
     font-family: Rubik,monospace;
     margin-top:10px;
     color:#2c559c ;
-
+}
+.card-subtitle {
+    font-size: 16px;
+    font-family: Rubik,monospace;
+    color:#2c559c ;
 }
 
 .waves {
@@ -714,7 +718,7 @@ ul li a img {
 
     #refresh-button:hover {
       background-color: #2c559c;
-      
+
     }
 
     #parent-todxs {
@@ -751,7 +755,7 @@ ul li a img {
 
     #refresh-button:hover {
       background-color: #2c559c;
-      
+
     }
 
     #img-refresh {
@@ -936,7 +940,7 @@ ul li a img {
   #search-button img {
     margin-left: -0.4rem;
   }
-  
+
   #search-button p{
     visibility: hidden;
   }
@@ -1029,7 +1033,7 @@ ul li a img {
 - Media Queries
 */
 
-/* PLotly.js 
+/* PLotly.js
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 /* plotly.js's modebar's z-index is 1001 by default
  * https://github.com/plotly/plotly.js/blob/7e4d8ab164258f6bd48be56589dacd9bdd7fded2/src/css/_modebar.scss#L5
@@ -1060,14 +1064,14 @@ ul li a img {
     width: 100%;
     float: left;
     box-sizing: border-box; }
-  
+
   /* For devices larger than 400px */
   @media (min-width: 400px) {
     .container {
       width: 85%;
       padding: 0; }
   }
-  
+
   /* For devices larger than 550px */
   @media (min-width: 550px) {
     .container {
@@ -1078,7 +1082,7 @@ ul li a img {
     .column:first-child,
     .columns:first-child {
       margin-left: 0; }
-  
+
     .one.column,
     .one.columns                    { width: 4.66666666667%; }
     .two.columns                    { width: 13.3333333333%; }
@@ -1092,12 +1096,12 @@ ul li a img {
     .ten.columns                    { width: 82.6666666667%; }
     .eleven.columns                 { width: 91.3333333333%; }
     .twelve.columns                 { width: 100%; margin-left: 0; }
-  
+
     .one-third.column               { width: 30.6666666667%; }
     .two-thirds.column              { width: 65.3333333333%; }
-  
+
     .one-half.column                { width: 48%; }
-  
+
     /* Offsets */
     .offset-by-one.column,
     .offset-by-one.columns          { margin-left: 8.66666666667%; }
@@ -1121,18 +1125,18 @@ ul li a img {
     .offset-by-ten.columns          { margin-left: 86.6666666667%; }
     .offset-by-eleven.column,
     .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
-  
+
     .offset-by-one-third.column,
     .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
     .offset-by-two-thirds.column,
     .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
-  
+
     .offset-by-one-half.column,
     .offset-by-one-half.columns     { margin-left: 52%; }
-  
+
   }
-  
-  
+
+
   /* Base Styles
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   /* NOTE
@@ -1146,8 +1150,8 @@ ul li a img {
     font-weight: 400;
     font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: rgb(50, 50, 50); }
-  
-  
+
+
   /* Typography
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   h1, h2, h3, h4, h5, h6 {
@@ -1160,11 +1164,11 @@ ul li a img {
   h4 { font-size: 2.6rem; line-height: 1.35; letter-spacing: -.08rem; margin-bottom: 1.2rem; margin-top: 1.2rem;}
   h5 { font-size: 2.2rem; line-height: 1.5;  letter-spacing: -.05rem; margin-bottom: 0.6rem; margin-top: 0.6rem;}
   h6 { font-size: 2.0rem; line-height: 1.6;  letter-spacing: 0; margin-bottom: 0.75rem; margin-top: 0.75rem;}
-  
+
   p {
     margin-top: 0; }
-  
-  
+
+
   /* Blockquotes
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   blockquote {
@@ -1174,18 +1178,18 @@ ul li a img {
     margin-bottom: 2rem;
     margin-left: 0rem;
   }
-  
-  
+
+
   /* Links
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   a {
-    color: #1EAEDB; 
+    color: #1EAEDB;
     text-decoration: underline;
     cursor: pointer;}
   a:hover {
     color: #0FA0CE; }
-  
-  
+
+
   /* Buttons
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   .button,
@@ -1244,8 +1248,8 @@ ul li a img {
     color: #FFF;
     background-color: #1EAEDB;
     border-color: #1EAEDB; }
-  
-  
+
+
   /* Forms
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   input[type="email"],
@@ -1263,7 +1267,7 @@ ul li a img {
     border: 1px solid #D1D1D1;
     border-radius: 4px;
     box-shadow: none;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     font-family: inherit;
     font-size: inherit; /*https://stackoverflow.com/questions/6080413/why-doesnt-input-inherit-the-font-from-body*/}
   /* Removes awkward default styles on some inputs for iOS */
@@ -1307,8 +1311,8 @@ ul li a img {
     display: inline-block;
     margin-left: .5rem;
     font-weight: normal; }
-  
-  
+
+
   /* Lists
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   ul {
@@ -1326,8 +1330,8 @@ ul li a img {
     font-size: 90%; }
   li {
     margin-bottom: 1rem; }
-  
-  
+
+
   /* Tables
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   table {
@@ -1344,8 +1348,8 @@ ul li a img {
   th:last-child:not(.CalendarDay),
   td:last-child:not(.CalendarDay) {
     padding-right: 0; }
-  
-  
+
+
   /* Spacing
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   button,
@@ -1366,7 +1370,7 @@ ul li a img {
   ul,
   ol {
     margin-bottom: 0.75rem; }
-  
+
   /* Utilities
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   .u-full-width {
@@ -1379,8 +1383,8 @@ ul li a img {
     float: right; }
   .u-pull-left {
     float: left; }
-  
-  
+
+
   /* Misc
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   hr {
@@ -1388,11 +1392,11 @@ ul li a img {
     margin-bottom: 3.5rem;
     border-width: 0;
     border-top: 1px solid #E1E1E1; }
-  
-  
+
+
   /* Clearing
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
-  
+
   /* Self Clearing Goodness */
   .container:after,
   .row:after,
@@ -1400,8 +1404,8 @@ ul li a img {
     content: "";
     display: table;
     clear: both; }
-  
-  
+
+
   /* Media Queries
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
   /*
@@ -1410,19 +1414,19 @@ ul li a img {
   on small devices, paste the mobile query code up in the buttons section and style it
   there.
   */
-  
-  
+
+
   /* Larger than mobile */
   @media (min-width: 400px) {}
-  
+
   /* Larger than phablet (also point when grid becomes active) */
   @media (min-width: 550px) {}
-  
+
   /* Larger than tablet */
   @media (min-width: 750px) {}
-  
+
   /* Larger than desktop */
   @media (min-width: 1000px) {}
-  
+
   /* Larger than Desktop HD */
   @media (min-width: 1200px) {}

@@ -94,7 +94,7 @@ third_card = dbc.Card(
     dbc.CardBody(
         [
             html.H5("Material recolectado", className="card-title"),
-            dcc.Graph(id="graph-legajo", figure=fig, config={'displaylogo': False, 'displayModeBar': False}),
+            dcc.Graph(id="graph-legajo", figure=fig, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'}),
         ]),
     className="card"
 )
