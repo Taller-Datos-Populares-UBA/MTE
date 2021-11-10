@@ -10,7 +10,7 @@ def pesos_historico_predios(data, tipo='predio'):
     '''
     if tipo=='predio':
         tipo2='material'
-    elif tipo=='material':
+    else:
         tipo2='predio'
     df = data.groupby(by=["fecha", tipo, tipo2], as_index=False).sum()    # Para sacar la info de materiales, sacar "material"
     fig = px.bar(df, x="fecha", y="peso", color=tipo, hover_data=[tipo2])  # "group"
@@ -30,15 +30,15 @@ def pesos_historico_materiales(data, tipo):
     return fig
 
 
-def pesos_historico_promedio(data):
+def pesos_historico_promedio(data,tipo='predio'):
     '''
     Prueba. Grafica el "rolling average" (en cada dia muestra el promedio de los últimos 7 dias).
     '''
-    df = data.groupby(by=["fecha", "predio"], as_index = False).sum()
+    df = data.groupby(by=["fecha", tipo], as_index = False).sum()
 
     #recuperamos primer fecha y ultima fecha
     df= df.sort_values(by="fecha")
-    df=df[df['predio'].notna()]
+    df=df[df[tipo].notna()]
 
     primer_fecha=df["fecha"].iloc[0]
     ultima_fecha=df["fecha"].iloc[-1]
@@ -47,8 +47,8 @@ def pesos_historico_promedio(data):
 
     fig = go.Figure()
     fig.update_layout(xaxis_title="Fecha", yaxis_title="Peso (kilos)")
-    for predio in df["predio"].unique():
-        df_predio = df.loc[df['predio'] == predio]
+    for predio in df[tipo].unique():
+        df_predio = df.loc[df[tipo] == predio]
 
         #agrego ceros
         df_predio.set_index(keys="fecha",inplace=True)
@@ -61,25 +61,35 @@ def pesos_historico_promedio(data):
         fig.add_scatter(x=df_predio.index, y=df_predio['peso'], mode='lines', name=predio)
     return fig
 
-def torta(data):
+def torta(data,tipo='predio'):
 
     #Realiza un gráfico de torta del peso por material.
     #Devuelve la figura de plotly conteniendo el gráfico.
 
-    df = data.groupby(by=["material"], as_index = False).sum()
-    fig = px.pie(df, values="peso", names="material", title='')
+    df = data.groupby(by=[tipo], as_index = False).sum()
+    fig = px.pie(df, values="peso", names=tipo, title='')
     fig.update_traces(hoverinfo="label+percent", textfont_size=14,
                       textinfo="percent", marker=dict(line=dict(color="#FFFFFF", width=0.1)),
                       textposition="auto")
     return fig
 
 
-def datos_tabla(data):
-    df =data.groupby(by=["predio", "material"]).sum()
+def datos_tabla(data,tipo='predio'):
+    #if tipo=='predio':
+    #    tipo2='material'
+    #else:
+    #    tipo2='predio'
+
+    #df =data.groupby(by=[tipo, tipo2]).sum()
+    df=data
     try:
         df = df.drop(columns=["bolson"])
     except:
         pass
-    suma_predios = df.groupby(by=["predio"]).sum()
-    suma_materiales = df.groupby(by=["material"]).sum()
-    return df, suma_predios, suma_materiales
+    
+    
+    suma = df.groupby(by=[tipo]).sum()
+    suma=suma.reset_index()
+    suma.rename(columns={tipo:'clasificacion'},inplace=True)
+    #suma_materiales = df.groupby(by=[tipo2]).sum()
+    return suma

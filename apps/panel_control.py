@@ -30,7 +30,7 @@ card_resumen = dbc.Card([
             html.Div(children=[
             DataTable(
                     id="tabla-Resumen",
-                    columns=[{"name": "Sede", "id": "predio"},
+                    columns=[{"name": "Clasificación", "id": "clasificacion"},
                              {"name": "Peso (kilos)", "id": "peso"}
 
                              ],
@@ -158,10 +158,10 @@ layout = html.Div([
             				id='dropdown_clasificador_vistas',
             				className="dropdowns",
             				options=[
+                   			{"label": 'Predio', "value": 'predio'},
                 			{"label": 'Material', "value": 'material'},
-                			{"label": 'Etapa', "value": 'etapa'},
             				],
-            				value='material',
+            				value='predio',
             				multi=False
         ),]
     	),
@@ -241,6 +241,7 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
     [
         Input("btn-filtro", "n_clicks"),
         Input("close-modal-sininfopanel-button","n_clicks"),
+        Input("dropdown_clasificador_vistas","value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
@@ -250,10 +251,11 @@ def cambiarFechaCalendario(periodo,start_date,end_date):
         State("sininfopanel-modal","is_open"),
         State("grafico-historico","figure"),
         State("grafico-torta","figure"),
-        State("grafico-barras","figure")
+        State("grafico-barras","figure"),
+
     ]
 )
-def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, cartonere, fecha_inicio,
+def filtrar(n_clicks, close_sininfo_modal_button,clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
     fecha_fin,open_sininfopanel_modal,fig_hist,fig_torta,fig_barras):
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
@@ -261,23 +263,26 @@ def filtrar(n_clicks, close_sininfo_modal_button, predios, rutas, materiales, ca
 
     trigger = callback_context.triggered[0]
 
-    if trigger["prop_id"] in ['.',"btn-filtro.n_clicks"]:
+    if trigger["prop_id"] in ['.',"btn-filtro.n_clicks"] or trigger["prop_id"].split('.')[0]=="dropdown_clasificador_vistas":
         df = MTEDataFrame.get_instance()
         df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
                                                     datetime.fromisoformat(fecha_fin), materiales, cartonere)
         if df_filtrado.empty:
             open_sininfopanel_modal = not open_sininfopanel_modal
-
         else:
-            fig_hist = pesos_historico_promedio(df_filtrado)
-            fig_torta = torta(df_filtrado)
-            fig_barras = pesos_historico_predios(df_filtrado)
-            tabla_resumen=datos_tabla(df_filtrado)[1]
+
+            fig_hist = pesos_historico_promedio(df_filtrado,clasificador)
+            fig_torta = torta(df_filtrado,clasificador)
+            fig_barras = pesos_historico_predios(df_filtrado,clasificador)
+            tabla_resumen=datos_tabla(df_filtrado,clasificador)
             #tabla_resumen = [tabla_resumen.iloc[i].to_dict() for i in range(len(tabla_resumen.index))]
 
-            tabla_resumen=tabla_resumen.reset_index().to_dict('records')
+            tabla_resumen=tabla_resumen.to_dict('records')
+            print(tabla_resumen)
 
-    elif trigger["prop_id"] == "close-modal-sininfopanel-button.n_clicks":
+    elif trigger["prop_id"] in ['.',"btn-filtro.n_clicks"]:
         open_sininfopanel_modal = not open_sininfopanel_modal
+
+
 
     return fig_hist, fig_torta,fig_barras,open_sininfopanel_modal,tabla_resumen #df_filtrado.to_dict("records")
