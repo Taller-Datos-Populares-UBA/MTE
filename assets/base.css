@@ -129,6 +129,23 @@ margin-top: 3%;
   width: 100%;
 }
 
+#upload-comp-base {
+  display: inline-block;
+  color: white !important;
+  text-align: center;
+  text-decoration: none;
+
+  font-family: Rubik, sans;
+}
+
+#upload-comp-base: hover {
+  background-color: #2c559c;
+  box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+  text-decoration: none;
+}
+
 ul li {
   float: left;
 }

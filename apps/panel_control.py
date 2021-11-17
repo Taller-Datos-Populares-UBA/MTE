@@ -18,7 +18,7 @@ from mte_dataframe import MTEDataFrame
 from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
 
-df = MTEDataFrame.get_instance()
+# df = MTEDataFrame.get_instance()
 predios, rutas, materiales, cartoneres=MTEDataFrame.create_features()
 
 # Cards

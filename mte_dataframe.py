@@ -2,12 +2,12 @@ import pandas as pd
 
 from utils.utils import determinar_tipo_cartonero
 
+
 class MTEDataFrame:
     FILES_TO_LOAD = ["data/pesajes-01-01-2019-31-12-2020_anonimizado.csv",
                      "data/pesajes-30-07-2021-06-08-2021_anonimizado.csv"]
 
     _instance = None
-
 
     def __init__(self):
         raise Exception("Cannot instanciate a singleton")
@@ -39,6 +39,11 @@ class MTEDataFrame:
     @classmethod
     def _read_mte_csv(cls, csv_name, dtypes):
         return pd.read_csv(csv_name, dtype=dtypes, parse_dates=[0])
+
+    @classmethod
+    def reset_with_files(cls, files):
+        cls._instance = None
+        cls.FILES_TO_LOAD = files
 
     @classmethod
     def create_features(cls):
