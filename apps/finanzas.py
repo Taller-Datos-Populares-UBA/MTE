@@ -18,11 +18,26 @@ from mte_dataframe import MTEDataFrame
 from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
 # Carga de DataFrames
-df = MTEDataFrame.get_instance()
-predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
+if MTEDataFrame.FILES_TO_LOAD:
+    predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
+else:
+    predios = ['CORTEJARENA', 'SAAVEDRA', 'No especificado', 'BARRACAS', 'AVELLANEDA']
+    rutas = [
+        'R26', 'E5', 'EVU', 'E13', 'E2', 'E1', 'RAZ', 'E8', 'E10', 'R11', 'R14',
+        'R4', 'R24', 'R5', 'R1', 'R12', 'R16', 'R6', 'R17', 'R21', 'R22', 'R3',
+        'R9', 'R25', 'R20', 'R7', 'R8', 'R15', 'R18', 'RUTAS', 'AVELLANEDA',
+        'CHACARITA', 'E2C', 'E2B', 'RIS', 'Avellaneda (A)', 'Avellaneda (C)',
+        'Avellaneda (D)', 'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)',
+        'E8C', 'E8A ', 'E8B', 'E2A'
+    ]
+    materiales = ['No especificado', 'Mezcla B', 'Vidrio B', 'TELA', 'Chatarra', 'Papel Blanco B']
+    cartoneres = ['LE', 'RA', 'No especificado']
 
 
-fig = grafico_torta("NA", df)  # Creo una figura vacia rellenar la card que lleva el grafico
+# EMPROLIJAR
+import plotly.graph_objs as go
+fig = go.Figure()
+# fig = grafico_torta("NA", df)  # Creo una figura vacia rellenar la card que lleva el grafico
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -106,6 +121,7 @@ cards_individual = html.Div(
             children=[
                 dbc.Col(
                     children=[
+                        dbc.Col(html.Div(id="warning-subir-archivo-finanzas"),),
                         dbc.Col(
                             first_card,
                         ),
@@ -363,7 +379,7 @@ layout = html.Div([
                                             },
                                             autoComplete="off"
                                         ),
-                                        CreateButton("search-button", "Buscar")
+                                        CreateButton("search-button", "Buscar"),
                                     ],
                                         id="search-div",
                                         className=""  # Contenedor de la parte de busqueda
@@ -433,7 +449,7 @@ layout = html.Div([
                                         className="mr-1 mt-1 btn btn-primary"
                                     ),
                                     html.Div(children=[
-                                    DataTable(
+                                        DataTable(
                                             id="df_pagos",
                                             columns=[{"name": "Legajo", "id": "legacyId"},
                                                      {"name": "Pago", "id": "precio"}
@@ -441,27 +457,27 @@ layout = html.Div([
                                             editable=False,
                                             row_deletable=False,
                                             style_cell={
-                                                    "textOverflow": "ellipsis",
-                                                    "whiteSpace": "nowrap",
-                                                    "border": "1px solid black",
-                                                    "border-left": "2px solid black"
-                                                },
+                                                "textOverflow": "ellipsis",
+                                                "whiteSpace": "nowrap",
+                                                "border": "1px solid black",
+                                                "border-left": "2px solid black"
+                                            },
                                             style_header={
-                                                    "backgroundColor": "#4582ec",
-                                                    "color": "white",
-                                                    "border": "0px solid #2c559c",
-                                                },
+                                                "backgroundColor": "#4582ec",
+                                                "color": "white",
+                                                "border": "0px solid #2c559c",
+                                            },
                                             style_table={
-                                                    "height": "200px",
-                                                    "minHeight": "200px",
-                                                    "maxHeight": "700px",
-                                                    "overflowX": "auto"
-                                                },
+                                                "height": "200px",
+                                                "minHeight": "200px",
+                                                "maxHeight": "700px",
+                                                "overflowX": "auto"
+                                            },
                                             fixed_rows={'headers': True},
-                        
+
                                         )],
-                                            id="df-precios-parent"),
-                                    
+                                        id="df-precios-parent"),
+
                                     dbc.Spinner(
                                         children=[
                                             html.P(
@@ -473,7 +489,7 @@ layout = html.Div([
                                         fullscreen=False,
                                         id="loading-2",
                                     )],
-                                
+
                                 style={
                                     "position": "relative",
                                     "top": 0,
@@ -483,7 +499,7 @@ layout = html.Div([
                                     "padding": "0 auto"
                                 },
                             ),
-                                    
+
                         ],
                         id="tab2-finanzas",
                         className="tabs tab-finanzas-header tab",
@@ -636,7 +652,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         Output("legacy_id-modal", "is_open"),
         Output("tabla-legajo", "data"),
         Output("errorpago-modal", "is_open"),
-        Output("df_pagos","data"),
+        Output("df_pagos", "data"),
 
     ],
     [
@@ -657,7 +673,8 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         State("legacy_id-modal", "is_open"),
         State("tabla-legajo", "data"),
         State("errorpago-modal", "is_open")
-    ]
+    ],
+    prevent_initial_call=True
 )
 def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
                   sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open):
@@ -673,7 +690,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
             df_pagos = pago_por_compa(df_filtrado, df_precios)
         except Exception as e:
             print("No pude calcular el pago, error:", e)
-    
+
     elif trigger["prop_id"] in ["search-button.n_clicks"]:
         # Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
@@ -683,7 +700,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
         # Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
         cond2 = legacy_id in list(df_filtrado["legacyId"])
-        
+
         if cond1 and cond2:  # Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar
 
             if trigger["prop_id"] == "search-button.n_clicks":
@@ -706,7 +723,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
                     ultimos_movimientos = ultimos_movimientos.head(10)
                     ultimos_movimientos["fecha"] = [fecha.isoformat()[:-9] for fecha in ultimos_movimientos.fecha]
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
-                
+
         elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
             sininfo_is_open = not sininfo_is_open
 
@@ -722,7 +739,22 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
     elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
         errorpago_is_open = not errorpago_is_open
-    print(df_pagos)
+    # print(df_pagos)
     df_pagos=df_pagos.reset_index().to_dict('records')
-    
-    return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open,df_pagos]
+
+    return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, df_pagos]
+
+
+@app.callback(
+    Output("warning-subir-archivo-finanzas", "children"),
+    Input("search-button", "n_clicks")
+)
+def warning_subir_archivo(n_clicks):
+    """
+    Agrega un warning si el usuario no cargó un archivo.
+    """
+    if n_clicks:
+        if MTEDataFrame.FILES_TO_LOAD:
+            return None
+    if MTEDataFrame.FILES_TO_LOAD is None:
+        return dbc.Alert("Por favor subir un archivo primero y luego apretar BUSCAR", color="danger", style={"font-size": "20px"})

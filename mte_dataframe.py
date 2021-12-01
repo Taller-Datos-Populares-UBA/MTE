@@ -4,8 +4,9 @@ from utils.utils import determinar_tipo_cartonero
 
 
 class MTEDataFrame:
-    FILES_TO_LOAD = ["data/pesajes-01-01-2019-31-12-2020_anonimizado.csv",
-                     "data/pesajes-30-07-2021-06-08-2021_anonimizado.csv"]
+    # FILES_TO_LOAD = ["data/pesajes-01-01-2019-31-12-2020_anonimizado.csv",
+    #                  "data/pesajes-30-07-2021-06-08-2021_anonimizado.csv"]
+    FILES_TO_LOAD = None
 
     _instance = None
 

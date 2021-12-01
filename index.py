@@ -67,10 +67,10 @@ def cargar_archivo(list_of_contents, list_of_names, list_of_dates):
         files_list = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
-        print(files_list)
+        # print(files_list)
         MTEDataFrame.reset_with_files(files_list)
         df = MTEDataFrame.get_instance()
-        print(df)
+        # print(df)
         return ""
 
 
