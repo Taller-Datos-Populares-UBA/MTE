@@ -17,8 +17,6 @@ from mte_dataframe import MTEDataFrame
 
 from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
 
-# df = MTEDataFrame.get_instance()
-
 if MTEDataFrame.FILES_TO_LOAD:
     predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
 else:
@@ -71,8 +69,6 @@ card_resumen = dbc.Card([
 
                 )],
                 id="tabla-Resumen-parent")]
-
-        #html.P(f"$ {round(pago, 2)}", id="label-legajo"),
 
     )], className="card"
 )
@@ -187,14 +183,6 @@ layout = html.Div([
                                          type="circle",
                                      ),
                                  ]),
-                         # dcc.Tab(label="Pestaña 2", value="tab_2",
-                         #         children=[
-                         #             dash_table.DataTable(
-                         #                 id="tabla",
-                         #                 editable=True,
-                         #                 columns=[{"name": i, "id": i} for i in df.columns],
-                         #             )
-                         #         ]),
                          ],
                      value="tab_1"
                      ),
@@ -276,13 +264,12 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
     """
-    # tabla_resumen = None  # Probando para eliminar un error
 
     trigger = callback_context.triggered[0]
 
     if trigger["prop_id"] in ['.', "btn-filtro.n_clicks"] or trigger["prop_id"].split('.')[0]=="dropdown_clasificador_vistas":
         df = MTEDataFrame.get_instance()
-        df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
+        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
                                         datetime.fromisoformat(fecha_fin), materiales, cartonere)
         if df_filtrado.empty:
             open_sininfopanel_modal = not open_sininfopanel_modal
@@ -290,8 +277,8 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
             fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
             fig_torta = torta(df_filtrado, clasificador)
             fig_barras = pesos_historico_predios(df_filtrado, clasificador)
-            tabla_resumen=datos_tabla(df_filtrado, clasificador)
-            tabla_resumen=tabla_resumen.to_dict('records')
+            tabla_resumen = datos_tabla(df_filtrado, clasificador)
+            tabla_resumen = tabla_resumen.to_dict('records')
 
     elif trigger["prop_id"] in ['.', "btn-filtro.n_clicks"]:
         open_sininfopanel_modal = not open_sininfopanel_modal

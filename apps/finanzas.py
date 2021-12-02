@@ -201,6 +201,9 @@ layout = html.Div([
 
             SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonerx", "salida-cartoneres"),
 
+            SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
+                    capitalize=True),
+
             html.Label(  # Label de la tabla
                 "Tabla de precios",
                 id="label-tabla"
@@ -448,47 +451,36 @@ layout = html.Div([
                                         className="mr-1 mt-1 btn btn-primary"
                                     ),
                                     html.Div(children=[
-                                        DataTable(
+                                    DataTable(
                                             id="df_pagos",
-                                            columns=[{"name": "Legajo", "id": "legacyId"},
+                                            columns=[{"name": "Predio", "id": "predio"},
                                                      {"name": "Pago", "id": "precio"}
                                                      ],
                                             editable=False,
                                             row_deletable=False,
                                             style_cell={
-                                                "textOverflow": "ellipsis",
-                                                "whiteSpace": "nowrap",
-                                                "border": "1px solid black",
-                                                "border-left": "2px solid black"
-                                            },
+                                                    "textOverflow": "ellipsis",
+                                                    "whiteSpace": "nowrap",
+                                                    "border": "1px solid black",
+                                                    "border-left": "2px solid black"
+                                                },
                                             style_header={
-                                                "backgroundColor": "#4582ec",
-                                                "color": "white",
-                                                "border": "0px solid #2c559c",
-                                            },
+                                                    "backgroundColor": "#4582ec",
+                                                    "color": "white",
+                                                    "border": "0px solid #2c559c",
+                                                },
                                             style_table={
-                                                "height": "200px",
-                                                "minHeight": "200px",
-                                                "maxHeight": "700px",
-                                                "overflowX": "auto"
-                                            },
+                                                    "height": "800px",
+                                                    "minHeight": "200px",
+                                                    "maxHeight": "700px",
+                                                    "overflowX": "auto"
+                                                },
                                             fixed_rows={'headers': True},
-
+                        
                                         )],
-                                        id="df-precios-parent"),
-
-                                    dbc.Spinner(
-                                        children=[
-                                            html.P(
-                                                "Si no ves nada acá presioná el botón de Refrescar",
-                                                id="parent-todxs"
-                                            ),
-                                        ],
-                                        size="md",
-                                        fullscreen=False,
-                                        id="loading-2",
-                                    )],
-
+                                            id="df-precios-parent"),
+                                    ],
+                                
                                 style={
                                     "position": "relative",
                                     "top": 0,
@@ -498,7 +490,7 @@ layout = html.Div([
                                     "padding": "0 auto"
                                 },
                             ),
-
+                                    
                         ],
                         id="tab2-finanzas",
                         className="tabs tab-finanzas-header tab",
@@ -645,7 +637,6 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
     [
         Output("label-total", "children"),
         Output("sininfo-modal", "is_open"),
-        Output("parent-todxs", "children"),
         Output("graph-legajo", "figure"),
         Output("label-legajo", "children"),
         Output("legacy_id-modal", "is_open"),
@@ -671,35 +662,38 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         State("label-legajo", "children"),
         State("legacy_id-modal", "is_open"),
         State("tabla-legajo", "data"),
-        State("errorpago-modal", "is_open")
+        State("errorpago-modal", "is_open"),
+        State("dropdown-rutas", "value"),
+        State("dropdown-materiales", "value"),
+        State("dropdown-cartonerx", "value"),
     ],
     prevent_initial_call=True
 )
 def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
-                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open):
+                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, rutas, materiales, cartonere):
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
-    df_pagos=pd.DataFrame()
+    df_pagos = pd.DataFrame()
     # Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
     if trigger["prop_id"] in ["refresh-button.n_clicks"] and tab == "todxs":
         df_precios = pd.DataFrame(data)
-        df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
-                                        datetime.fromisoformat(fecha_fin), [], [])
+        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
+                                        datetime.fromisoformat(fecha_fin), materiales, cartonere)
         try:
             df_pagos = pago_por_compa(df_filtrado, df_precios)
         except Exception as e:
             print("No pude calcular el pago, error:", e)
-
+    
     elif trigger["prop_id"] in ["search-button.n_clicks"]:
         # Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
-        df_filtrado = crear_df_filtrado(df, predios, datetime.fromisoformat(fecha_inicio),
-                                        datetime.fromisoformat(fecha_fin), [], [])
+        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
+                                        datetime.fromisoformat(fecha_fin), materiales, cartonere)
 
         # Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
         cond2 = legacy_id in list(df_filtrado["legacyId"])
-
+        
         if cond1 and cond2:  # Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar
 
             if trigger["prop_id"] == "search-button.n_clicks":
@@ -722,7 +716,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
                     ultimos_movimientos = ultimos_movimientos.head(10)
                     ultimos_movimientos["fecha"] = [fecha.isoformat()[:-9] for fecha in ultimos_movimientos.fecha]
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
-
+                
         elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
             sininfo_is_open = not sininfo_is_open
 
@@ -738,9 +732,10 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
     elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
         errorpago_is_open = not errorpago_is_open
-    df_pagos=df_pagos.reset_index().to_dict('records')
 
-    return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, df_pagos]
+    df_pagos = df_pagos.reset_index().to_dict('records')
+
+    return [n_clicks, sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, df_pagos]
 
 
 @app.callback(

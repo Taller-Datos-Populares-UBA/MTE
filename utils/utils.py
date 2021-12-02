@@ -9,7 +9,7 @@ def determinar_tipo_cartonero(row):
     return val
 
 
-def crear_df_filtrado(df, predios, fecha_inicio, fecha_finalizacion, materiales, tipo_cartonero):
+def crear_df_filtrado(df, predios, rutas, fecha_inicio, fecha_finalizacion, materiales, tipo_cartonero):
     """
     Si el dropdown queda vacío, nos llega una lista vacía y eso implica que devolvemos
     un df sin filtrar en esa categoría (por eso los condicionales).
@@ -22,6 +22,9 @@ def crear_df_filtrado(df, predios, fecha_inicio, fecha_finalizacion, materiales,
     # aplicar filtros
     if predios:
         df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
+
+    if rutas:
+        df_filtrado = df_filtrado.loc[df_filtrado['etapa'].isin(rutas)]
 
     df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
 

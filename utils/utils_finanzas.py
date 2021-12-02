@@ -107,11 +107,9 @@ def retornar_df_pagos(df_filtrado, df_precios):
     for index, row in df_precios.iterrows():
         sede = row["sede"]
         material = row["material"]
-#         tipoCartonero = row["tipoCartonero"]
 
         indices_LE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "LE")].index
         indices_RA = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "RA")].index
-#         indices_NE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == tipoCartonero)].index
 
         precio_LE = row["preciole"]
         precio_RA = row["preciora"]
@@ -124,7 +122,7 @@ def retornar_df_pagos(df_filtrado, df_precios):
 
 def pago_por_compa(df_filtrado, df_precios):
     df_pagos = retornar_df_pagos(df_filtrado, df_precios)
-    df_pagos = df_pagos.groupby(['legacyId']).sum('precio')
+    df_pagos = df_pagos.groupby(['predio']).sum('precio')
     return df_pagos[['precio']]
 
 

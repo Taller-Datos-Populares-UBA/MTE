@@ -67,7 +67,7 @@ def SelectDates(identificacion, indentificacion_radio):
                     {'label': 'Último año', 'value': 'año'},
                     {'label': 'Otro', 'value': 'otro'}
                     ],
-                value='semana',
+                value='otro',
                 className="radio-item",
                 style={
                     "fontSize": "18px",
@@ -79,7 +79,7 @@ def SelectDates(identificacion, indentificacion_radio):
                 id=identificacion,
                 display_format="D/M/Y",
                 min_date_allowed=date(1995, 8, 5),
-                max_date_allowed=date(2021, 12, 31),
+                max_date_allowed=date(2022, 12, 31),
                 start_date=date(2019, 5, 15),
                 end_date=date(2021, 8, 10),
                 className="date-range"
@@ -91,7 +91,7 @@ def SelectDates(identificacion, indentificacion_radio):
 
 def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_option=False, capitalize=False):
     options = list(options) + ["Todas"] if add_all_as_option else options
-    initial_value = "Todas" if add_all_as_option else options
+    initial_value = ["Todas"] if add_all_as_option else options
     return html.Div(children=[
         html.Label(label, className="labels"),
         dcc.Dropdown(
