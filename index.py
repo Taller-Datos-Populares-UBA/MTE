@@ -40,19 +40,17 @@ app.layout = html.Div([
 ]
 )
 
-
-# BORRAR ESTO, ES PRUEBA
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)
 
     if filename.endswith(".csv"):
-        file = io.StringIO(decoded.decode('utf-8'))
+        return io.StringIO(decoded.decode('utf-8'))
     elif filename.endswith(".xls") or filename.endswith(".xlsx"):
-        file = io.BytesIO(decoded)
-
-    return file
+        return io.BytesIO(decoded)
+    
+    return None # TODO It should raise an exception
 
 
 @app.callback(
@@ -67,10 +65,8 @@ def cargar_archivo(list_of_contents, list_of_names, list_of_dates):
         files_list = [
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
-        # print(files_list)
         MTEDataFrame.reset_with_files(files_list)
         df = MTEDataFrame.get_instance()
-        # print(df)
         return ""
 
 
@@ -90,8 +86,6 @@ def display_page(pathname):
         return panel_control.layout, "link-active", ""  # ,""
     elif pathname == '/finanzas':
         return finanzas.layout, "", "link-active"  # ,""
-    # elif pathname == '/bases_de_datos':
-    #    raise Exception("No implementado")
     elif pathname == "/":
         return panel_control.layout, "link-active", ""  # ,""
     else:

@@ -287,15 +287,11 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
         if df_filtrado.empty:
             open_sininfopanel_modal = not open_sininfopanel_modal
         else:
-
             fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
             fig_torta = torta(df_filtrado, clasificador)
             fig_barras = pesos_historico_predios(df_filtrado, clasificador)
             tabla_resumen=datos_tabla(df_filtrado, clasificador)
-            #tabla_resumen = [tabla_resumen.iloc[i].to_dict() for i in range(len(tabla_resumen.index))]
-
             tabla_resumen=tabla_resumen.to_dict('records')
-            # print(tabla_resumen)
 
     elif trigger["prop_id"] in ['.', "btn-filtro.n_clicks"]:
         open_sininfopanel_modal = not open_sininfopanel_modal

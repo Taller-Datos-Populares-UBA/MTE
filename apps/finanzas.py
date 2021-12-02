@@ -37,7 +37,6 @@ else:
 # EMPROLIJAR
 import plotly.graph_objs as go
 fig = go.Figure()
-# fig = grafico_torta("NA", df)  # Creo una figura vacia rellenar la card que lleva el grafico
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -739,7 +738,6 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
     elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
         errorpago_is_open = not errorpago_is_open
-    # print(df_pagos)
     df_pagos=df_pagos.reset_index().to_dict('records')
 
     return [n_clicks, sininfo_is_open, n_clicks, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, df_pagos]
