@@ -2,6 +2,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
+#prueba comentario 8/12
 
 def pesos_historico_predios(data, tipo='predio'):
     '''
