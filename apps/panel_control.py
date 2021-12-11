@@ -264,7 +264,9 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
     """
     Se ejecuta al principio y cada vez que se clickee el botón.
     """
-
+    if "Todas" in rutas: 
+        rutas = None
+        
     trigger = callback_context.triggered[0]
 
     if trigger["prop_id"] in ['.', "btn-filtro.n_clicks"] or trigger["prop_id"].split('.')[0]=="dropdown_clasificador_vistas":

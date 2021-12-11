@@ -671,6 +671,8 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
 )
 def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
                   sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, rutas, materiales, cartonere):
+    if "Todas" in rutas: 
+        rutas = None
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
     df_pagos = pd.DataFrame()
