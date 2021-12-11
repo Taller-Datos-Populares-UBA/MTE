@@ -1,8 +1,8 @@
+from datetime import date
+
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-
-from datetime import date, datetime, timedelta
 
 from app import app
 
@@ -46,7 +46,7 @@ def CreateButton(identificacion, txt):
                 html.P(
                     txt
                 )
-                ],
+            ],
             id=identificacion,
             n_clicks=0,
             className="mr-1 mt-1 btn btn-primary search-button"
@@ -66,15 +66,15 @@ def SelectDates(identificacion, indentificacion_radio):
                     {'label': 'Último mes', 'value': 'mes'},
                     {'label': 'Último año', 'value': 'año'},
                     {'label': 'Otro', 'value': 'otro'}
-                    ],
+                ],
                 value='otro',
                 className="radio-item",
                 style={
                     "fontSize": "18px",
                     "width": "100%",
-                    },
+                },
                 id=indentificacion_radio
-                ),
+            ),
             dcc.DatePickerRange(
                 id=identificacion,
                 display_format="D/M/Y",
@@ -83,9 +83,9 @@ def SelectDates(identificacion, indentificacion_radio):
                 start_date=date(2019, 5, 15),
                 end_date=date(2021, 8, 10),
                 className="date-range"
-                )
-            ], className="dates-container"
             )
+        ], className="dates-container"
+        )
     ])
 
 
@@ -143,3 +143,21 @@ def CreateModal(idModal: str, titleModal: str, bodyModal: str):
         is_open=False,
         backdrop="static"  # Modal sin informacion
     )
+
+
+def CreateFilters(predios, rutas, materiales, cartoneres):
+    return html.Div(children=[
+
+        html.H6(
+            "Filtros",
+            className="title-botonera"
+        ),
+
+        SelectDates("date-range", "radio-button-fechas"),
+        SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
+        SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas",
+                            add_all_as_option=True),
+        SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
+                            capitalize=True),
+        SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
+    ])

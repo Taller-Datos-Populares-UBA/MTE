@@ -1,17 +1,16 @@
-import io
+# index
+
 import base64
+import io
 
 import dash_core_components as dcc
-import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Output, Input, State
 
 from app import app
 from apps import panel_control, finanzas, error404
 from elements import NavbarElement, LogoMTE
-
 from mte_dataframe import MTEDataFrame
-
 
 navbar = (
     html.Ul([
@@ -66,7 +65,6 @@ def cargar_archivo(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         MTEDataFrame.reset_with_files(files_list)
-        df = MTEDataFrame.get_instance()
         return ""
 
 

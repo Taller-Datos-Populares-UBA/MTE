@@ -1,48 +1,25 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
-import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-from dash import callback_context
-from dash.dependencies import Output, Input, State
+import plotly.graph_objs as go
+from dash.dependencies import State
 from dash_table import DataTable, FormatTemplate
 
+from apps.base import *
+from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
 from utils.utils import crear_df_filtrado
-from utils.utils_finanzas import grafico_torta, parse_contents  # , calcular_pago
-from utils.utils_finanzas import pago_por_compa, pago_individual
+from utils.utils_finanzas import grafico_torta, parse_contents
+from utils.utils_finanzas import pago_por_predio, pago_individual
 
-from app import app
-from mte_dataframe import MTEDataFrame
-
-from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
-
-# Carga de DataFrames
-if MTEDataFrame.FILES_TO_LOAD:
-    predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
-else:
-    predios = ['CORTEJARENA', 'SAAVEDRA', 'No especificado', 'BARRACAS', 'AVELLANEDA']
-    rutas = [
-        'R26', 'E5', 'EVU', 'E13', 'E2', 'E1', 'RAZ', 'E8', 'E10', 'R11', 'R14',
-        'R4', 'R24', 'R5', 'R1', 'R12', 'R16', 'R6', 'R17', 'R21', 'R22', 'R3',
-        'R9', 'R25', 'R20', 'R7', 'R8', 'R15', 'R18', 'RUTAS', 'AVELLANEDA',
-        'CHACARITA', 'E2C', 'E2B', 'RIS', 'Avellaneda (A)', 'Avellaneda (C)',
-        'Avellaneda (D)', 'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)',
-        'E8C', 'E8A ', 'E8B', 'E2A'
-    ]
-    materiales = ['No especificado', 'Mezcla B', 'Vidrio B', 'TELA', 'Chatarra', 'Papel Blanco B']
-    cartoneres = ['LE', 'RA', 'No especificado']
-
-
-# EMPROLIJAR
-import plotly.graph_objs as go
 fig = go.Figure()
 
-#--------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 
 # Cards
 
-#--------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------------
 
 # Card con el saldo
 first_card = dbc.Card([
@@ -91,12 +68,12 @@ second_card = dbc.Card([
                         "textOverflow": "ellipsis",
                         "border": "1px solid black",
                         "border-left": "2px solid black"
-                        },
+                    },
                     style_header={
                         "backgroundColor": "#4582ec",
                         "color": "white",
                         "border": "0px solid #2c559c",
-                        },
+                    },
                 )
             ])
         ], id="tabla-legajo-parent")],
@@ -108,7 +85,8 @@ third_card = dbc.Card(
     dbc.CardBody(
         [
             html.H5("Material recolectado", className="card-title"),
-            dcc.Graph(id="graph-legajo", figure=fig, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'}),
+            dcc.Graph(id="graph-legajo", figure=fig,
+                      config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'}),
         ]),
     className="card"
 )
@@ -120,7 +98,7 @@ cards_individual = html.Div(
             children=[
                 dbc.Col(
                     children=[
-                        dbc.Col(html.Div(id="warning-subir-archivo-finanzas"),),
+                        dbc.Col(html.Div(id="warning-subir-archivo-finanzas"), ),
                         dbc.Col(
                             first_card,
                         ),
@@ -172,10 +150,11 @@ layout = html.Div([
 
     CreateModal("errorpago", "Faltan precios", "Revisá si está completa la tabla de precios."),
 
-    CreateModal("legacy_id", "No se encontró el número de legajo", "Revisá si está correctamente colocado el número de legajo."),
+    CreateModal("legacy_id", "No se encontró el número de legajo",
+                "Revisá si está correctamente colocado el número de legajo."),
 
-    CreateModal("archivoerror", "Problemas con el archivo", "El archivo parece estar dañado, vacio, o con un formato no soportado."),
-
+    CreateModal("archivoerror", "Problemas con el archivo",
+                "El archivo parece estar dañado, vacio, o con un formato no soportado."),
 
     dcc.Download(id="download"),
 
@@ -185,25 +164,7 @@ layout = html.Div([
         id="botonera",
         className="botonera",
         children=[
-
-            html.H6(  # Titulo Botonera
-                "Filtros",
-                className="title-botonera"
-            ),
-
-            html.Div(
-                children=[  # Radiobuttons y picker de fechas
-                    SelectDates("date-range-finanzas", "radio-button-fechas-finanzas"),
-                    SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
-                    ]
-            ),
-            SelectFilterOptions(rutas, "Elegí la ruta", "dropdown-rutas", "salida-rutas", add_all_as_option=True, capitalize=True),
-
-            SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonerx", "salida-cartoneres"),
-
-            SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
-                    capitalize=True),
-
+            CreateFilters(predios, rutas, materiales, cartoneres),
             html.Label(  # Label de la tabla
                 "Tabla de precios",
                 id="label-tabla"
@@ -451,7 +412,7 @@ layout = html.Div([
                                         className="mr-1 mt-1 btn btn-primary"
                                     ),
                                     html.Div(children=[
-                                    DataTable(
+                                        DataTable(
                                             id="df_pagos",
                                             columns=[{"name": "Predio", "id": "predio"},
                                                      {"name": "Pago", "id": "precio"}
@@ -459,28 +420,28 @@ layout = html.Div([
                                             editable=False,
                                             row_deletable=False,
                                             style_cell={
-                                                    "textOverflow": "ellipsis",
-                                                    "whiteSpace": "nowrap",
-                                                    "border": "1px solid black",
-                                                    "border-left": "2px solid black"
-                                                },
+                                                "textOverflow": "ellipsis",
+                                                "whiteSpace": "nowrap",
+                                                "border": "1px solid black",
+                                                "border-left": "2px solid black"
+                                            },
                                             style_header={
-                                                    "backgroundColor": "#4582ec",
-                                                    "color": "white",
-                                                    "border": "0px solid #2c559c",
-                                                },
+                                                "backgroundColor": "#4582ec",
+                                                "color": "white",
+                                                "border": "0px solid #2c559c",
+                                            },
                                             style_table={
-                                                    "height": "800px",
-                                                    "minHeight": "200px",
-                                                    "maxHeight": "700px",
-                                                    "overflowX": "auto"
-                                                },
+                                                "height": "800px",
+                                                "minHeight": "200px",
+                                                "maxHeight": "700px",
+                                                "overflowX": "auto"
+                                            },
                                             fixed_rows={'headers': True},
-                        
+
                                         )],
-                                            id="df-precios-parent"),
-                                    ],
-                                
+                                        id="df-precios-parent"),
+                                ],
+
                                 style={
                                     "position": "relative",
                                     "top": 0,
@@ -490,7 +451,7 @@ layout = html.Div([
                                     "padding": "0 auto"
                                 },
                             ),
-                                    
+
                         ],
                         id="tab2-finanzas",
                         className="tabs tab-finanzas-header tab",
@@ -506,63 +467,7 @@ layout = html.Div([
         },
     ),
 
-
 ])
-
-
-"""
-----------------------------------------------------------------------------------------------------------------------------------------------
-
-Callbacks
-
-----------------------------------------------------------------------------------------------------------------------------------------------
-
-"""
-
-
-# Funcion que controla los radiobuttons de las fechas y la fecha que aparece en el calendario
-@app.callback(
-    [
-        Output("date-range-finanzas", "start_date"),
-        Output("date-range-finanzas", "end_date"),
-        Output("radio-button-fechas-finanzas", "value")
-    ],
-    [
-        Input("radio-button-fechas-finanzas", "value"),
-        Input("date-range-finanzas", "start_date"),
-        Input("date-range-finanzas", "end_date"),
-    ]
-)
-def cambiarFechaCalendario(periodo, start_date, end_date):
-    trigger = callback_context.triggered[0]
-
-    # Si llamo a la función desde los input de las fechas se tendria que cambiar a otro automaticamente el periodo
-    if trigger["prop_id"] == "date-range-finanzas.start_date" or trigger["prop_id"] == "date-range-finanzas.end_date":
-        fecha_inicio = start_date
-        fecha_finalizacion = end_date
-        periodo = "otro"
-
-    # Si no viene de los input, viene de los radiobutton.
-    # Luego que modifique la fecha de los input con la opcion del radiobutton que llega
-    else:
-        if periodo == 'otro':
-            fecha_inicio = start_date
-            fecha_finalizacion = end_date
-        elif periodo == 'semana':
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(6)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-        elif periodo == 'mes':
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(30)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-        else:
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(364)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-
-    return fecha_inicio, fecha_finalizacion, periodo
-
 
 # Funcion que controla todos los botones de la tabla de precios
 @app.callback(
@@ -629,6 +534,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
             rows = store_data
         return rows, None, False, rows
 
+
 # Función
 
 
@@ -653,8 +559,8 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         Input("tabs-finanzas", "value"),
         Input("refresh-button", "n_clicks"),
         State("dropdown-predios", "value"),
-        State("date-range-finanzas", "start_date"),
-        State("date-range-finanzas", "end_date"),
+        State("date-range", "start_date"),
+        State("date-range", "end_date"),
         State("input-legacyId", "value"),
         State("table-precios", "data"),
         State("sininfo-modal", "is_open"),
@@ -665,27 +571,30 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         State("errorpago-modal", "is_open"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
-        State("dropdown-cartonerx", "value"),
+        State("dropdown-cartonere", "value"),
     ],
     prevent_initial_call=True
 )
-def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data,
-                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, rutas, materiales, cartonere):
-    if "Todas" in rutas: 
+def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios,
+                  fecha_inicio, fecha_fin, legacy_id, data,
+                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos,
+                  errorpago_is_open, rutas, materiales, cartonere):
+    if "Todas" in rutas:
         rutas = None
+    print(MTEDataFrame.FILES_TO_LOAD)
     df = MTEDataFrame.get_instance()
     trigger = callback_context.triggered[0]
     df_pagos = pd.DataFrame()
     # Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
-    if trigger["prop_id"] in ["refresh-button.n_clicks"] and tab == "todxs":
+    if trigger["prop_id"] in ["refresh-button.n_clicks"] and tab == "todxs":  # REVISAR
         df_precios = pd.DataFrame(data)
         df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
                                         datetime.fromisoformat(fecha_fin), materiales, cartonere)
         try:
-            df_pagos = pago_por_compa(df_filtrado, df_precios)
+            df_pagos = pago_por_predio(df_filtrado, df_precios)
         except Exception as e:
             print("No pude calcular el pago, error:", e)
-    
+
     elif trigger["prop_id"] in ["search-button.n_clicks"]:
         # Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
         df_precios = pd.DataFrame(data)
@@ -695,27 +604,28 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
         # Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
         cond1 = not df_filtrado.empty
         cond2 = legacy_id in list(df_filtrado["legacyId"])
-        
+
         if cond1 and cond2:  # Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar
 
             if trigger["prop_id"] == "search-button.n_clicks":
                 figure = grafico_torta(legacy_id, df_filtrado)
                 # pago, ultimos_movimientos = calcular_pago(df_filtrado, legacy_id, df_precios)
                 try:
-                    df_pagos = pago_por_compa(df_filtrado, df_precios)
-                    pago = pago_individual(df_pagos, legacy_id)[0]
+                    pago = pago_individual(df_filtrado, df_precios, legacy_id)
                 except Exception as e:
                     print("No pude calcular el pago, error:", e)
-                ultimos_movimientos = df_filtrado[df_filtrado.legacyId==legacy_id]
-                if pago=="Error":  # Del hecho de que la tabla de precios esta vacio
+                ultimos_movimientos = df_filtrado[df_filtrado.legacyId == legacy_id]
+                if pago == "Error":  # Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
                 else:  # Modificamos el formato del pago
-                    pago="$ "+str(pago)
+                    print(pago)
+                    pago = "$ " + str(pago)
 
                 ultimos_movimientos = ultimos_movimientos.sort_values("fecha", ascending=False)
                 ultimos_movimientos["fecha"] = ultimos_movimientos["fecha"].dt.strftime("%d/%m/%Y")
-                ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
-                
+                ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in
+                                       range(len(ultimos_movimientos.index))]
+
         elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
             sininfo_is_open = not sininfo_is_open
 
@@ -734,19 +644,5 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
 
     df_pagos = df_pagos.reset_index().to_dict('records')
 
-    return [n_clicks, sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos, errorpago_is_open, df_pagos]
-
-
-@app.callback(
-    Output("warning-subir-archivo-finanzas", "children"),
-    Input("search-button", "n_clicks")
-)
-def warning_subir_archivo(n_clicks):
-    """
-    Agrega un warning si el usuario no cargó un archivo.
-    """
-    if n_clicks:
-        if MTEDataFrame.FILES_TO_LOAD:
-            return None
-    if MTEDataFrame.FILES_TO_LOAD is None:
-        return dbc.Alert("Por favor subir un archivo primero y luego apretar BUSCAR", color="danger", style={"font-size": "20px"})
+    return [n_clicks, sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos,
+            errorpago_is_open, df_pagos]

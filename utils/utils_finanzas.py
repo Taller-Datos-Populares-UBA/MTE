@@ -1,4 +1,3 @@
-import datetime
 import base64
 import io
 
@@ -120,11 +119,14 @@ def retornar_df_pagos(df_filtrado, df_precios):
     return df_pagos
 
 
-def pago_por_compa(df_filtrado, df_precios):
+def pago_por_predio(df_filtrado, df_precios):
     df_pagos = retornar_df_pagos(df_filtrado, df_precios)
     df_pagos = df_pagos.groupby(['predio']).sum('precio')
     return df_pagos[['precio']]
 
 
-def pago_individual(df_pagos, legajo):
+def pago_individual(df_filtrado, df_precios, legajo):
+    df_pagos = retornar_df_pagos(df_filtrado, df_precios)
+    df_pagos = df_pagos.groupby(['legacyId']).sum('precio')
+    print(df_pagos)
     return df_pagos.loc[legajo]

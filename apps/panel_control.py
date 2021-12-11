@@ -1,37 +1,15 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
-import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_table
-from dash import callback_context
-from dash.dependencies import Output, Input, State
+from dash.dependencies import State
 from dash_table import DataTable
 
-
-from utils.utils import crear_df_filtrado
-from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, pesos_historico_materiales, datos_tabla
-
-from app import app
+from apps.base import *
+from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
 from mte_dataframe import MTEDataFrame
-
-from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal
-
-if MTEDataFrame.FILES_TO_LOAD:
-    predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
-else:
-    predios = ['CORTEJARENA', 'SAAVEDRA', 'No especificado', 'BARRACAS', 'AVELLANEDA']
-    rutas = [
-        'R26', 'E5', 'EVU', 'E13', 'E2', 'E1', 'RAZ', 'E8', 'E10', 'R11', 'R14',
-        'R4', 'R24', 'R5', 'R1', 'R12', 'R16', 'R6', 'R17', 'R21', 'R22', 'R3',
-        'R9', 'R25', 'R20', 'R7', 'R8', 'R15', 'R18', 'RUTAS', 'AVELLANEDA',
-        'CHACARITA', 'E2C', 'E2B', 'RIS', 'Avellaneda (A)', 'Avellaneda (C)',
-        'Avellaneda (D)', 'Avellaneda (F)', 'Avellaneda (E)', 'Avellaneda (B)',
-        'E8C', 'E8A ', 'E8B', 'E2A'
-    ]
-    materiales = ['No especificado', 'Mezcla B', 'Vidrio B', 'TELA', 'Chatarra', 'Papel Blanco B']
-    cartoneres = ['LE', 'RA', 'No especificado']
-
+from utils.utils import crear_df_filtrado
+from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
 
 # Cards
 
@@ -135,22 +113,7 @@ layout = html.Div([
 
     CreateModal("sininfopanel", "No se encontró información", "Revisá si estan correctamente seleccionados los filtros."),
     html.Div(id="div-izquierda-panel", className="botonera", children=[
-        # html.Img(
-        #    src=app.get_asset_url("logo_negro.png"), className="logo-mte-panel"
-        #),
-
-        html.H6(  # Titulo Botonera
-                "Filtros",
-                className="title-botonera"
-        ),
-
-        SelectDates("date-range-panel", "radio-button-fechas-panel"),
-        SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
-        SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas", add_all_as_option=True),
-        SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
-                            capitalize=True),
-        SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
-
+        CreateFilters(predios, rutas, materiales, cartoneres),
         CreateButton("btn-filtro", "Filtrar"),
 
     ],
@@ -192,46 +155,6 @@ layout = html.Div([
 
 ])
 
-
-@app.callback(
-    [
-        Output("date-range-panel", "start_date"),
-        Output("date-range-panel", "end_date"),
-        Output("radio-button-fechas-panel", "value")
-    ],
-    [
-        Input("radio-button-fechas-panel", "value"),
-        Input("date-range-panel", "start_date"),
-        Input("date-range-panel", "end_date"),
-    ]
-)
-def cambiarFechaCalendario(periodo, start_date, end_date):
-    trigger = callback_context.triggered[0]
-
-    if trigger["prop_id"] == "date-range-panel.start_date" or trigger["prop_id"] == "date-range-panel.end_date":
-        fecha_inicio = start_date
-        fecha_finalizacion = end_date
-        periodo = "otro"
-    else:
-        if periodo == 'otro':
-            fecha_inicio = start_date
-            fecha_finalizacion = end_date
-        elif periodo == 'semana':
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(6)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-        elif periodo == 'mes':
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(30)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-        else:
-            fecha_finalizacion = date.today()
-            otra_fecha = timedelta(364)
-            fecha_inicio = fecha_finalizacion - otra_fecha
-
-    return fecha_inicio, fecha_finalizacion, periodo
-
-
 @app.callback(
     [
         Output("grafico-historico", "figure"),
@@ -249,8 +172,8 @@ def cambiarFechaCalendario(periodo, start_date, end_date):
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
-        State("date-range-panel", "start_date"),
-        State("date-range-panel", "end_date"),
+        State("date-range", "start_date"),
+        State("date-range", "end_date"),
         State("sininfopanel-modal", "is_open"),
         State("grafico-historico", "figure"),
         State("grafico-torta", "figure"),
@@ -285,19 +208,4 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
     elif trigger["prop_id"] in ['.', "btn-filtro.n_clicks"]:
         open_sininfopanel_modal = not open_sininfopanel_modal
 
-    return fig_hist, fig_torta, fig_barras, open_sininfopanel_modal, tabla_resumen  # df_filtrado.to_dict("records")
-
-
-@app.callback(
-    Output("warning-subir-archivo", "children"),
-    Input("btn-filtro", "n_clicks")
-)
-def warning_subir_archivo(n_clicks):
-    """
-    Agrega un warning si el usuario no cargó un archivo.
-    """
-    if n_clicks:
-        if MTEDataFrame.FILES_TO_LOAD:
-            return None
-    if MTEDataFrame.FILES_TO_LOAD is None:
-        return dbc.Alert("Por favor subir un archivo primero y luego apretar FILTRAR", color="danger", style={"font-size": "20px"})
+    return fig_hist, fig_torta, fig_barras, open_sininfopanel_modal, tabla_resumen
