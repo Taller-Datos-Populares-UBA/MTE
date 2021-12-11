@@ -713,10 +713,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
                     pago="$ "+str(pago)
 
                 ultimos_movimientos = ultimos_movimientos.sort_values("fecha", ascending=False)
-
-                if len(ultimos_movimientos.index)>10:
-                    ultimos_movimientos = ultimos_movimientos.head(10)
-                    ultimos_movimientos["fecha"] = [fecha.isoformat()[:-9] for fecha in ultimos_movimientos.fecha]
+                ultimos_movimientos["fecha"] = ultimos_movimientos["fecha"].dt.strftime("%d/%m/%Y")
                 ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in range(len(ultimos_movimientos.index))]
                 
         elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
