@@ -8,7 +8,7 @@ from dash.dependencies import State
 from dash_table import DataTable, FormatTemplate
 
 from apps.base import *
-from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
+from elements import CreateButton, CreateModal, CreateFilters
 from utils.utils import crear_df_filtrado
 from utils.utils_finanzas import grafico_torta, parse_contents
 from utils.utils_finanzas import pago_por_predio, pago_individual
@@ -469,6 +469,7 @@ layout = html.Div([
 
 ])
 
+
 # Funcion que controla todos los botones de la tabla de precios
 @app.callback(
     Output('table-precios', 'data'),
@@ -615,6 +616,7 @@ def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, 
                 except Exception as e:
                     print("No pude calcular el pago, error:", e)
                 ultimos_movimientos = df_filtrado[df_filtrado.legacyId == legacy_id]
+                print(pago)
                 if pago == "Error":  # Del hecho de que la tabla de precios esta vacio
                     errorpago_is_open = not errorpago_is_open
                 else:  # Modificamos el formato del pago

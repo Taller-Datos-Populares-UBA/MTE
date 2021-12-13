@@ -61,7 +61,7 @@ def grafico_torta(legajo, df):
             tickmode="array",
             tickvals=[],
             ticktext=[]
-            )
+        )
     else:
         fig = px.pie(df_aux, values='peso', names='material')
 
@@ -107,15 +107,17 @@ def retornar_df_pagos(df_filtrado, df_precios):
         sede = row["sede"]
         material = row["material"]
 
-        indices_LE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "LE")].index
-        indices_RA = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (df_pagos["tipoCartonero"] == "RA")].index
+        indices_LE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (
+                    df_pagos["tipoCartonero"] == "LE")].index
+        indices_RA = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (
+                    df_pagos["tipoCartonero"] == "RA")].index
 
         precio_LE = row["preciole"]
         precio_RA = row["preciora"]
         df_pagos.loc[indices_LE, "precio/kg"] = precio_LE
         df_pagos.loc[indices_RA, "precio/kg"] = precio_RA
 
-    df_pagos["precio"] = df_pagos["precio/kg"]*df_pagos["peso"]
+    df_pagos["precio"] = df_pagos["precio/kg"] * df_pagos["peso"]
     return df_pagos
 
 
@@ -128,5 +130,5 @@ def pago_por_predio(df_filtrado, df_precios):
 def pago_individual(df_filtrado, df_precios, legajo):
     df_pagos = retornar_df_pagos(df_filtrado, df_precios)
     df_pagos = df_pagos.groupby(['legacyId']).sum('precio')
-    print(df_pagos)
-    return df_pagos.loc[legajo]
+    pago_ind = df_pagos.loc[legajo]
+    return pago_ind['precio']  # En realidad la columna 'precio' es 'pago'.
