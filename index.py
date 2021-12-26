@@ -12,6 +12,7 @@ from apps import panel_control, finanzas, error404
 from elements import NavbarElement, LogoMTE
 from mte_dataframe import MTEDataFrame
 
+
 navbar = (
     html.Ul([
         NavbarElement("Panel de Control", "settings.svg", "/panel_control", "panel-navbar"),

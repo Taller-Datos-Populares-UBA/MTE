@@ -11,14 +11,11 @@ from mte_dataframe import MTEDataFrame
 from utils.utils import crear_df_filtrado
 from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
 
+from dashhandler import DashPanelControlHandler
+
 # Cards
 
-card_resumen = dbc.Card([
-    dbc.CardBody(
-        [
-            html.H6("Resumen", id="monto-card-saldo", className="card-title"),
-            html.Div(children=[
-                DataTable(
+tabla_resumen = DataTable(
                     id="tabla-Resumen",
                     columns=[{"name": "Clasificación", "id": "clasificacion"},
                              {"name": "Peso (kilos)", "id": "peso"}
@@ -45,19 +42,29 @@ card_resumen = dbc.Card([
                     },
                     fixed_rows={'headers': True},
 
-                )],
+                )
+
+graph_hist = dcc.Graph(id="grafico-historico", config={'displaylogo': False, 'displayModeBar': True, 'locale': 'es'})
+graph_torta = dcc.Graph(id="grafico-torta", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_barras = dcc.Graph(id="grafico-barras", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+
+card_resumen = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H6("Resumen", id="monto-card-saldo", className="card-title"),
+            html.Div(children=[
+                tabla_resumen],
                 id="tabla-Resumen-parent")]
 
     )], className="card"
 )
-
 
 card_historico = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Gráfico temporal", className="card-title"),
             html.P("Promedio por 2 semanas", className="card-subtitle"),
-            dcc.Graph(id="grafico-historico", config={'displaylogo': False, 'displayModeBar': True, 'locale': 'es'}),
+            graph_hist,
         ],
 
     )], className="card",
@@ -68,7 +75,7 @@ card_torta = dbc.Card([
     dbc.CardBody(
         [
             html.H5("Porcentajes", className="card-title"),
-            dcc.Graph(id="grafico-torta", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+            graph_torta
         ],
     )], className="card"
 )
@@ -77,7 +84,7 @@ card_barras = dbc.Card([
     dbc.CardBody(
         [
             html.H5("Distribución por fecha", className="card-title"),
-            dcc.Graph(id="grafico-barras", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+            graph_barras
         ],
     )], className="card"
 )
@@ -155,6 +162,8 @@ layout = html.Div([
 
 ])
 
+dash_handler = DashPanelControlHandler(tabla_resumen.columns)
+
 @app.callback(
     [
         Output("grafico-historico", "figure"),
@@ -174,38 +183,13 @@ layout = html.Div([
         State("dropdown-cartonere", "value"),
         State("date-range", "start_date"),
         State("date-range", "end_date"),
-        State("sininfopanel-modal", "is_open"),
-        State("grafico-historico", "figure"),
-        State("grafico-torta", "figure"),
-        State("grafico-barras", "figure"),
 
     ],
     prevent_initial_call=True
 )
 def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
-            fecha_fin, open_sininfopanel_modal, fig_hist, fig_torta, fig_barras):
-    """
-    Se ejecuta al principio y cada vez que se clickee el botón.
-    """
-    if "Todas" in rutas: 
-        rutas = None
-        
+            fecha_fin):
+   
     trigger = callback_context.triggered[0]
 
-    if trigger["prop_id"] in ['.', "btn-filtro.n_clicks"] or trigger["prop_id"].split('.')[0]=="dropdown_clasificador_vistas":
-        df = MTEDataFrame.get_instance()
-        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
-                                        datetime.fromisoformat(fecha_fin), materiales, cartonere)
-        if df_filtrado.empty:
-            open_sininfopanel_modal = not open_sininfopanel_modal
-        else:
-            fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
-            fig_torta = torta(df_filtrado, clasificador)
-            fig_barras = pesos_historico_predios(df_filtrado, clasificador)
-            tabla_resumen = datos_tabla(df_filtrado, clasificador)
-            tabla_resumen = tabla_resumen.to_dict('records')
-
-    elif trigger["prop_id"] in ['.', "btn-filtro.n_clicks"]:
-        open_sininfopanel_modal = not open_sininfopanel_modal
-
-    return fig_hist, fig_torta, fig_barras, open_sininfopanel_modal, tabla_resumen
+    return dash_handler.panel_control(trigger,clasificador, predios, rutas, materiales, cartonere, fecha_inicio,fecha_fin)
