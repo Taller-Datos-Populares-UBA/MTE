@@ -563,13 +563,13 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         State("date-range", "start_date"),
         State("date-range", "end_date"),
         State("input-legacyId", "value"),
-        State("table-precios", "data"),
-        State("sininfo-modal", "is_open"),
-        State("graph-legajo", "figure"),
-        State("label-legajo", "children"),
-        State("legacy_id-modal", "is_open"),
-        State("tabla-legajo", "data"),
-        State("errorpago-modal", "is_open"),
+        State("table-precios", "data"), 
+        State("sininfo-modal", "is_open"), #Esta
+        State("graph-legajo", "figure"), #Esta
+        State("label-legajo", "children"), #Esta
+        State("legacy_id-modal", "is_open"), #Esta
+        State("tabla-legajo", "data"), #Esta
+        State("errorpago-modal", "is_open"), #Esta
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
@@ -577,74 +577,7 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
     prevent_initial_call=True
 )
 def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios,
-                  fecha_inicio, fecha_fin, legacy_id, data,
-                  sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos,
-                  errorpago_is_open, rutas, materiales, cartonere):
-    if "Todas" in rutas:
-        rutas = None
-    print(MTEDataFrame.FILES_TO_LOAD)
-    df = MTEDataFrame.get_instance()
-    trigger = callback_context.triggered[0]
-    df_pagos = pd.DataFrame()
-    # Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
-    if trigger["prop_id"] in ["refresh-button.n_clicks"] and tab == "todxs":  # REVISAR
-        df_precios = pd.DataFrame(data)
-        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
-                                        datetime.fromisoformat(fecha_fin), materiales, cartonere)
-        try:
-            df_pagos = pago_por_predio(df_filtrado, df_precios)
-        except Exception as e:
-            print("No pude calcular el pago, error:", e)
-
-    elif trigger["prop_id"] in ["search-button.n_clicks"]:
-        # Solo en este caso va a buscar el df, filtrar, y realizar todos estos procesos que llevan tiempo.
-        df_precios = pd.DataFrame(data)
-        df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
-                                        datetime.fromisoformat(fecha_fin), materiales, cartonere)
-
-        # Chequea que el df_filtrado no este vacio, y que la persona que buscamos este en el df.
-        cond1 = not df_filtrado.empty
-        cond2 = legacy_id in list(df_filtrado["legacyId"])
-
-        if cond1 and cond2:  # Si se cumplen las dos condiciones, muestra todo lo que tiene que mostrar
-
-            if trigger["prop_id"] == "search-button.n_clicks":
-                figure = grafico_torta(legacy_id, df_filtrado)
-                # pago, ultimos_movimientos = calcular_pago(df_filtrado, legacy_id, df_precios)
-                try:
-                    pago = pago_individual(df_filtrado, df_precios, legacy_id)
-                except Exception as e:
-                    print("No pude calcular el pago, error:", e)
-                ultimos_movimientos = df_filtrado[df_filtrado.legacyId == legacy_id]
-                print(pago)
-                if pago == "Error":  # Del hecho de que la tabla de precios esta vacio
-                    errorpago_is_open = not errorpago_is_open
-                else:  # Modificamos el formato del pago
-                    print(pago)
-                    pago = "$ " + str(pago)
-
-                ultimos_movimientos = ultimos_movimientos.sort_values("fecha", ascending=False)
-                ultimos_movimientos["fecha"] = ultimos_movimientos["fecha"].dt.strftime("%d/%m/%Y")
-                ultimos_movimientos = [ultimos_movimientos.iloc[i].to_dict() for i in
-                                       range(len(ultimos_movimientos.index))]
-
-        elif not cond1:  # Si el df esta vacio, te avisa con el modal de que esta vacio
-            sininfo_is_open = not sininfo_is_open
-
-        elif not cond2:  # Si la persona no esta en el df, te avisa con el modal
-            legacy_id_no_encontrado_is_open = not legacy_id_no_encontrado_is_open
-
-    # Los siguientes 3 elif son para cerrar los modals
-    elif trigger["prop_id"] == "close-modal-sininfo-button.n_clicks":
-        sininfo_is_open = not sininfo_is_open
-
-    elif trigger["prop_id"] == "close-modal-legacy_id-button.n_clicks":
-        legacy_id_no_encontrado_is_open = not legacy_id_no_encontrado_is_open
-
-    elif trigger["prop_id"] == "close-modal-errorpago-button.n_clicks":
-        errorpago_is_open = not errorpago_is_open
-
-    df_pagos = df_pagos.reset_index().to_dict('records')
+                  fecha_inicio, fecha_fin, legacy_id, data, rutas, materiales, cartonere):
 
     return [n_clicks, sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos,
             errorpago_is_open, df_pagos]

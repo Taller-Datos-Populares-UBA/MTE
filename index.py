@@ -52,7 +52,6 @@ def parse_contents(contents, filename, date):
     
     return None # TODO It should raise an exception
 
-
 @app.callback(
     Output("borrar-esto", "children"),
     Input("upload-comp-base", "contents"),
