@@ -11,7 +11,7 @@ from mte_dataframe import MTEDataFrame
 from utils.utils import crear_df_filtrado
 from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
 
-from dashhandler import DashPanelControlHandler
+from dashpanelcontrolhandler import DashPanelControlHandler
 
 # Cards
 
