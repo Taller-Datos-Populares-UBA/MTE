@@ -1015,19 +1015,37 @@ ul li a img {
   float: right;
 }
 
-.tabs-panel-parent {
-  position: fixed;
-  width: 70%;
-  height: calc(100% - 50px);
-  bottom: 0px;
-}
-
 .graficos-div-parent {
   margin-top: 20px;
   overflow-y: scroll;
+  overflow-x: hidden;
   margin-bottom: 20px;
-  height: calc(100vh - 150px);
-  max-height: calc(100vh - 170px);
+  height: calc(100vh - 50px);
+  max-height: calc(100vh - 140px);
+  padding-bottom: 50px;
+}
+
+.tabs-panel-parent {
+  position: fixed;
+  width: 70%;
+  height: calc(100% - 45px);
+  bottom: 0px;
+  overflow: hidden;
+}
+
+.panel-container {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  overflow: hidden;
+}
+
+.alert.alert-danger.fade.show {
+  margin: 5px;
+  border-radius: 5px;
+
 }
 
 /* DE ACA PARA ABAJO ES EL CSS DE PLOTLY DASH, SIRVE PARA ALGUNAS COSAS(?) */

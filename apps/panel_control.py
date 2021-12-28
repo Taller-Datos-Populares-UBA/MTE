@@ -67,7 +67,7 @@ card_historico = dbc.Card([
             graph_hist,
         ],
 
-    )], className="card",
+    )], className="card last-card",
 )
 
 
@@ -127,10 +127,7 @@ layout = html.Div([
         ),
     html.Div(id="div-derecha", className="output", children=[
         html.Div(className="tabs-panel-parent", children=[
-            dcc.Tabs(id="tabs",
-                     children=[
-                         dcc.Tab(label="Panel de control", value="tab_1",
-                                 children=[
+            html.Div([
                                      html.Div(children=[
                                          html.Div(id="warning-subir-archivo"),
                                          html.Label('Agrupar por:', className="labels"),
@@ -152,10 +149,7 @@ layout = html.Div([
                                          ])],
                                          type="circle",
                                      ),
-                                 ]),
-                         ],
-                     value="tab_1"
-                     ),
+                ],className="panel-container")
             ],
             ),
     ])
