@@ -162,7 +162,7 @@ layout = html.Div([
 
 ])
 
-dash_handler = DashPanelControlHandler(tabla_resumen.columns)
+dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
 
 @app.callback(
     [
@@ -192,4 +192,4 @@ def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, 
    
     trigger = callback_context.triggered[0]
 
-    return dash_handler.panel_control(trigger,clasificador, predios, rutas, materiales, cartonere, fecha_inicio,fecha_fin)
+    return dash_handler_panel.panel_control(trigger,clasificador, predios, rutas, materiales, cartonere, fecha_inicio,fecha_fin)

@@ -13,31 +13,43 @@ from utils.utils import crear_df_filtrado
 from utils.utils_finanzas import grafico_torta, parse_contents
 from utils.utils_finanzas import pago_por_predio, pago_individual
 
+from dashfinanzashandler import DashFinanzasHandler
+
 fig = go.Figure()
 
 # --------------------------------------------------------------------------------------------------------------------------
 
 # Cards
 
-# --------------------------------------------------------------------------------------------------------------------------
+tabla_todos = DataTable(
+                id="df_pagos",
+                columns=[{"name": "Predio", "id": "predio"},
+                            {"name": "Pago", "id": "precio"}
+                            ],
+                editable=False,
+                row_deletable=False,
+                style_cell={
+                    "textOverflow": "ellipsis",
+                    "whiteSpace": "nowrap",
+                    "border": "1px solid black",
+                    "border-left": "2px solid black"
+                },
+                style_header={
+                    "backgroundColor": "#4582ec",
+                    "color": "white",
+                    "border": "0px solid #2c559c",
+                },
+                style_table={
+                    "height": "800px",
+                    "minHeight": "200px",
+                    "maxHeight": "700px",
+                    "overflowX": "auto"
+                },
+                fixed_rows={'headers': True},
 
-# Card con el saldo
-first_card = dbc.Card([
-    dbc.CardBody(
-        [
-            html.H6("Monto a pagar", id="monto-card-saldo", className="card-title"),
-            html.P(id="label-legajo"),
-        ]
-    )]
-)
+            )
 
-# Card con la tabla de ultimos movimientos
-second_card = dbc.Card([
-    dbc.CardBody(
-        [
-            html.H6("Ultimas cargas", className="card-title"),
-            html.Div(children=[
-                DataTable(
+tabla_resumen = DataTable(
                     id="tabla-legajo",
                     columns=[
                         {
@@ -75,6 +87,26 @@ second_card = dbc.Card([
                         "border": "0px solid #2c559c",
                     },
                 )
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# Card con el saldo
+first_card = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H6("Monto a pagar", id="monto-card-saldo", className="card-title"),
+            html.P(id="label-legajo"),
+        ]
+    )]
+)
+
+# Card con la tabla de ultimos movimientos
+second_card = dbc.Card([
+    dbc.CardBody(
+        [
+            html.H6("Ultimas cargas", className="card-title"),
+            html.Div(children=[
+                tabla_resumen
             ])
         ], id="tabla-legajo-parent")],
     className="card last-card",
@@ -412,33 +444,7 @@ layout = html.Div([
                                         className="mr-1 mt-1 btn btn-primary"
                                     ),
                                     html.Div(children=[
-                                        DataTable(
-                                            id="df_pagos",
-                                            columns=[{"name": "Predio", "id": "predio"},
-                                                     {"name": "Pago", "id": "precio"}
-                                                     ],
-                                            editable=False,
-                                            row_deletable=False,
-                                            style_cell={
-                                                "textOverflow": "ellipsis",
-                                                "whiteSpace": "nowrap",
-                                                "border": "1px solid black",
-                                                "border-left": "2px solid black"
-                                            },
-                                            style_header={
-                                                "backgroundColor": "#4582ec",
-                                                "color": "white",
-                                                "border": "0px solid #2c559c",
-                                            },
-                                            style_table={
-                                                "height": "800px",
-                                                "minHeight": "200px",
-                                                "maxHeight": "700px",
-                                                "overflowX": "auto"
-                                            },
-                                            fixed_rows={'headers': True},
-
-                                        )],
+                                        tabla_todos],
                                         id="df-precios-parent"),
                                 ],
 
@@ -538,11 +544,11 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
 
 # Función
 
+dash_handler_finanzas = DashFinanzasHandler(tabla_resumen.columns, tabla_todos.columns)
 
 # Función que controla todo lo que muestra en la parte de Individual y Todxs
 @app.callback(
     [
-        Output("label-total", "children"),
         Output("sininfo-modal", "is_open"),
         Output("graph-legajo", "figure"),
         Output("label-legajo", "children"),
@@ -564,12 +570,6 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         State("date-range", "end_date"),
         State("input-legacyId", "value"),
         State("table-precios", "data"), 
-        State("sininfo-modal", "is_open"), #Esta
-        State("graph-legajo", "figure"), #Esta
-        State("label-legajo", "children"), #Esta
-        State("legacy_id-modal", "is_open"), #Esta
-        State("tabla-legajo", "data"), #Esta
-        State("errorpago-modal", "is_open"), #Esta
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
@@ -579,5 +579,6 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
 def filtrar_rutas(n_clicks, close_n_clicks, close_n_clicks_2, close_n_clicks_3, tab, refresh_n_clicks, predios,
                   fecha_inicio, fecha_fin, legacy_id, data, rutas, materiales, cartonere):
 
-    return [n_clicks, sininfo_is_open, figure, pago, legacy_id_no_encontrado_is_open, ultimos_movimientos,
-            errorpago_is_open, df_pagos]
+    trigger = callback_context.triggered[0]
+
+    return dash_handler_finanzas.filtrar(trigger, tab, refresh_n_clicks, predios, fecha_inicio, fecha_fin, legacy_id, data, rutas, materiales, cartonere)
