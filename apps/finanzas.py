@@ -10,8 +10,7 @@ from dash_table import DataTable, FormatTemplate
 from apps.base import *
 from elements import CreateButton, CreateModal, CreateFilters
 from utils.utils import crear_df_filtrado
-from utils.utils_finanzas import grafico_torta, parse_contents
-from utils.utils_finanzas import pago_por_predio, pago_individual
+from utils.utils_finanzas import grafico_torta, parse_contents, pago_por_predio, pago_individual
 
 from dashfinanzashandler import DashFinanzasHandler
 
