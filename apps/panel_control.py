@@ -13,6 +13,7 @@ from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_p
 
 from dashpanelcontrolhandler import DashPanelControlHandler
 
+import plotly.graph_objs as go
 # Cards
 
 tabla_resumen = DataTable(
@@ -44,9 +45,30 @@ tabla_resumen = DataTable(
 
                 )
 
-graph_hist = dcc.Graph(id="grafico-historico", config={'displaylogo': False, 'displayModeBar': True, 'locale': 'es'})
-graph_torta = dcc.Graph(id="grafico-torta", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
-graph_barras = dcc.Graph(id="grafico-barras", config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+fig_vacio = go.Figure()
+fig_vacio.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=10,
+)
+fig_vacio.update_xaxes(
+        zeroline=False,
+        showgrid=False,
+        tickmode="array",
+        tickvals=[],
+        ticktext=[]
+)
+fig_vacio.update_yaxes(
+    zeroline=False,
+    showgrid=False,
+    tickmode="array",
+    tickvals=[],
+    ticktext=[]
+)
+
+graph_hist = dcc.Graph(id="grafico-historico", figure = fig_vacio,config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_torta = dcc.Graph(id="grafico-torta", figure = fig_vacio, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_barras = dcc.Graph(id="grafico-barras", figure = fig_vacio, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
 
 card_resumen = dbc.Card([
     dbc.CardBody(
@@ -54,7 +76,7 @@ card_resumen = dbc.Card([
             html.H6("Resumen", id="monto-card-saldo", className="card-title"),
             html.Div(children=[
                 tabla_resumen],
-                id="tabla-Resumen-parent")]
+                id="tabla-resumen-parent")]
 
     )], className="card"
 )

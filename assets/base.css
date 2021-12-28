@@ -1048,6 +1048,15 @@ ul li a img {
 
 }
 
+#tabla-resumen-parent {
+  height: 298px;
+  padding: 50px 0px;
+}
+
+#df-precios-parent {
+  padding: 15px 50px;
+}
+
 /* DE ACA PARA ABAJO ES EL CSS DE PLOTLY DASH, SIRVE PARA ALGUNAS COSAS(?) */
 
 /* Table of contents

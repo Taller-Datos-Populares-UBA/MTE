@@ -15,7 +15,25 @@ from utils.utils_finanzas import grafico_torta, parse_contents, pago_por_predio,
 from dashfinanzashandler import DashFinanzasHandler
 
 fig = go.Figure()
-
+fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=10,
+    )
+fig.update_xaxes(
+        zeroline=False,
+        showgrid=False,
+        tickmode="array",
+        tickvals=[],
+        ticktext=[]
+)
+fig.update_yaxes(
+    zeroline=False,
+    showgrid=False,
+    tickmode="array",
+    tickvals=[],
+    ticktext=[]
+)
 # --------------------------------------------------------------------------------------------------------------------------
 
 # Cards

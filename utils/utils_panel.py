@@ -18,6 +18,10 @@ def pesos_historico_predios(data, tipo='predio'):
     fig = px.bar(df, x="fecha", y="peso", color=tipo, hover_data=[tipo2])  # "group"
     fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])    # Ignora fin de semana
     fig.update_layout(bargap=0.01)
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=450,
+    )
     return fig
 
 
@@ -29,6 +33,10 @@ def pesos_historico_materiales(data, tipo):
     df = data.groupby(by=["fecha", tipo], as_index=False).sum()
     fig = px.bar(df, x="fecha", y="peso", color=tipo, barmode="group")
     fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])    # Ignora fin de semana
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=450,
+    )
     return fig
 
 
@@ -61,6 +69,12 @@ def pesos_historico_promedio(data,tipo='predio'):
         df_predio["peso"] = df_predio["peso"] / 10
 
         fig.add_scatter(x=df_predio.index, y=df_predio['peso'], mode='lines', name=predio)
+
+    fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            height=450,
+        )
+
     return fig
 
 def torta(data,tipo='predio'):
@@ -73,6 +87,11 @@ def torta(data,tipo='predio'):
     fig.update_traces(hoverinfo="label+percent", textfont_size=14,
                       textinfo="percent", marker=dict(line=dict(color="#FFFFFF", width=0.1)),
                       textposition="auto")
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=300,
+        )
     return fig
 
 
