@@ -5,39 +5,24 @@ from dash.dependencies import State
 from dash_table import DataTable
 
 from apps.base import *
-from dash_panel_control_handler import DashPanelControlHandler
-from elements import CreateButton, CreateModal, CreateFilters
+from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
+from mte_dataframe import MTEDataFrame
+from utils.utils import crear_df_filtrado, crear_tabla
+from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
+
+from dashpanelcontrolhandler import DashPanelControlHandler
 
 # Cards
 
-tabla_resumen = DataTable(
-    id="tabla-Resumen",
-    columns=[{"name": "Clasificación", "id": "clasificacion"},
-             {"name": "Peso (kilos)", "id": "peso"}
-
-             ],
-    editable=False,
-    row_deletable=False,
-    style_cell={
-        "textOverflow": "ellipsis",
-        "whiteSpace": "nowrap",
-        "border": "1px solid black",
-        "border-left": "2px solid black"
+tabla_resumen = crear_tabla(
+    id = "tabla-Resumen",
+    titulos_columnas = {
+        "clasificacion": "Clasificación",
+        "peso": "Peso (kg)"
     },
-    style_header={
-        "backgroundColor": "#4582ec",
-        "color": "white",
-        "border": "0px solid #2c559c",
-    },
-    style_table={
-        "height": "200px",
-        "minHeight": "200px",
-        "maxHeight": "200px",
-        "overflowX": "auto"
-    },
-    fixed_rows={'headers': True},
-
-)
+    tipos = {"peso": "numeric"},
+    dimensiones = ("auto", "200px")
+    )
 
 fig_vacio = go.Figure()
 fig_vacio.update_layout(
