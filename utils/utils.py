@@ -79,8 +79,8 @@ def crear_tabla(id, titulos_columnas, dimensiones = ("auto", "auto"), tipos = {}
             "border": "0px solid #2c559c",
         },
         style_table = {
-            "height": dimensiones[0],
-            "width" : dimensiones[1],
+            "height": dimensiones[1],
+            "width" : dimensiones[0],
             "overflowX": "auto" 
             },
         fixed_rows = {'headers': True},

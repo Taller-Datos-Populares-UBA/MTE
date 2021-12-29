@@ -9,7 +9,7 @@ from dash_table import DataTable, FormatTemplate
 
 from apps.base import *
 from elements import CreateButton, CreateModal, CreateFilters
-from utils.utils import crear_df_filtrado
+from utils.utils import crear_df_filtrado, crear_tabla
 from utils.utils_finanzas import grafico_torta, parse_contents, pago_por_predio, pago_individual
 
 from dashfinanzashandler import DashFinanzasHandler
@@ -38,72 +38,22 @@ fig.update_yaxes(
 
 # Cards
 
-tabla_todos = DataTable(
-                id="df_pagos",
-                columns=[{"name": "Predio", "id": "predio"},
-                            {"name": "Pago", "id": "precio"}
-                            ],
-                editable=False,
-                row_deletable=False,
-                style_cell={
-                    "textOverflow": "ellipsis",
-                    "whiteSpace": "nowrap",
-                    "border": "1px solid black",
-                    "border-left": "2px solid black"
-                },
-                style_header={
-                    "backgroundColor": "#4582ec",
-                    "color": "white",
-                    "border": "0px solid #2c559c",
-                },
-                style_table={
-                    "height": "800px",
-                    "minHeight": "200px",
-                    "maxHeight": "700px",
-                    "overflowX": "auto"
-                },
-                fixed_rows={'headers': True},
+tabla_todos = crear_tabla(
+    id = "df_pagos",
+    titulos_columnas = {"predio": "Predio", "precio": "Pago"},
+    tipos = {"precio": "numeric"},
+    formatos = {"precio": FormatTemplate.money(2)}
+    )
 
-            )
-
-tabla_resumen = DataTable(
-                    id="tabla-legajo",
-                    columns=[
-                        {
-                            'name': 'Fecha',
-                            'id': 'fecha',
-                            'deletable': False,
-                            'renamable': False,
-                        },
-                        {
-                            'name': 'Material',
-                            'id': 'material',
-                            'deletable': False,
-                            'renamable': False,
-                            "type": 'numeric',
-                            "format": FormatTemplate.money(2)
-                        },
-                        {
-                            'name': 'Peso',
-                            'id': 'peso',
-                            'deletable': False,
-                            'renamable': False,
-                            "type": 'numeric',
-                            # "format":FormatTemplate.money(2)
-                        }
-                    ],
-                    style_cell={
-                        "overflowX": "hidden",
-                        "textOverflow": "ellipsis",
-                        "border": "1px solid black",
-                        "border-left": "2px solid black"
-                    },
-                    style_header={
-                        "backgroundColor": "#4582ec",
-                        "color": "white",
-                        "border": "0px solid #2c559c",
-                    },
-                )
+tabla_resumen = crear_tabla(
+    id = "tabla-legajo",
+    titulos_columnas = {
+        "fecha": "Fecha", 
+        "material": "Material", 
+        "peso": "Peso"
+        },
+    tipos = {"peso": "numeric"},
+    )
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -234,64 +184,25 @@ layout = html.Div([
                         id="store-precios",
                         storage_type="local"
                     ),
-                    DataTable(
-                        id='table-precios',
-                        columns=[
-                            {
-                                'name': 'Sede',
-                                'id': 'sede',
-                                'deletable': False,
-                                'renamable': False,
-                            },
-                            {
-                                'name': 'Material',
-                                'id': 'material',
-                                'deletable': False,
-                                'renamable': False,
-                            },
-                            {
-                                'name': '  Precio RA',
-                                'id': 'preciora',
-                                'deletable': False,
-                                'renamable': False,
-                                "type": 'numeric',
-                                "format": FormatTemplate.money(2)
-                            },
-                            {
-                                'name': '  Precio LE',
-                                'id': 'preciole',
-                                'deletable': False,
-                                'renamable': False,
-                                "type": 'numeric',
-                                "format": FormatTemplate.money(2)
-                            }
-                        ],
-                        data=[
-                            {"material": "", "preciora": "",
-                             "preciole": "",
-                             "sede": ""}
-                        ],
-                        editable=True,
-                        row_deletable=True,
-                        style_cell={
-                            "textOverflow": "ellipsis",
-                            "whiteSpace": "nowrap",
-                            "border": "1px solid black",
-                            "border-left": "2px solid black"
+                    crear_tabla(
+                        id = "table-precios",
+                        titulos_columnas = {
+                            "sede": "Sede",
+                            "material": "Material",
+                            "preciora": "Precio RA",
+                            "preciole": "Precio LE",
                         },
-                        style_header={
-                            "backgroundColor": "#4582ec",
-                            "color": "white",
-                            "border": "0px solid #2c559c",
+                        tipos = {
+                            "preciora": "numeric",
+                            "preciole": "numeric"
                         },
-                        style_table={
-                            "height": "200px",
-                            "minHeight": "200px",
-                            "maxHeight": "200px",
-                            "overflowX": "auto"
+                        formatos = {
+                            "preciora": FormatTemplate.money(2),
+                            "preciole": FormatTemplate.money(2)
                         },
-                        fixed_rows={'headers': True},
-                        style_cell_conditional=[
+                        dimensiones = ("auto", "200px"),
+                        es_editable = True,
+                        condicionales = [
                             {'if': {'column_id': 'sede'},
                              'width': '150px'},
                             {'if': {'column_id': 'material'},
@@ -302,9 +213,8 @@ layout = html.Div([
                              'width': '100px'},
                             {'if': {'column_id': ''},
                              'width': '25em'},
-                        ]
-
-                    ),
+                        ] 
+                    )
                 ],
                 id="table-precios-div"
             ),
