@@ -346,3 +346,15 @@
         margin-top:0px !important;
         padding: 0 auto !important;
       }
+
+#btn-filtro {
+  margin-top: 20px;
+}
+
+.Select-menu-outer {
+  position: relative;
+  margin-top: 10px ;
+  border-radius: 5px ;
+  width: calc(100% - 20px) !important;
+  margin: 10px !important;
+}

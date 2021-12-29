@@ -1,9 +1,3 @@
-/* finanzas 
-  ---------------------------------------------
- - Tab individual y tab todos
- - Tabla precios
- */
-
 .tabs-finanzas {
   background-color: #adb5bd;
 }
@@ -23,39 +17,6 @@
   width: 60%;
   height: calc(100% - 50px);
   bottom: 0px;
-}
-
-.card {
-  border-radius: 15px;
-  border: 1px solid #4582ec;
-  background: rgb(222,222,222);
-  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(241,241,241,1) 42%, rgba(255,255,255,1) 100%);
-  margin-bottom: 40px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.row {
-  padding: 0px 15px;
-}
-
-.card-title {
-    font-size: 20px;
-    font-family: Rubik,monospace;
-    margin-top:10px;
-    color:#2c559c ;
-}
-.card-subtitle {
-    font-size: 16px;
-    font-family: Rubik,monospace;
-    color:#2c559c ;
-}
-
-.waves {
-  position: fixed;
-  bottom: 0px;
-  right: 0px;
-  width: 60%;
-  z-index: 0;
 }
 
 .tab-finanzas-header {
@@ -219,159 +180,8 @@
   transition: 0.5s;
 }
 
-
-
 .expanded-row--empty-cell.dash-delete-header {
   width: 10.45% !important;
-}
-
-#btn-filtro {
-  margin-top: 20px;
-}
-
-.Select-menu-outer {
-  position: relative;
-  margin-top: 10px ;
-  border-radius: 5px ;
-  width: calc(100% - 20px) !important;
-  margin: 10px !important;
-}
-
-
-
-@media (max-width: 995px) {
-
-  #button-add-row-div {
-    display: block !important;
-    margin: 0 auto;
-    width: 25rem;
-  }
-
-  #container-buttons{
-    display: flex;
-    justify-content: center;
-  }
-
-  .start-button{
-    width: 25rem !important;
-    display: block !important;
-    margin: 0 auto !important;
-    margin-bottom: 0px !important;
-    border-radius: 15px 15px 0 0;
-
-  }
-
-  .mid-button{
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-    width: 25rem !important;
-    clear: both;
-    display: block;
-  }
-
-  .end-button{
-    margin-top: 0px !important;
-    width: 25rem !important;
-    clear: both;
-    display: block;
-    border-radius: 0 0 15px 15px;
-  }
-
-  #cargar-img {
-    margin-left: 50px;
-  }
-
-  #cargar-text {
-    display: flex;
-    float: left;
-    padding-left: 15px;
-  }
-
-  .mid-button img {
-    margin-left: -12px;
-  }
-
-  .mid-button p {
-    margin-left: 0px;
-  }
-
-  #input-legacyId{
-    width: 20rem;
-  }
-}
-
-@media (max-width: 700px) {
-
-  #button-add-row-div {
-    display: block !important;
-    margin: 0 auto;
-    width: 20rem;
-  }
-
-  #container-buttons{
-    display: flex;
-    justify-content: center;
-  }
-
-  .start-button{
-    width: 20rem !important;
-    display: block !important;
-    margin: 0 auto !important;
-    margin-bottom: 0px !important;
-    border-radius: 15px 15px 0 0;
-
-  }
-
-  .mid-button{
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-    width: 20rem !important;
-    clear: both;
-    display: block;
-  }
-
-  .end-button{
-    margin-top: 0px !important;
-    width: 20rem !important;
-    clear: both;
-    display: block;
-    border-radius: 0 0 15px 15px;
-  }
-
-  #cargar-img {
-    margin-left: 25px;
-  }
-
-  #cargar-text {
-    display: flex;
-    float: left;
-    padding-left: 17px;
-  }
-
-  .mid-button img {
-    margin-left: -12px;
-  }
-
-  .mid-button p {
-    margin-left: 0px;
-  }
-
-  #input-legacyId{
-    width: 20rem;
-    overflow: ellipsis;
-  }
-
-  #search-button {
-    width: 4rem;
-  }
-
-  #search-button img {
-    margin-left: -0.4rem;
-  }
-
-  #search-button p{
-    visibility: hidden;
-  }
 }
 
 #table-precios-parent {
@@ -393,63 +203,7 @@
       padding-bottom: 0px;
     }
 
-.last-card {
-  margin-bottom: 20px;
-}
-
 .container-cards{
   padding-bottom: 50px;
   margin-bottom: 20px;
-}
-
-#div-izquierda-panel{
-  width: 30%;
-}
-
-.output {
-  width: 70%;
-  bottom: 0px;
-  float: right;
-}
-
-.graficos-div-parent {
-  margin-top: 20px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin-bottom: 20px;
-  height: calc(100vh - 50px);
-  max-height: calc(100vh - 140px);
-  padding-bottom: 50px;
-}
-
-.tabs-panel-parent {
-  position: fixed;
-  width: 70%;
-  height: calc(100% - 45px);
-  bottom: 0px;
-  overflow: hidden;
-}
-
-.panel-container {
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  background: rgb(164,164,164);
-  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
-  overflow: hidden;
-}
-
-.alert.alert-danger.fade.show {
-  margin: 5px;
-  border-radius: 5px;
-
-}
-
-#tabla-resumen-parent {
-  height: 298px;
-  padding: 50px 0px;
-}
-
-#df-precios-parent {
-  padding: 15px 50px;
 }
