@@ -1,0 +1,42 @@
+.card {
+  border-radius: 15px;
+  border: 1px solid #4582ec;
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(241,241,241,1) 42%, rgba(255,255,255,1) 100%);
+  margin-bottom: 40px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.last-card {
+  margin-bottom: 20px;
+}
+
+.row {
+  padding: 0px 15px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-family: Rubik,monospace;
+    margin-top:10px;
+    color:#2c559c ;
+}
+.card-subtitle {
+    font-size: 16px;
+    font-family: Rubik,monospace;
+    color:#2c559c ;
+}
+
+.waves {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 60%;
+  z-index: 0;
+}
+
+.alert.alert-danger.fade.show {
+  margin: 5px;
+  border-radius: 5px;
+
+}

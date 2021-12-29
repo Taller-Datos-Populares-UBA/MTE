@@ -83,22 +83,6 @@ def grafico_torta(legajo, df):
     return fig
 
 
-# def calcular_pago(df, legajo, df_precio):
-#     """recibe df filtrado.
-#     creo que hay q borrarla esta funcion!"""
-#     df_legajo = df[df['legacyId'] == legajo]
-#     df_legajo_materiales = df_legajo.groupby(['material'])['peso'].sum().reset_index()
-#     costo_neto = 0
-#     try:
-#         for index, row in df_legajo_materiales.iterrows():
-#             costo_material = df_precio[df_precio['material'] == 'Mezcla B']['preciora'].values[0] * row['peso']
-#             costo_neto += costo_material
-#     except IndexError:
-#         costo_neto="Error"
-
-#     return costo_neto, df_legajo
-
-
 def retornar_df_pagos(df_filtrado, df_precios):
     df_pagos = df_filtrado.copy()
     df_pagos["precio/kg"] = 0
@@ -108,9 +92,9 @@ def retornar_df_pagos(df_filtrado, df_precios):
         material = row["material"]
 
         indices_LE = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (
-                    df_pagos["tipoCartonero"] == "LE")].index
+                df_pagos["tipoCartonero"] == "LE")].index
         indices_RA = df_pagos[(df_pagos["predio"] == sede) & (df_pagos["material"] == material) & (
-                    df_pagos["tipoCartonero"] == "RA")].index
+                df_pagos["tipoCartonero"] == "RA")].index
 
         precio_LE = row["preciole"]
         precio_RA = row["preciora"]

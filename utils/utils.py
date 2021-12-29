@@ -1,4 +1,3 @@
-
 def determinar_tipo_cartonero(row):
     if row['legacyId'].startswith('LE'):
         val = 'LE'

@@ -1,0 +1,45 @@
+#div-izquierda-panel{
+  width: 30%;
+}
+
+.output {
+  width: 70%;
+  bottom: 0px;
+  float: right;
+}
+
+.graficos-div-parent {
+  margin-top: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+  height: calc(100vh - 50px);
+  max-height: calc(100vh - 140px);
+  padding-bottom: 50px;
+}
+
+.tabs-panel-parent {
+  position: fixed;
+  width: 70%;
+  height: calc(100% - 45px);
+  bottom: 0px;
+  overflow: hidden;
+}
+
+.panel-container {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  overflow: hidden;
+}
+
+#tabla-resumen-parent {
+  height: 298px;
+  padding: 50px 0px;
+}
+
+#df-precios-parent {
+  padding: 15px 50px;
+}

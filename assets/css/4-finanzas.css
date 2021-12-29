@@ -1,0 +1,209 @@
+.tabs-finanzas {
+  background-color: #adb5bd;
+}
+
+.jsx-4017309047 .tab-content {
+  position: relative;
+  bottom: 0px;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  bottom: 0px;
+  min-height: 100% !important;
+  flex: 1;
+}
+
+#tabs-finanzas-parent {
+  position: fixed;
+  width: 60%;
+  height: calc(100% - 50px);
+  bottom: 0px;
+}
+
+.tab-finanzas-header {
+  background: rgb(181,181,181);
+  background: linear-gradient(0deg, rgba(181,181,181,1) 0%, rgba(244,244,244,1) 100%);
+  color:#2c559c;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 0px solid #4582ec;
+  height: 60px;
+  padding: 10px !important;
+  transition: 0.5s;
+}
+
+.tab-finanzas-header:hover {
+  color:#376bc4;
+  transition: 0.2s;
+}
+
+    /*7.1) Tab Individual*/
+
+    #search-div {
+      width: 100%;
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:20px;
+      padding: 0 auto;
+    }
+
+    .search-button {
+      margin-left: 10px;
+      margin-top: 15px !important;
+      font-family: Rubik, sans;
+      font-size: 20px;
+      padding-top: 2px;
+      border-radius: 10px !important;
+    }
+
+    #search-button {
+      margin-top: 0px !important;
+      padding-top: 2px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    .search-button img {
+      margin-top: -2px !important;
+    }
+
+    #input-legacyId {
+      font-family: Rubik;
+      font-size: 20px;
+      color:#005370;
+    }
+
+    #label-total {
+      visibility: hidden;
+      margin-top:10px;
+      font-size:1px;
+      font-family: Rubik;
+      color:#2c559c;
+    }
+
+    #div-individual {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+      height: calc(100vh - 150px);
+      max-height: calc(100vh - 170px);
+      padding: 0px 20px;
+    }
+
+    .labels-cartas {
+      font-family: Rubik, sans;
+      font-size: 20px;
+    }
+
+    #label-legajo {
+      font-family: Rubik, sans;
+      font-size: 30px;
+      padding-left: 10px;
+    }
+
+
+
+    /*7.2) Tab Todxs*/
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    #parent-todxs {
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:100px;
+      font-size:50px;
+      font-family: Rubik;
+      color:#005370;
+      text-align: center;
+      width: 50%
+    }
+
+    #refresh-button {
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      display:flex !important;
+      justify-content: center !important;
+      margin: 0 auto !important;
+      margin-left: 10px;
+      margin-top:20px !important;
+      padding: 0 auto !important;
+      border-radius: 10px !important;
+    }
+
+    #refresh-button p{
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      margin-top: 2px;
+      margin-left: 10px;
+      padding: 0 auto !important;
+    }
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    #img-refresh {
+      width: 3rem;
+      padding: 0;
+      margin-right: 0px;
+      margin-top: -2px;
+
+    }
+
+/*Al fondo de los dos tabs para que aplique este efecto por arriba de los otros*/
+#tabs-finanzas .tab--selected {
+  background: #e8e8e8;
+  color: #4582ec;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 5px solid #4582ec;
+  padding: 5px;
+  transition: 0.5s;
+}
+
+.expanded-row--empty-cell.dash-delete-header {
+  width: 10.45% !important;
+}
+
+#table-precios-parent {
+      display:block;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:10px;
+      margin-bottom: 20px;
+      padding: 0px;
+      width: 80%;
+    }
+
+#tabla-legajo {
+      display:block;
+      margin-top:10px;
+      font-size: 20px;
+      padding: 0px;
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
+
+.container-cards{
+  padding-bottom: 50px;
+  margin-bottom: 20px;
+}

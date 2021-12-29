@@ -26,7 +26,7 @@ def LogoMTE():
     return html.Li([
         html.A(
             html.Img(
-                src=app.get_asset_url("logo_blanco.png"),
+                src=app.get_asset_url("img/logo_blanco.png"),
                 className="logo-mte",
                 id="logo-mte",
             ),
@@ -40,7 +40,7 @@ def CreateButton(identificacion, txt):
         html.Button(
             children=[
                 html.Img(
-                    src=app.get_asset_url("search.svg")
+                    src=app.get_asset_url("img/search.svg")
                 ),
 
                 html.P(
@@ -89,9 +89,7 @@ def SelectDates(identificacion, indentificacion_radio):
     ])
 
 
-def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_option=False, capitalize=False):
-    options = list(options) + ["Todas"] if add_all_as_option else options
-    initial_value = ["Todas"] if add_all_as_option else options
+def SelectFilterOptions(options, label, dropdown_id, response_id, capitalize=False):
     return html.Div(children=[
         html.Label(label, className="labels"),
         dcc.Dropdown(
@@ -101,7 +99,7 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, add_all_as_opt
             options=[
                 {"label": option.capitalize() if capitalize else option, "value": option} for option in options
             ],
-            value=initial_value,
+            value=options,
             multi=True
         ),
         html.H6(id=response_id)]
@@ -129,7 +127,7 @@ def CreateModal(idModal: str, titleModal: str, bodyModal: str):
                 dbc.Button(
                     children=[
                         html.Img(
-                            src=app.get_asset_url("close.svg"),
+                            src=app.get_asset_url("img/close.svg"),
                             className="ico"),
                         "Cerrar"
                     ],
@@ -155,8 +153,7 @@ def CreateFilters(predios, rutas, materiales, cartoneres):
 
         SelectDates("date-range", "radio-button-fechas"),
         SelectFilterOptions(predios, "Elegí el predio", "dropdown-predios", "salida-predios", capitalize=True),
-        SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas",
-                            add_all_as_option=True),
+        SelectFilterOptions(rutas, "Elegí la ruta o etapa", "dropdown-rutas", "salida-rutas"),
         SelectFilterOptions(materiales, "Elegí el tipo de material", "dropdown-materiales", "salida-materiales",
                             capitalize=True),
         SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),

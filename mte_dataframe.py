@@ -5,7 +5,6 @@ from utils.utils import determinar_tipo_cartonero
 
 class MTEDataFrame:
     FILES_TO_LOAD = None
-
     _instance = None
 
     def __init__(self):
@@ -46,9 +45,9 @@ class MTEDataFrame:
 
     @classmethod
     def create_features(cls):
-        df=cls.get_instance()
+        df = cls.get_instance()
         predios = df.predio.unique()
         rutas = df.etapa.unique()
         materiales = df.material.unique()
-        cartoneres = ["LE", "RA", "No especificado"]
+        cartoneres = df.tipoCartonero.unique()
         return predios, rutas, materiales, cartoneres

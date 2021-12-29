@@ -1,0 +1,50 @@
+.parent-error{
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	font-size: 50px;
+	height: calc(100vh - 45px);
+	padding: 0px;
+	margin: 0px;
+
+	font-family: Rubik, sans;
+
+}
+
+.wrapper-error{
+	position: absolute;
+	top: calc(50vh);
+	transform: translateY(-50%);
+	width: 100%;
+}
+
+.error-404 {
+	display: flex; 
+	justify-content: center;
+	margin-bottom: 0px;
+	font-size: 150px;
+	font-weight: bold;
+	padding: 0px;
+	color: #4582ec;
+}
+
+.page-not-found {
+
+	margin: 0px;
+	padding: 0px;
+}
+
+.page-not-found div {
+	margin: auto;
+	margin-top: -30px;
+	text-align: center;
+	width: 100%;
+	font-family: Rubik, sans;
+}
+
+#hint-error {
+	margin-top: 30px;
+	width: 80%;
+	font-size: 30px;
+	margin-bottom: 50px;
+}

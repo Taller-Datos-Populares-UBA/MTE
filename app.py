@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 
 # meta_tags are required for the app layout to be mobile responsive
-external_scripts = ["https://cdn.plot.ly/plotly-locale-es-latest.js"] # Agregamos español como lenguaje
+external_scripts = ["https://cdn.plot.ly/plotly-locale-es-latest.js"]  # Agregamos español como lenguaje
 app = dash.Dash(__name__, suppress_callback_exceptions=True,
                 external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css', dbc.themes.LITERA],
                 external_scripts=external_scripts,

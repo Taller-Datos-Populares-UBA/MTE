@@ -1,62 +1,56 @@
-from datetime import datetime
-
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objs as go
 from dash.dependencies import State
 from dash_table import DataTable
 
 from apps.base import *
-from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
-from mte_dataframe import MTEDataFrame
-from utils.utils import crear_df_filtrado
-from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
+from dash_panel_control_handler import DashPanelControlHandler
+from elements import CreateButton, CreateModal, CreateFilters
 
-from dashpanelcontrolhandler import DashPanelControlHandler
-
-import plotly.graph_objs as go
 # Cards
 
 tabla_resumen = DataTable(
-                    id="tabla-Resumen",
-                    columns=[{"name": "Clasificación", "id": "clasificacion"},
-                             {"name": "Peso (kilos)", "id": "peso"}
+    id="tabla-Resumen",
+    columns=[{"name": "Clasificación", "id": "clasificacion"},
+             {"name": "Peso (kilos)", "id": "peso"}
 
-                             ],
-                    editable=False,
-                    row_deletable=False,
-                    style_cell={
-                        "textOverflow": "ellipsis",
-                        "whiteSpace": "nowrap",
-                        "border": "1px solid black",
-                        "border-left": "2px solid black"
-                    },
-                    style_header={
-                        "backgroundColor": "#4582ec",
-                        "color": "white",
-                        "border": "0px solid #2c559c",
-                    },
-                    style_table={
-                        "height": "200px",
-                        "minHeight": "200px",
-                        "maxHeight": "200px",
-                        "overflowX": "auto"
-                    },
-                    fixed_rows={'headers': True},
+             ],
+    editable=False,
+    row_deletable=False,
+    style_cell={
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "border": "1px solid black",
+        "border-left": "2px solid black"
+    },
+    style_header={
+        "backgroundColor": "#4582ec",
+        "color": "white",
+        "border": "0px solid #2c559c",
+    },
+    style_table={
+        "height": "200px",
+        "minHeight": "200px",
+        "maxHeight": "200px",
+        "overflowX": "auto"
+    },
+    fixed_rows={'headers': True},
 
-                )
+)
 
 fig_vacio = go.Figure()
 fig_vacio.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            height=10,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    height=10,
 )
 fig_vacio.update_xaxes(
-        zeroline=False,
-        showgrid=False,
-        tickmode="array",
-        tickvals=[],
-        ticktext=[]
+    zeroline=False,
+    showgrid=False,
+    tickmode="array",
+    tickvals=[],
+    ticktext=[]
 )
 fig_vacio.update_yaxes(
     zeroline=False,
@@ -66,9 +60,12 @@ fig_vacio.update_yaxes(
     ticktext=[]
 )
 
-graph_hist = dcc.Graph(id="grafico-historico", figure = fig_vacio,config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
-graph_torta = dcc.Graph(id="grafico-torta", figure = fig_vacio, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
-graph_barras = dcc.Graph(id="grafico-barras", figure = fig_vacio, config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_hist = dcc.Graph(id="grafico-historico", figure=fig_vacio,
+                       config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_torta = dcc.Graph(id="grafico-torta", figure=fig_vacio,
+                        config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
+graph_barras = dcc.Graph(id="grafico-barras", figure=fig_vacio,
+                         config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
 
 card_resumen = dbc.Card([
     dbc.CardBody(
@@ -92,7 +89,6 @@ card_historico = dbc.Card([
     )], className="card last-card",
 )
 
-
 card_torta = dbc.Card([
     dbc.CardBody(
         [
@@ -110,7 +106,6 @@ card_barras = dbc.Card([
         ],
     )], className="card"
 )
-
 
 cards_panel = html.Div(
     [
@@ -138,47 +133,51 @@ cards_panel = html.Div(
 )
 
 
-layout = html.Div([
+def layout(predios, rutas, materiales, cartoneres):
+    return html.Div([
 
-    CreateModal("sininfopanel", "No se encontró información", "Revisá si estan correctamente seleccionados los filtros."),
-    html.Div(id="div-izquierda-panel", className="botonera", children=[
-        CreateFilters(predios, rutas, materiales, cartoneres),
-        CreateButton("btn-filtro", "Filtrar"),
+        CreateModal("sininfopanel", "No se encontró información",
+                    "Revisá si estan correctamente seleccionados los filtros."),
+        html.Div(id="div-izquierda-panel", className="botonera", children=[
+            CreateFilters(predios, rutas, materiales, cartoneres),
+            CreateButton("btn-filtro", "Filtrar"),
 
-    ],
-        ),
-    html.Div(id="div-derecha", className="output", children=[
-        html.Div(className="tabs-panel-parent", children=[
-            html.Div([
-                                     html.Div(children=[
-                                         html.Div(id="warning-subir-archivo"),
-                                         html.Label('Agrupar por:', className="labels"),
-                                         dcc.Dropdown(
-                                             id='dropdown_clasificador_vistas',
-                                             className="dropdowns",
-                                             options=[
-                                                 {"label": 'Predio', "value": 'predio'},
-                                                 {"label": 'Material', "value": 'material'},
-                                             ],
-                                             value='predio',
-                                             multi=False
-                                         ), ]
-                                     ),
-                                     dcc.Loading(
-                                         id="loading-1",
-                                         children=[html.Div(className="graficos-div-parent", children=[
-                                             cards_panel
-                                         ])],
-                                         type="circle",
-                                     ),
-                ],className="panel-container")
+        ],
+                 ),
+        html.Div(id="div-derecha", className="output", children=[
+            html.Div(className="tabs-panel-parent", children=[
+                html.Div([
+                    html.Div(children=[
+                        html.Div(id="warning-subir-archivo"),
+                        html.Label('Agrupar por:', className="labels"),
+                        dcc.Dropdown(
+                            id='dropdown_clasificador_vistas',
+                            className="dropdowns",
+                            options=[
+                                {"label": 'Predio', "value": 'predio'},
+                                {"label": 'Material', "value": 'material'},
+                            ],
+                            value='predio',
+                            multi=False
+                        ), ]
+                    ),
+                    dcc.Loading(
+                        id="loading-1",
+                        children=[html.Div(className="graficos-div-parent", children=[
+                            cards_panel
+                        ])],
+                        type="circle",
+                    ),
+                ], className="panel-container")
             ],
-            ),
+                     ),
+        ])
+
     ])
 
-])
 
 dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
+
 
 @app.callback(
     [
@@ -190,8 +189,6 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
 
     ],
     [
-        Input("btn-filtro", "n_clicks"),
-        Input("close-modal-sininfopanel-button", "n_clicks"),
         Input("dropdown_clasificador_vistas", "value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
@@ -203,9 +200,9 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
     ],
     prevent_initial_call=True
 )
-def filtrar(n_clicks, close_sininfo_modal_button, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
+def filtrar(clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
             fecha_fin):
-   
     trigger = callback_context.triggered[0]
 
-    return dash_handler_panel.panel_control(trigger,clasificador, predios, rutas, materiales, cartonere, fecha_inicio,fecha_fin)
+    return dash_handler_panel.panel_control(trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
+                                            fecha_fin)
