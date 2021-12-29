@@ -1,3 +1,4 @@
+from dash_table import DataTable, FormatTemplate
 
 def determinar_tipo_cartonero(row):
     if row['legacyId'].startswith('LE'):
@@ -35,3 +36,55 @@ def crear_df_filtrado(df, predios, rutas, fecha_inicio, fecha_finalizacion, mate
         df_filtrado = df_filtrado.loc[df_filtrado['tipoCartonero'].isin(tipo_cartonero)]
 
     return df_filtrado
+
+def crear_tabla(id, titulos_columnas, dimensiones = ("auto", "auto"), tipos = {}, formatos = {}, es_editable = False, condicionales = []):
+    coulumn_ids = titulos_columnas.keys()
+    columnas = []
+    for col in coulumn_ids:
+        nueva_columna = {
+            'name': titulos_columnas[col],
+            'id': col,
+            'deletable': False,
+            'renamable': False,
+        }
+        if col in tipos.keys():
+            nueva_columna["type"] = tipos[col]
+        if col in formatos.keys():
+            nueva_columna["format"] = formatos[col]
+
+        columnas.append(nueva_columna)
+
+
+    data = {}
+    for col in coulumn_ids:
+        data[col] = ""
+
+    data = [data]
+
+    tabla = DataTable(
+        id = id,
+        columns = columnas,
+        data = data,
+        editable = es_editable,
+        row_deletable = es_editable,
+        style_cell = {
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "border": "1px solid black",
+            "border-left": "2px solid black"
+        },
+        style_header = {
+            "backgroundColor": "#4582ec",
+            "color": "white",
+            "border": "0px solid #2c559c",
+        },
+        style_table = {
+            "height": dimensiones[0],
+            "width" : dimensiones[1],
+            "overflowX": "auto" 
+            },
+        fixed_rows = {'headers': True},
+        style_cell_conditional = condicionales
+        )
+    return tabla
+
