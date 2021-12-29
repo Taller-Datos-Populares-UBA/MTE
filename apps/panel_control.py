@@ -2,27 +2,23 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import State
-from dash_table import DataTable
 
 from apps.base import *
-from elements import CreateButton, SelectDates, SelectFilterOptions, CreateModal, CreateFilters
-from mte_dataframe import MTEDataFrame
-from utils.utils import crear_df_filtrado, crear_tabla
-from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
-
-from dashpanelcontrolhandler import DashPanelControlHandler
+from dash_panel_control_handler import DashPanelControlHandler
+from elements import CreateButton, CreateModal, CreateFilters
+from utils.utils import crear_tabla
 
 # Cards
 
 tabla_resumen = crear_tabla(
-    id = "tabla-Resumen",
-    titulos_columnas = {
+    id="tabla-Resumen",
+    titulos_columnas={
         "clasificacion": "Clasificación",
         "peso": "Peso (kg)"
     },
-    tipos = {"peso": "numeric"},
-    dimensiones = ("auto", "200px")
-    )
+    tipos={"peso": "numeric"},
+    dimensiones=("auto", "200px")
+)
 
 fig_vacio = go.Figure()
 fig_vacio.update_layout(
@@ -121,8 +117,7 @@ cards_panel = html.Div(
 def layout(predios, rutas, materiales, cartoneres):
     return html.Div([
 
-        CreateModal("sininfopanel", "No se encontró información",
-                    "Revisá si estan correctamente seleccionados los filtros."),
+        CreateModal("error3"),
         html.Div(id="div-izquierda-panel", className="botonera", children=[
             CreateFilters(predios, rutas, materiales, cartoneres),
             CreateButton("btn-filtro", "Filtrar"),
@@ -169,11 +164,15 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
         Output("grafico-historico", "figure"),
         Output("grafico-torta", "figure"),
         Output("grafico-barras", "figure"),
-        Output("sininfopanel-modal", "is_open"),
+        Output("error3-modal", "is_open"),
+        Output("header-error3", "children"),
+        Output("body-error3", "children"),
         Output("tabla-Resumen", "data"),
 
     ],
     [
+        Input("btn-filtro", "n_clicks"),
+        Input("close-modal-error3-button", "n_clicks"),
         Input("dropdown_clasificador_vistas", "value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
@@ -185,9 +184,9 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
     ],
     prevent_initial_call=True
 )
-def filtrar(clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
+def filtrar(filtrar_button, close_modal, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
             fecha_fin):
     trigger = callback_context.triggered[0]
 
-    return dash_handler_panel.panel_control(trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
-                                            fecha_fin)
+    return dash_handler_panel.callback(trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
+                                       fecha_fin)

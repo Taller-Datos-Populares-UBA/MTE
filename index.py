@@ -1,17 +1,14 @@
 # index
 
-import base64
-import io
-
 import dash_core_components as dcc
 import dash_html_components as html
 from dash import callback_context
 from dash.dependencies import Output, Input, State
 
 from app import app
-from apps import panel_control, finanzas, error404
+from dash_index_handler import DashIndexHandler
+from elements import CreateModal
 from elements import NavbarElement, LogoMTE
-from mte_dataframe import MTEDataFrame
 
 navbar = (
     html.Ul([
@@ -35,22 +32,12 @@ app.layout = html.Div([
     # Para manejar las distintas páginas/rutas
     dcc.Location(id='url', refresh=True),
     navbar,
+    CreateModal("error5"),
     html.Div(id="page-content", children=[])
 ]
 )
 
-
-def parse_contents(contents, filename, date):
-    content_type, content_string = contents.split(',')
-
-    decoded = base64.b64decode(content_string)
-
-    if filename.endswith(".csv"):
-        return io.StringIO(decoded.decode('utf-8'))
-    elif filename.endswith(".xls") or filename.endswith(".xlsx"):
-        return io.BytesIO(decoded)
-
-    return None  # TODO It should raise an exception
+dash_handler = DashIndexHandler()
 
 
 @app.callback(
@@ -58,6 +45,9 @@ def parse_contents(contents, filename, date):
         Output('page-content', 'children'),
         Output("panel-navbar", "className"),
         Output("finanzas-navbar", "className"),
+        Output("error5-modal", "is_open"),
+        Output("header-error5", "children"),
+        Output("body-error5", "children"),
     ],
     [
         Input('url', 'pathname'),
@@ -69,27 +59,8 @@ def parse_contents(contents, filename, date):
 def display_page(pathname, list_of_contents, list_of_names, list_of_dates):
     trigger = callback_context.triggered[0]
 
-    if trigger["prop_id"] == "upload-comp-base.contents":
-        if list_of_contents is not None:
-            files_list = [
-                parse_contents(c, n, d) for c, n, d in
-                zip(list_of_contents, list_of_names, list_of_dates)]
-            MTEDataFrame.reset_with_files(files_list)
-
-    if MTEDataFrame.FILES_TO_LOAD:
-        predios, rutas, materiales, cartoneres = MTEDataFrame.create_features()
-    else:
-        predios, rutas, materiales, cartoneres = [], [], [], []
-
-    if pathname == '/panel_control':
-        return panel_control.layout(predios, rutas, materiales, cartoneres), "link-active", ""  # ,""
-    elif pathname == '/finanzas':
-        return finanzas.layout(predios, rutas, materiales, cartoneres), "", "link-active"  # ,""
-    elif pathname == '/':
-        return panel_control.layout(predios, rutas, materiales, cartoneres), "link-active", ""  # ,""
-    else:
-        return error404.layout, "", ""
+    return dash_handler.callback(trigger, pathname, list_of_contents, list_of_names, list_of_dates)
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, port=9050)
+    app.run_server(debug=False, port=9050)

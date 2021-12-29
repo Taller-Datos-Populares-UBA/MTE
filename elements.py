@@ -106,18 +106,20 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, capitalize=Fal
     )
 
 
-def CreateModal(idModal: str, titleModal: str, bodyModal: str):
+def CreateModal(idModal: str):
     return dbc.Modal(  # Modal sin informacion
         children=[
             dbc.ModalHeader(
-                titleModal,
+                '',
+                id=f"header-{idModal}",
                 style={
                     "font-size": "30px"
                 }
             ),
 
             dbc.ModalBody(
-                bodyModal,
+                '',
+                id=f"body-{idModal}",
                 style={
                     "font-size": "20px"
                 }
