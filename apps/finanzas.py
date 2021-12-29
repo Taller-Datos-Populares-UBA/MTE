@@ -36,7 +36,8 @@ fig.update_yaxes(
 )
 # --------------------------------------------------------------------------------------------------------------------------
 
-# Cards
+
+# Tablas
 
 tabla_todos = crear_tabla(
     id = "df_pagos",
@@ -55,7 +56,40 @@ tabla_resumen = crear_tabla(
     tipos = {"peso": "numeric"},
     )
 
+tabla_precios = crear_tabla(
+    id = "table-precios",
+    titulos_columnas = {
+        "sede": "Sede",
+        "material": "Material",
+        "preciora": "Precio RA",
+        "preciole": "Precio LE",
+    },
+    tipos = {
+        "preciora": "numeric",
+        "preciole": "numeric"
+    },
+    formatos = {
+        "preciora": FormatTemplate.money(2),
+        "preciole": FormatTemplate.money(2)
+    },
+    dimensiones = ("auto", "200px"),
+    es_editable = True,
+    condicionales = [
+        {'if': {'column_id': 'sede'},
+            'width': '150px'},
+        {'if': {'column_id': 'material'},
+            'width': '150px'},
+        {'if': {'column_id': 'preciora'},
+            'width': '100px'},
+        {'if': {'column_id': 'preciole'},
+            'width': '100px'},
+        {'if': {'column_id': ''},
+            'width': '25em'},
+    ] 
+)
 # --------------------------------------------------------------------------------------------------------------------------
+
+# Cards -----------------------------------------------------------
 
 # Card con el saldo
 first_card = dbc.Card([
@@ -184,37 +218,7 @@ layout = html.Div([
                         id="store-precios",
                         storage_type="local"
                     ),
-                    crear_tabla(
-                        id = "table-precios",
-                        titulos_columnas = {
-                            "sede": "Sede",
-                            "material": "Material",
-                            "preciora": "Precio RA",
-                            "preciole": "Precio LE",
-                        },
-                        tipos = {
-                            "preciora": "numeric",
-                            "preciole": "numeric"
-                        },
-                        formatos = {
-                            "preciora": FormatTemplate.money(2),
-                            "preciole": FormatTemplate.money(2)
-                        },
-                        dimensiones = ("auto", "200px"),
-                        es_editable = True,
-                        condicionales = [
-                            {'if': {'column_id': 'sede'},
-                             'width': '150px'},
-                            {'if': {'column_id': 'material'},
-                             'width': '150px'},
-                            {'if': {'column_id': 'preciora'},
-                             'width': '100px'},
-                            {'if': {'column_id': 'preciole'},
-                             'width': '100px'},
-                            {'if': {'column_id': ''},
-                             'width': '25em'},
-                        ] 
-                    )
+                    tabla_precios
                 ],
                 id="table-precios-div"
             ),

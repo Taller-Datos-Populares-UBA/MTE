@@ -38,6 +38,9 @@ def crear_df_filtrado(df, predios, rutas, fecha_inicio, fecha_finalizacion, mate
     return df_filtrado
 
 def crear_tabla(id, titulos_columnas, dimensiones = ("auto", "auto"), tipos = {}, formatos = {}, es_editable = False, condicionales = []):
+    """
+    IMPORTANTE: Los keys de los diccionarios ``titulos_columnas``, ``tipos``, y  ``formatos`` son los id's de las columnas. Todas las columnas deben tener titulo, ya que la función consigue los id's de cada columna a traves de los keys de ``titulos_columnas``. 
+    """
     coulumn_ids = titulos_columnas.keys()
     columnas = []
     for col in coulumn_ids:
