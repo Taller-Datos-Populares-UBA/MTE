@@ -1,0 +1,348 @@
+/* Filtros ------------------------------------------------------------------------------------------------------------------------------*/
+.botonera {
+    position: fixed;
+    bottom: 0;
+    top: 45px;
+    float:left;
+    margin:0px;
+    padding-top:0px;
+    width: 40%;
+    padding-bottom: 20px;
+  
+    max-height: calc(100%-50px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: rgb(222,222,222);
+    background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(247,247,247,1) 51%, rgba(255,255,255,1) 100%);
+  }
+  
+  .title-botonera {
+    font-size: 30px;
+    padding-left: 10px;
+    font-weight: bold;
+    color: #376bc4;
+    margin-left: 10px;
+  }
+  
+      /*5.1) Labels */
+  
+  
+      .labels {
+        font-size: 20px;
+        font-family: Rubik,monospace;
+        margin-top:10px;
+        margin-left: 20px !important;
+        color:#2c559c ;
+      }
+  
+      #label-tabla {
+        font-size: 20px;
+        font-family: Rubik,monospace;
+        margin-top:15px;
+        margin-left: 20px !important;
+        color:#2c559c;
+        display: inline-block;
+      }
+  
+      #help-table {
+        display: inline-block;
+        padding: 18px;
+        padding-left: 10px;
+        margin: 0px;
+        vertical-align: top;
+      }
+  
+      #tooltip-table {
+        font-family: Rubik,sans !important;
+        font-size: 20px !important;
+      }
+  
+      /*5.2) Selector de fecha*/
+  
+      .radio-item {
+        display: inline-block;
+        position: relative;
+        padding: 0 px;
+        margin: -10px 0px 10px;
+        transition: 0.1s;
+      }
+  
+      .radio-item input[type='radio'] {
+        display: none;
+        transition: 0.1s;
+      }
+  
+      .radio-item label {
+        color: #666;
+        font-weight: normal;
+        transition: 0.1s;
+        margin: 0;
+      }
+  
+      .radio-item label:before {
+        content: " ";
+        display: inline-block;
+        position: relative;
+        top: 4px;
+        margin: 12px 5px 0 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 11px;
+        border: 2px solid #2c559c;
+        background-color: transparent;
+        transition: 0.1s;
+      }
+  
+      .dates-container {
+        padding: 10px 20px;
+      }
+  
+      .date-range {
+        width: 100%;
+        display:flex;
+        justify-content: left ;
+        margin:0 auto;
+        margin-left: 10px;
+        margin-top:10px;
+        padding: 0 auto;
+      }
+  
+      .date-range {
+        width: 100%;
+        font-family: Rubik;
+        font-size:20px;
+        border: 0px solid black;
+        display:block;
+        margin:0 auto ;
+  
+      }
+  
+      .DateRangePickerInput_arrow {
+        background: none;
+      }
+  
+      .DateRangePickerInput {
+        background: none;
+      }
+  
+          /*5.2.1) Calendario */
+  
+          .DateRangePickerInput  {
+            border:  0px solid white !important;
+          }
+  
+          .CalendarDay__selected {
+            background-color: #2c559c !important;
+            border: 1px solid white;
+          }
+  
+          .CalendarDay__selected_span {
+            background-color: #4582ec !important;
+            border: 1px solid white;
+          }
+  
+          .CalendarDay__selected_span:hover {
+            background-color: #376bc4 !important;
+            border: 1px solid white;
+          }
+  
+          .DayPickerKeyboardShortcuts_show__bottomRight::before {
+            border-top: 26px solid transparent;
+            border-right: 33px solid #4582ec;
+            bottom: 0;
+            right: 0
+          }
+  
+          .DayPickerKeyboardShortcuts_show__bottomRight:hover::before {
+            border-right: 33px solid #2c559c
+          }
+  
+          .DayPickerNavigation_button {
+            border: 1px solid black;
+          }
+  
+          .DayPickerNavigation_button:hover {
+            border: 1px solid black;
+            background-color: #bdd5ff;
+          }
+  
+          .DayPicker_weekHeader_li {
+            display: hidden;
+          }
+  
+          .DayPicker_weekHeader_li:after {
+            visibility: visible;
+            content: Su;
+          }
+  
+  
+      /*5.3) Dropdown de predios */
+  
+      .dropdowns {
+        margin-top: 10px;
+        padding: 0px 20px ;
+      }
+  
+      .Select-placeholder{
+        color: grey;
+        vertical-align: text-bottom;
+      }
+  
+      .div-dropdown {
+        width: 100%;
+        display:flex;
+        justify-content: left;
+        margin: 0 auto;
+        margin-left:10px;
+        margin-top:10px;
+        padding: 0 auto;
+      }
+  
+      /*5.4) Tabla de precios */
+  
+      #table-precios-div {
+        display:block;
+        justify-content: center;
+        margin: 0 auto;
+        margin-top:10px;
+        margin-bottom: 20px;
+        padding: 0px;
+        width: 80%;
+      }
+      #table-precios {
+        display:block;
+        margin-top:10px;
+        font-size: 20px;
+        padding: 0px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+      }
+  
+      tr .dash-delete-cell {
+        font-size: 30px !important;
+      }
+  
+      /*5.5) Botones de la tabla*/
+  
+      #button-add-row-div {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+  
+      }
+  
+      #button-add-row-div button{
+        display: inline-block !important;
+        background-color: #4582ec;
+        border: 0px solid white;
+        white-space: pre-wrap;
+        width: 15rem;
+        padding-top: 10px;
+        height: 6rem;
+        bottom: 20px;
+      }
+  
+      #button-add-row-div button:hover{
+        background-color: #2c559c;
+        border: 0px solid white;
+        white-space: pre-wrap;
+        padding-top: 10px;
+        height: 6rem;
+  
+        bottom: 20px;
+      }
+  
+      .buttons-table {
+        font-family: Rubik, sans;
+        font-size: 15px;
+        display:flex !important;
+        justify-content: center !important;
+        padding: 0 auto !important;
+      }
+  
+      .start-button {
+        margin-right: 0px !important;
+        padding-right: 0px !important;
+        border-radius: 15px 0px 0px 15px;
+      }
+  
+      .mid-button {
+        margin-left: 0px !important;
+        padding-left: 0px !important;
+        margin-right: 0px !important;
+        padding-right: 0px !important;
+        border-radius: 0px 0px 0px 0px;
+      }
+  
+      .end-button {
+        margin-left: 0px !important;
+        padding-left: 0px !important;
+        border-radius: 0px 15px 15px 0px;
+      }
+  
+      button img {
+        display: inline-block;
+        vertical-align: center;
+        margin-top: -25px;
+        margin-right: 15px;
+      }
+  
+      button p {
+        display: inline-block;
+        vertical-align: center;
+  
+        font-family: Rubik, sans;
+      }
+  
+      #button-save-file img {
+        display: inline-block;
+        vertical-align: center;
+        margin-top: -25px;
+        margin-right: 15px;
+      }
+  
+      #button-save-file p {
+        display: inline-block;
+        vertical-align: center;
+  
+        font-family: Rubik, sans;
+      }
+  
+      #button-add-row img {
+        display: inline-block;
+        vertical-align: center;
+        margin-top: -25px;
+        margin-right: 15px;
+      }
+  
+      #button-add-row p {
+        display: inline-block;
+        vertical-align: center;
+  
+        font-family: Rubik, sans;
+      }
+  
+      #cargar-text {
+        display: inline-block;
+        margin: 0;
+        padding: 0 auto;
+      }
+  
+      #cargar-img {
+        display: inline-block !important;
+        margin: 0 auto;
+        margin-top: 7px;
+        margin-right: 0px;
+        padding: 0 auto;
+        float: left;
+      }
+  
+      #button-load-file p {
+        font-family: Rubik, sans;
+        font-size: 15px;
+        display:flex !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        margin-top:0px !important;
+        padding: 0 auto !important;
+      }

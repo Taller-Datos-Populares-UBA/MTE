@@ -1,0 +1,455 @@
+/* finanzas 
+  ---------------------------------------------
+ - Tab individual y tab todos
+ - Tabla precios
+ */
+
+.tabs-finanzas {
+  background-color: #adb5bd;
+}
+
+.jsx-4017309047 .tab-content {
+  position: relative;
+  bottom: 0px;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  bottom: 0px;
+  min-height: 100% !important;
+  flex: 1;
+}
+
+#tabs-finanzas-parent {
+  position: fixed;
+  width: 60%;
+  height: calc(100% - 50px);
+  bottom: 0px;
+}
+
+.card {
+  border-radius: 15px;
+  border: 1px solid #4582ec;
+  background: rgb(222,222,222);
+  background: linear-gradient(0deg, rgba(222,222,222,1) 0%, rgba(241,241,241,1) 42%, rgba(255,255,255,1) 100%);
+  margin-bottom: 40px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.row {
+  padding: 0px 15px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-family: Rubik,monospace;
+    margin-top:10px;
+    color:#2c559c ;
+}
+.card-subtitle {
+    font-size: 16px;
+    font-family: Rubik,monospace;
+    color:#2c559c ;
+}
+
+.waves {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  width: 60%;
+  z-index: 0;
+}
+
+.tab-finanzas-header {
+  background: rgb(181,181,181);
+  background: linear-gradient(0deg, rgba(181,181,181,1) 0%, rgba(244,244,244,1) 100%);
+  color:#2c559c;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 0px solid #4582ec;
+  height: 60px;
+  padding: 10px !important;
+  transition: 0.5s;
+}
+
+.tab-finanzas-header:hover {
+  color:#376bc4;
+  transition: 0.2s;
+}
+
+    /*7.1) Tab Individual*/
+
+    #search-div {
+      width: 100%;
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:20px;
+      padding: 0 auto;
+    }
+
+    .search-button {
+      margin-left: 10px;
+      margin-top: 15px !important;
+      font-family: Rubik, sans;
+      font-size: 20px;
+      padding-top: 2px;
+      border-radius: 10px !important;
+    }
+
+    #search-button {
+      margin-top: 0px !important;
+      padding-top: 2px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    .search-button img {
+      margin-top: -2px !important;
+    }
+
+    #input-legacyId {
+      font-family: Rubik;
+      font-size: 20px;
+      color:#005370;
+    }
+
+    #label-total {
+      visibility: hidden;
+      margin-top:10px;
+      font-size:1px;
+      font-family: Rubik;
+      color:#2c559c;
+    }
+
+    #div-individual {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+      height: calc(100vh - 150px);
+      max-height: calc(100vh - 170px);
+      padding: 0px 20px;
+    }
+
+    .labels-cartas {
+      font-family: Rubik, sans;
+      font-size: 20px;
+    }
+
+    #label-legajo {
+      font-family: Rubik, sans;
+      font-size: 30px;
+      padding-left: 10px;
+    }
+
+
+
+    /*7.2) Tab Todxs*/
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    #parent-todxs {
+      display:flex;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:100px;
+      font-size:50px;
+      font-family: Rubik;
+      color:#005370;
+      text-align: center;
+      width: 50%
+    }
+
+    #refresh-button {
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      display:flex !important;
+      justify-content: center !important;
+      margin: 0 auto !important;
+      margin-left: 10px;
+      margin-top:20px !important;
+      padding: 0 auto !important;
+      border-radius: 10px !important;
+    }
+
+    #refresh-button p{
+      font-family: Rubik, sans ;
+      font-size: 15px;
+      margin-top: 2px;
+      margin-left: 10px;
+      padding: 0 auto !important;
+    }
+
+    #refresh-button:hover {
+      background-color: #2c559c;
+
+    }
+
+    #img-refresh {
+      width: 3rem;
+      padding: 0;
+      margin-right: 0px;
+      margin-top: -2px;
+
+    }
+
+/*Al fondo de los dos tabs para que aplique este efecto por arriba de los otros*/
+#tabs-finanzas .tab--selected {
+  background: #e8e8e8;
+  color: #4582ec;
+  font-size: 25px;
+  font-weight: bold;
+  font-family: Rubik, sans;
+  border-radius: 20px 20px 0px 0px;
+  border-top: 5px solid #4582ec;
+  padding: 5px;
+  transition: 0.5s;
+}
+
+
+
+.expanded-row--empty-cell.dash-delete-header {
+  width: 10.45% !important;
+}
+
+#btn-filtro {
+  margin-top: 20px;
+}
+
+.Select-menu-outer {
+  position: relative;
+  margin-top: 10px ;
+  border-radius: 5px ;
+  width: calc(100% - 20px) !important;
+  margin: 10px !important;
+}
+
+
+
+@media (max-width: 995px) {
+
+  #button-add-row-div {
+    display: block !important;
+    margin: 0 auto;
+    width: 25rem;
+  }
+
+  #container-buttons{
+    display: flex;
+    justify-content: center;
+  }
+
+  .start-button{
+    width: 25rem !important;
+    display: block !important;
+    margin: 0 auto !important;
+    margin-bottom: 0px !important;
+    border-radius: 15px 15px 0 0;
+
+  }
+
+  .mid-button{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    width: 25rem !important;
+    clear: both;
+    display: block;
+  }
+
+  .end-button{
+    margin-top: 0px !important;
+    width: 25rem !important;
+    clear: both;
+    display: block;
+    border-radius: 0 0 15px 15px;
+  }
+
+  #cargar-img {
+    margin-left: 50px;
+  }
+
+  #cargar-text {
+    display: flex;
+    float: left;
+    padding-left: 15px;
+  }
+
+  .mid-button img {
+    margin-left: -12px;
+  }
+
+  .mid-button p {
+    margin-left: 0px;
+  }
+
+  #input-legacyId{
+    width: 20rem;
+  }
+}
+
+@media (max-width: 700px) {
+
+  #button-add-row-div {
+    display: block !important;
+    margin: 0 auto;
+    width: 20rem;
+  }
+
+  #container-buttons{
+    display: flex;
+    justify-content: center;
+  }
+
+  .start-button{
+    width: 20rem !important;
+    display: block !important;
+    margin: 0 auto !important;
+    margin-bottom: 0px !important;
+    border-radius: 15px 15px 0 0;
+
+  }
+
+  .mid-button{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    width: 20rem !important;
+    clear: both;
+    display: block;
+  }
+
+  .end-button{
+    margin-top: 0px !important;
+    width: 20rem !important;
+    clear: both;
+    display: block;
+    border-radius: 0 0 15px 15px;
+  }
+
+  #cargar-img {
+    margin-left: 25px;
+  }
+
+  #cargar-text {
+    display: flex;
+    float: left;
+    padding-left: 17px;
+  }
+
+  .mid-button img {
+    margin-left: -12px;
+  }
+
+  .mid-button p {
+    margin-left: 0px;
+  }
+
+  #input-legacyId{
+    width: 20rem;
+    overflow: ellipsis;
+  }
+
+  #search-button {
+    width: 4rem;
+  }
+
+  #search-button img {
+    margin-left: -0.4rem;
+  }
+
+  #search-button p{
+    visibility: hidden;
+  }
+}
+
+#table-precios-parent {
+      display:block;
+      justify-content: center;
+      margin: 0 auto;
+      margin-top:10px;
+      margin-bottom: 20px;
+      padding: 0px;
+      width: 80%;
+    }
+
+#tabla-legajo {
+      display:block;
+      margin-top:10px;
+      font-size: 20px;
+      padding: 0px;
+      margin-bottom: 0px;
+      padding-bottom: 0px;
+    }
+
+.last-card {
+  margin-bottom: 20px;
+}
+
+.container-cards{
+  padding-bottom: 50px;
+  margin-bottom: 20px;
+}
+
+#div-izquierda-panel{
+  width: 30%;
+}
+
+.output {
+  width: 70%;
+  bottom: 0px;
+  float: right;
+}
+
+.graficos-div-parent {
+  margin-top: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-bottom: 20px;
+  height: calc(100vh - 50px);
+  max-height: calc(100vh - 140px);
+  padding-bottom: 50px;
+}
+
+.tabs-panel-parent {
+  position: fixed;
+  width: 70%;
+  height: calc(100% - 45px);
+  bottom: 0px;
+  overflow: hidden;
+}
+
+.panel-container {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  background: rgb(164,164,164);
+  background: linear-gradient(0deg, rgba(164,164,164,1) 0%, rgba(205,205,205,1) 42%, rgba(232,232,232,1) 100%);
+  overflow: hidden;
+}
+
+.alert.alert-danger.fade.show {
+  margin: 5px;
+  border-radius: 5px;
+
+}
+
+#tabla-resumen-parent {
+  height: 298px;
+  padding: 50px 0px;
+}
+
+#df-precios-parent {
+  padding: 15px 50px;
+}
