@@ -52,14 +52,16 @@ dash_handler = DashIndexHandler()
     [
         Input('url', 'pathname'),
         Input('upload-comp-base', 'contents'),
+        Input('close-modal-error5-button', 'n_clicks'),
         State('upload-comp-base', 'filename'),
         State('upload-comp-base', 'last_modified'),
     ]
 )
-def display_page(pathname, list_of_contents, list_of_names, list_of_dates):
+def display_page(pathname, list_of_contents, close_modal_button, list_of_names, list_of_dates):
     trigger = callback_context.triggered[0]
 
-    return dash_handler.callback(trigger, pathname, list_of_contents, list_of_names, list_of_dates)
+    res = dash_handler.callback(trigger, pathname, list_of_contents, list_of_names, list_of_dates)
+    return res
 
 
 if __name__ == "__main__":

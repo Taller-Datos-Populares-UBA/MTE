@@ -1,11 +1,10 @@
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.graph_objs as go
 from dash.dependencies import State
 
 from apps.base import *
 from dash_panel_control_handler import DashPanelControlHandler
-from elements import CreateButton, CreateModal, CreateFilters
+from elements import CreateButton, CreateModal, CreateFilters, EmptyFigure
 from utils.utils import crear_tabla
 
 # Cards
@@ -20,32 +19,13 @@ tabla_resumen = crear_tabla(
     dimensiones=("auto", "200px")
 )
 
-fig_vacio = go.Figure()
-fig_vacio.update_layout(
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    height=10,
-)
-fig_vacio.update_xaxes(
-    zeroline=False,
-    showgrid=False,
-    tickmode="array",
-    tickvals=[],
-    ticktext=[]
-)
-fig_vacio.update_yaxes(
-    zeroline=False,
-    showgrid=False,
-    tickmode="array",
-    tickvals=[],
-    ticktext=[]
-)
+fig = EmptyFigure()
 
-graph_hist = dcc.Graph(id="grafico-historico", figure=fig_vacio,
+graph_hist = dcc.Graph(id="grafico-historico", figure=fig,
                        config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
-graph_torta = dcc.Graph(id="grafico-torta", figure=fig_vacio,
+graph_torta = dcc.Graph(id="grafico-torta", figure=fig,
                         config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
-graph_barras = dcc.Graph(id="grafico-barras", figure=fig_vacio,
+graph_barras = dcc.Graph(id="grafico-barras", figure=fig,
                          config={'displaylogo': False, 'displayModeBar': False, 'locale': 'es'})
 
 card_resumen = dbc.Card([

@@ -47,7 +47,7 @@ class DashIndexHandler(DashHandler):
         self.panelcontrol_navbar = panelcontrol_navbar
         self.finanzas_navbar = finanzas_navbar
 
-    def _create_response(self):
+    def _get_response(self):
         return [self.layout,
                 self.panelcontrol_navbar,
                 self.finanzas_navbar,

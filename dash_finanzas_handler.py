@@ -22,6 +22,7 @@ class DashFinanzasHandler(DashHandler):
                           rutas,
                           materiales, cartonere):
 
+        show_modal, title_modal, descr_modal, fig_recolectado, total_a_pagar_por_usuario, tabla_resumen, tabla_todos = self._get_response()
         df_pagos = pd.DataFrame()
 
         df = MTEDataFrame.get_instance()
@@ -30,15 +31,14 @@ class DashFinanzasHandler(DashHandler):
 
         df_precios = pd.DataFrame(data)
 
-        # Si llame a la funcion apretando el boton de refrescar, buscar, o cambie a la tab de Todxs:
-        if (trigger["prop_id"] in ["refresh-button.n_clicks"]) or (tab == "todxs"):
+        if (trigger["prop_id"] == "refresh-button.n_clicks") or (tab == "todxs"):
 
             try:
                 df_pagos = pago_por_predio(df_filtrado, df_precios)
             except Exception as e:
                 print("No pude calcular el pago, error:", e)
 
-        elif trigger["prop_id"] in ["search-button.n_clicks"]:
+        elif trigger["prop_id"] == "search-button.n_clicks":
             df_is_empty = df_filtrado.empty
             legacy_not_found = legacy_id not in list(df_filtrado["legacyId"])
 
@@ -54,26 +54,22 @@ class DashFinanzasHandler(DashHandler):
                     ultimos_movimientos["fecha"] = ultimos_movimientos["fecha"].dt.strftime("%d/%m/%Y")
                     tabla_resumen = ultimos_movimientos.to_dict('records')
 
-            elif df_is_empty:  # Si el df esta vacio, te avisa con el modal de que esta vacio
+            elif df_is_empty:
                 show_modal = True
                 title_modal = "No se encontró información"
                 descr_modal = "Revisá si estan correctamente seleccionados los filtros"
 
-            elif legacy_not_found:  # Si la persona no esta en el df, te avisa con el modal
+            elif legacy_not_found:
                 show_modal = True
                 title_modal = "No se encontró información"
                 descr_modal = "Revisá si pusiste bien el número de legajo"
-
-        # Los siguientes 3 elif son para cerrar los modals
-        elif trigger["prop_id"] == "close-modal-error-button.n_clicks":
-            show_modal = False
 
         tabla_todos = df_pagos.reset_index().to_dict('records')
 
         self._save_response(show_modal, title_modal, descr_modal, fig_recolectado, total_a_pagar_por_usuario,
                             tabla_resumen, tabla_todos)
 
-    def _create_response(self):
+    def _get_response(self):
         return [self.show_modal,
                 self.title_modal,
                 self.descr_modal,

@@ -1,36 +1,16 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-import plotly.graph_objs as go
 from dash.dependencies import State
 from dash_table import FormatTemplate
 
 from apps.base import *
 from dash_finanzas_handler import DashFinanzasHandler
-from elements import CreateButton, CreateModal, CreateFilters
+from elements import CreateButton, CreateModal, CreateFilters, EmptyFigure
 from utils.utils import crear_tabla
 from utils.utils_finanzas import parse_contents
 
-fig = go.Figure()
-fig.update_layout(
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    height=10,
-)
-fig.update_xaxes(
-    zeroline=False,
-    showgrid=False,
-    tickmode="array",
-    tickvals=[],
-    ticktext=[]
-)
-fig.update_yaxes(
-    zeroline=False,
-    showgrid=False,
-    tickmode="array",
-    tickvals=[],
-    ticktext=[]
-)
+fig = EmptyFigure()
 # --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -184,8 +164,6 @@ def layout(predios, rutas, materiales, cartoneres):
 
         CreateModal("error"),
         CreateModal("error2"),
-
-        # CreateModal("error2", "Faltan precios", "Revisá si está completa la tabla de precios."),
 
         dcc.Download(id="download"),
 
@@ -475,12 +453,9 @@ def add_row(n_clicks_save, n_clicks_add, content, close_n_clicks, selected_cells
         return rows, None, False, rows
 
 
-# Función
-
 dash_handler_finanzas = DashFinanzasHandler(tabla_resumen.columns, tabla_todos.columns)
 
 
-# Función que controla todo lo que muestra en la parte de Individual y Todxs
 @app.callback(
     [
         Output("error-modal", "is_open"),

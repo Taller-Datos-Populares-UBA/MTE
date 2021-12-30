@@ -45,7 +45,7 @@ def pesos_historico_promedio(data, tipo='predio'):
     '''
     df = data.groupby(by=["fecha", tipo], as_index=False).sum()
 
-    # recuperamos primer fecha y ultima fecha
+    # recuperamos primera fecha y ultima fecha
     df = df.sort_values(by="fecha")
     df = df[df[tipo].notna()]
 
@@ -76,9 +76,6 @@ def pesos_historico_promedio(data, tipo='predio'):
 
 
 def torta(data, tipo='predio'):
-    # Realiza un gráfico de torta del peso por material.
-    # Devuelve la figura de plotly conteniendo el gráfico.
-
     df = data.groupby(by=[tipo], as_index=False).sum()
     fig = px.pie(df, values="peso", names=tipo, title='')
     fig.update_traces(hoverinfo="label+percent", textfont_size=14,
@@ -93,13 +90,7 @@ def torta(data, tipo='predio'):
 
 
 def datos_tabla(data, tipo='predio'):
-    df = data
-    try:
-        df = df.drop(columns=["bolson"])
-    except:
-        pass
-
-    suma = df.groupby(by=[tipo]).sum()
-    suma = suma.reset_index()
+    df = data.drop(columns=["bolson"], errors='ignore')
+    suma = df.groupby(by=[tipo]).sum().reset_index()
     suma.rename(columns={tipo: 'clasificacion'}, inplace=True)
     return suma

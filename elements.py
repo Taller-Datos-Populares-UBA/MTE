@@ -3,6 +3,7 @@ from datetime import date
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objects as go
 
 from app import app
 
@@ -107,7 +108,7 @@ def SelectFilterOptions(options, label, dropdown_id, response_id, capitalize=Fal
 
 
 def CreateModal(idModal: str):
-    return dbc.Modal(  # Modal sin informacion
+    return dbc.Modal(
         children=[
             dbc.ModalHeader(
                 '',
@@ -141,7 +142,7 @@ def CreateModal(idModal: str):
         ],
         id=f"{idModal}-modal",
         is_open=False,
-        backdrop="static"  # Modal sin informacion
+        backdrop="static"
     )
 
 
@@ -160,3 +161,28 @@ def CreateFilters(predios, rutas, materiales, cartoneres):
                             capitalize=True),
         SelectFilterOptions(cartoneres, "Elegí el tipo de cartonere", "dropdown-cartonere", "salida-cartoneres"),
     ])
+
+
+def EmptyFigure():
+    fig = go.Figure()
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=10,
+    )
+    fig.update_xaxes(
+        zeroline=False,
+        showgrid=False,
+        tickmode="array",
+        tickvals=[],
+        ticktext=[]
+    )
+    fig.update_yaxes(
+        zeroline=False,
+        showgrid=False,
+        tickmode="array",
+        tickvals=[],
+        ticktext=[]
+    )
+    return fig
+
