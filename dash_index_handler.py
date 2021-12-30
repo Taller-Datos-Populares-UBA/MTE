@@ -5,6 +5,7 @@ from apps import panel_control, finanzas, error404
 from dash_handler import DashHandler
 from mte_dataframe import MTEDataFrame
 
+from exceptions import *
 
 class DashIndexHandler(DashHandler):
 

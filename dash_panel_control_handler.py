@@ -7,6 +7,7 @@ from mte_dataframe import MTEDataFrame
 from utils.utils import crear_df_filtrado
 from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
 
+from exceptions import *
 
 class DashPanelControlHandler(DashHandler):
 
@@ -26,9 +27,7 @@ class DashPanelControlHandler(DashHandler):
             df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
                                             datetime.fromisoformat(fecha_fin), materiales, cartonere)
             if df_filtrado.empty:
-                show_modal = True
-                title_modal = "No se encontró información"
-                descr_modal = "Revisá si estan correctamente seleccionados los filtros"
+                raise EmptyDataFrameError
             else:
                 fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
                 fig_torta = torta(df_filtrado, clasificador)

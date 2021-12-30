@@ -8,6 +8,8 @@ from mte_dataframe import MTEDataFrame
 from utils.utils import crear_df_filtrado
 from utils.utils_finanzas import grafico_torta, pago_por_predio, pago_individual
 
+from exceptions import *
+
 
 class DashFinanzasHandler(DashHandler):
 
@@ -55,9 +57,7 @@ class DashFinanzasHandler(DashHandler):
                     tabla_resumen = ultimos_movimientos.to_dict('records')
 
             elif df_is_empty:
-                show_modal = True
-                title_modal = "No se encontró información"
-                descr_modal = "Revisá si estan correctamente seleccionados los filtros"
+                raise EmptyDataFrameError 
 
             elif legacy_not_found:
                 show_modal = True

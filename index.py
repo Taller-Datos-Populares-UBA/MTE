@@ -65,4 +65,4 @@ def display_page(pathname, list_of_contents, close_modal_button, list_of_names, 
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False, port=9050)
+    app.run_server(debug=True, port=9050)

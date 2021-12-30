@@ -1,3 +1,5 @@
+from exceptions import *
+
 class DashHandler:
 
     def __init__(self):
@@ -11,10 +13,23 @@ class DashHandler:
         else:
             try:
                 self._execute_callback(trigger, *args)
+            except KeyError as e:
+                self.show_modal = True
+                self.title_modal = "Problema con el archivo subido."
+                self.descr_modal = f"Columna {str(e)} no encontrada."
+            except ValueError as e:
+                self.show_modal = True
+                self.title_modal = "Problema con el archivo subido."
+                self.descr_modal = "Formato de archivo no soportado. Proba con .csv, .xlsx, o .xls"
+            except EmptyDataFrameError as e:
+                self.show_modal = True
+                self.title_modal = "No se encontró información"
+                self.descr_modal = "Revisá si estan correctamente seleccionados los filtros"
             except Exception as e:
                 self.show_modal = True
                 self.title_modal = 'Error inesperadisimo rey'
                 self.descr_modal = str(type(e)) + str(e)
+
 
         return self._get_response()
 
