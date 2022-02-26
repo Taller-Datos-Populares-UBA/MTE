@@ -36,6 +36,9 @@ class MTEDataFrame:
 
     @classmethod
     def _read_mte_csv(cls, csv_name, dtypes):
+        print("~~~~~~~~~~~~~~~")
+        print(csv_name)
+        print("~~~~~~~~~~~~~~~")
         return pd.read_csv(csv_name, dtype=dtypes, parse_dates=[0])
 
     @classmethod

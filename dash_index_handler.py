@@ -21,6 +21,9 @@ class DashIndexHandler(DashHandler):
                 files_list = [
                     self.parse_contents(c, n, d) for c, n, d in
                     zip(list_of_contents, list_of_names, list_of_dates)]
+                print("-------------")
+                print(f"{files_list}")
+                print("-------------")
                 MTEDataFrame.reset_with_files(files_list)
 
         if MTEDataFrame.FILES_TO_LOAD:

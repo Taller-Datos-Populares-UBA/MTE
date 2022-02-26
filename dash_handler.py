@@ -27,7 +27,7 @@ class DashHandler:
                 self.descr_modal = "Revisá si estan correctamente seleccionados los filtros"
             except Exception as e:
                 self.show_modal = True
-                self.title_modal = 'Error inesperadisimo rey'
+                self.title_modal = 'Error inesperado'
                 self.descr_modal = str(type(e)) + str(e)
 
 
