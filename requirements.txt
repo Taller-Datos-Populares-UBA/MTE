@@ -52,3 +52,4 @@ tenacity==8.0.1
     # via plotly
 werkzeug==2.0.1
     # via flask
+gunicorn==20.1.0

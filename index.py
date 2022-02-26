@@ -1,5 +1,4 @@
 # index
-import os
 
 import dash_core_components as dcc
 import dash_html_components as html
@@ -64,7 +63,6 @@ def display_page(pathname, list_of_contents, close_modal_button, list_of_names, 
     res = dash_handler.callback(trigger, pathname, list_of_contents, list_of_names, list_of_dates)
     return res
 
-PORT = os.getenv('PORT', 9050)
-print(f"PORT: {PORT}")
+
 if __name__ == "__main__":
-    app.run_server(debug=True, port=PORT)
+    app.run_server(debug=True, port=9050)
