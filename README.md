@@ -21,3 +21,6 @@ Si quisieras usar una ip en particular se puede especificar:
     `python ./index.py --host X.X.X.X`  
 
 Aclaración: dependiendo del sistema operativo y cómo hayas instalado Python, la palabra para llamarlo desde consola puede ser `py` (Windows) o `python3`, `python3.9` o algo similar en Mac/Linux.
+
+# Deploy
+Por el momento, tenemos la app hosteada en Heroku. En caso de querer hacer un deploy, dejar la app en el estado que se desea deployar en el repo original (el de Github) y dar aviso a Roni para que haga el deploy. La idea es a futuro hacer el deploy en Calculin
