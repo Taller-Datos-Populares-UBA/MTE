@@ -45,6 +45,8 @@ class MTEDataFrame:
 
     @classmethod
     def reset_with_files(cls, files):
+        print("reseteando files")
+        print(f"{files}")
         cls._instance = None
         cls.FILES_TO_LOAD = files
 
