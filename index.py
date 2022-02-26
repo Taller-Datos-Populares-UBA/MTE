@@ -37,6 +37,7 @@ app.layout = html.Div([
 ]
 )
 
+server = app.server
 dash_handler = DashIndexHandler()
 
 
