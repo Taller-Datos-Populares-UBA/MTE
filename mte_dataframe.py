@@ -21,7 +21,7 @@ class MTEDataFrame:
 
     @classmethod
     def _create_instance(cls):
-        print("files to load")
+        print("files to load ")
         print(cls.FILES_TO_LOAD)
         dtypes = {'etapa': str,
                   'bolson': float,
