@@ -21,20 +21,26 @@ def crear_df_filtrado(df, predios, rutas, fecha_inicio, fecha_finalizacion, mate
     # df_filtrado['tipoCartonero'] = df_filtrado.apply(determinar_tipo_cartonero, axis=1)
 
     # aplicar filtros
+    print(f"predios : {predios}")
+    print(f"rutas : {rutas}")
+    print(f"fecha : {fecha_inicio}")
+    print(f"fecha : {fecha_finalizacion}")
+    print(f"materiales : {materiales}")
+    print(f"tipo_cartonero : {tipo_cartonero}")
     if predios:
         df_filtrado = df_filtrado.loc[df_filtrado['predio'].isin(predios)]
-
+    print("1")
     if rutas:
         df_filtrado = df_filtrado.loc[df_filtrado['etapa'].isin(rutas)]
-
+    print("2")
     df_filtrado = df_filtrado[(df_filtrado['fecha'] >= fecha_inicio) & (df_filtrado['fecha'] <= fecha_finalizacion)]
-
+    print("3")
     if materiales:
         df_filtrado = df_filtrado.loc[df_filtrado['material'].isin(materiales)]
-
+    print("4")
     if tipo_cartonero:
         df_filtrado = df_filtrado.loc[df_filtrado['tipoCartonero'].isin(tipo_cartonero)]
-
+    print("5")
     return df_filtrado
 
 def crear_tabla(id, titulos_columnas, dimensiones = ("auto", "auto"), tipos = {}, formatos = {}, es_editable = False, condicionales = []):

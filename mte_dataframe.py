@@ -14,6 +14,9 @@ class MTEDataFrame:
     def get_instance(cls):
         if cls._instance is None:
             cls._instance = cls._create_instance()
+        print("~~~~~~~~~~~~~~~")
+        print(cls._instance)
+        print("~~~~~~~~~~~~~~~")
         return cls._instance.copy()
 
     @classmethod
@@ -36,9 +39,6 @@ class MTEDataFrame:
 
     @classmethod
     def _read_mte_csv(cls, csv_name, dtypes):
-        print("~~~~~~~~~~~~~~~")
-        print(csv_name)
-        print("~~~~~~~~~~~~~~~")
         return pd.read_csv(csv_name, dtype=dtypes, parse_dates=[0])
 
     @classmethod

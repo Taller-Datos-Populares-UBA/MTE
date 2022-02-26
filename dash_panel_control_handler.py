@@ -24,8 +24,12 @@ class DashPanelControlHandler(DashHandler):
         if trigger["prop_id"] == "btn-filtro.n_clicks" or trigger["prop_id"].split('.')[
             0] == "dropdown_clasificador_vistas":
             df = MTEDataFrame.get_instance()
+            print("aguante boca")
+            print(df)
             df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
                                             datetime.fromisoformat(fecha_fin), materiales, cartonere)
+            print("el fantasma de la b")
+            print(df_filtrado)
             if df_filtrado.empty:
                 raise EmptyDataFrameError
             else:
