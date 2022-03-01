@@ -7,6 +7,8 @@ class MTEDataFrame:
     FILES_TO_LOAD = None
     _instance = None
 
+    print("cargando la clase")
+
     def __init__(self):
         raise Exception("Cannot instanciate a singleton")
 
