@@ -1,7 +1,9 @@
 import pandas as pd
 
 from utils.utils import determinar_tipo_cartonero
+import os
 
+print(f"RONILOG {os.getpid()}")
 print ("RONILOG cargando archivo")
 class MTEDataFrame:
     FILES_TO_LOAD = None
