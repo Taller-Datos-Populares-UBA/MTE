@@ -2,7 +2,7 @@ import pandas as pd
 
 from utils.utils import determinar_tipo_cartonero
 
-
+print ("cargando archivo")
 class MTEDataFrame:
     FILES_TO_LOAD = None
     _instance = None
