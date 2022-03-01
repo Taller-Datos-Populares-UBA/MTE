@@ -38,6 +38,7 @@ app.layout = html.Div([
 )
 
 dash_handler = DashIndexHandler()
+print("RONILOG llegando al server")
 server = app.server
 
 @app.callback(
@@ -65,4 +66,5 @@ def display_page(pathname, list_of_contents, close_modal_button, list_of_names, 
 
 
 if __name__ == "__main__":
+    print("RONILOG run server")
     app.run_server(debug=True, port=9050)
