@@ -1,11 +1,15 @@
 import pandas as pd
 
 from utils.utils import determinar_tipo_cartonero
+import os
 
-
+print(f"RONILOG PID: {os.getpid()}")
+print ("RONILOG cargando archivo")
 class MTEDataFrame:
     FILES_TO_LOAD = None
     _instance = None
+
+    print("RONILOG cargando la clase")
 
     def __init__(self):
         raise Exception("Cannot instanciate a singleton")
