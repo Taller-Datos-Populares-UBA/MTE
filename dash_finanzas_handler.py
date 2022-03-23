@@ -57,7 +57,7 @@ class DashFinanzasHandler(DashHandler):
                     tabla_resumen = ultimos_movimientos.to_dict('records')
 
             elif df_is_empty:
-                raise EmptyDataFrameError 
+                raise EmptyDataFrameError()
 
             elif legacy_not_found:
                 show_modal = True

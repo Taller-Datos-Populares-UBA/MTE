@@ -13,17 +13,16 @@ def parse_contents(contents, filename):
 
     decoded = base64.b64decode(content_string)
     try:
+        df = None
         if 'csv' in filename:
-            df = pd.read_csv(
-                io.StringIO(decoded.decode('utf-8')))
+            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
         elif 'xls' in filename:
             df = pd.read_excel(io.BytesIO(decoded))
+        return df
     except Exception as e:
         return html.Div([
             'There was an error processing this file.'
         ])
-
-    return df
 
 
 def grafico_torta(legajo, df):
