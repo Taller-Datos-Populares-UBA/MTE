@@ -269,10 +269,9 @@ def layout(predios, rutas, materiales, cartoneres):
                                     children=[
                                         html.Div([
                                             html.Img(
-                                                src=app.get_asset_url("wave.png"),
+                                                src=app.get_asset_url("img/wave.png"),
                                                 className="waves"
                                             ),
-
                                             dcc.Input(
                                                 id="input-legacyId",
                                                 placeholder="Numero de Legajo",
@@ -334,7 +333,7 @@ def layout(predios, rutas, materiales, cartoneres):
                                         html.Button(  # Boton de refrescar
                                             children=[
                                                 html.Img(
-                                                    src=app.get_asset_url("renew.svg"),
+                                                    src=app.get_asset_url("img/renew.svg"),
                                                     id="img-refresh"
                                                 ),
                                                 html.P(
