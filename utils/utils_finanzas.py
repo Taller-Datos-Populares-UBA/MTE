@@ -26,7 +26,7 @@ def parse_contents(contents, filename):
 
 
 def grafico_torta(legajo, df):
-    df_cartoneros = df.groupby(by=["cartonero", "material", "legacyId"], ).sum()[["peso"]]
+    df_cartoneros = df.groupby(by=["cartonero", "material", "legacyId"], ).sum(numeric_only=True)[["peso"]]
     df_cartoneros.reset_index(inplace=True)
     df_aux = df_cartoneros.loc[df_cartoneros["legacyId"] == str(legajo)]
 
