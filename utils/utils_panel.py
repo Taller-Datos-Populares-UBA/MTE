@@ -13,7 +13,7 @@ def pesos_historico_predios(data, tipo='predio'):
     else:
         tipo2 = 'predio'
     df = data.groupby(by=["fecha", tipo, tipo2],
-                      as_index=False).sum()  # Para sacar la info de materiales, sacar "material"
+                      as_index=False).sum(numeric_only=True)  # Para sacar la info de materiales, sacar "material"
     fig = px.bar(df, x="fecha", y="peso", color=tipo, hover_data=[tipo2])  # "group"
     fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])  # Ignora fin de semana
     fig.update_layout(bargap=0.01)
@@ -43,7 +43,7 @@ def pesos_historico_promedio(data, tipo='predio'):
     '''
     Prueba. Grafica el "rolling average" (en cada dia muestra el promedio de los últimos 7 dias).
     '''
-    df = data.groupby(by=["fecha", tipo], as_index=False).sum()
+    df = data.groupby(by=["fecha", tipo], as_index=False).sum(numeric_only=True)
 
     # recuperamos primera fecha y ultima fecha
     df = df.sort_values(by="fecha")
@@ -62,7 +62,7 @@ def pesos_historico_promedio(data, tipo='predio'):
         df_predio.set_index(keys="fecha", inplace=True)
         df_predio = df_predio.reindex(rango_fechas, fill_value=0)
 
-        df_predio = df_predio.rolling("10d", min_periods=0).sum()
+        df_predio = df_predio.drop("predio",axis=1).rolling("10d", min_periods=0).sum()
         df_predio["peso"] = df_predio["peso"] / 10
 
         fig.add_scatter(x=df_predio.index, y=df_predio['peso'], mode='lines', name=predio)
@@ -76,7 +76,7 @@ def pesos_historico_promedio(data, tipo='predio'):
 
 
 def torta(data, tipo='predio'):
-    df = data.groupby(by=[tipo], as_index=False).sum()
+    df = data.groupby(by=[tipo], as_index=False).sum(numeric_only=True)
     fig = px.pie(df, values="peso", names=tipo, title='')
     fig.update_traces(hoverinfo="label+percent", textfont_size=14,
                       textinfo="percent", marker=dict(line=dict(color="#FFFFFF", width=0.1)),
@@ -91,6 +91,6 @@ def torta(data, tipo='predio'):
 
 def datos_tabla(data, tipo='predio'):
     df = data.drop(columns=["bolson"], errors='ignore')
-    suma = df.groupby(by=[tipo]).sum().reset_index()
+    suma = df.groupby(by=[tipo]).sum(numeric_only=True).reset_index()
     suma.rename(columns={tipo: 'clasificacion'}, inplace=True)
     return suma
