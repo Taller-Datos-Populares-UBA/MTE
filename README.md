@@ -24,3 +24,8 @@ Aclaración: dependiendo del sistema operativo y cómo hayas instalado Python, l
 
 # Deploy
 Por el momento, tenemos la app hosteada en Heroku. En caso de querer hacer un deploy, dejar la app en el estado que se desea deployar en el repo original (el de Github) y dar aviso a Roni para que haga el deploy. La idea es a futuro hacer el deploy en Calculin
+
+# Docker
+sudo docker build -t mte:v0 .
+sudo docker run -p 8000:8000 --name mte mte:v0
+abrir localhost:8000 en browser
