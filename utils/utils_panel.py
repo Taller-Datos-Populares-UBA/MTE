@@ -62,7 +62,7 @@ def pesos_historico_promedio(data, tipo='predio'):
         df_predio.set_index(keys="fecha", inplace=True)
         df_predio = df_predio.reindex(rango_fechas, fill_value=0)
 
-        df_predio = df_predio.drop("predio",axis=1).rolling("10d", min_periods=0).sum()
+        df_predio = df_predio.rolling("10d", min_periods=0).sum()
         df_predio["peso"] = df_predio["peso"] / 10
 
         fig.add_scatter(x=df_predio.index, y=df_predio['peso'], mode='lines', name=predio)
