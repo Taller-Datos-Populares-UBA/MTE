@@ -18,7 +18,7 @@ class DashPanelControlHandler(DashHandler):
         self.fig_barras = go.Figure()
         self.tabla_resumen = tabla_resumen
 
-    def _execute_callback(self, trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
+    def _execute_callback(self, trigger, clasificador, columnas_resumen, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
         fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen = self._get_response()
 
         if trigger["prop_id"] == "btn-filtro.n_clicks" or trigger["prop_id"].split('.')[0] == "dropdown_clasificador_vistas":
@@ -34,6 +34,7 @@ class DashPanelControlHandler(DashHandler):
                 fig_barras = pesos_historico_predios(df_filtrado, clasificador)
                 tabla_resumen = datos_tabla(df_filtrado, clasificador)
                 tabla_resumen = tabla_resumen.to_dict('records')
+                print(df_filtrado.groupby(by=columnas_resumen).sum(numeric_only=True).reset_index())
 
         self._save_response(fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen)
 

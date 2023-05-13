@@ -8,16 +8,19 @@ from elements import CreateButton, CreateModal, CreateFilters, EmptyFigure
 from utils.utils import crear_tabla
 
 # Cards
-
 tabla_resumen = crear_tabla(
-    id="tabla-Resumen",
+    id="tabla-Resumen", 
     titulos_columnas={
         "clasificacion": "Clasificación",
         "peso": "Peso (kg)"
     },
-    tipos={"peso": "numeric"},
-    dimensiones=("auto", "200px")
-)
+    tipos={"peso": "numeric"}, 
+    dimensiones=("auto", "200px"))
+    
+tabla_posta = crear_tabla(id="tabla-Posta", titulos_columnas={}, tipos={"peso": "numeric"}, dimensiones=("auto", "200px"))
+
+
+dic_labels_columnas = {'predio':'Predio', 'material':'Material', 'tipoCartonero':'Tipo de Cartonere'}
 
 fig = EmptyFigure()
 
@@ -32,8 +35,14 @@ card_resumen = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Resumen", id="monto-card-saldo", className="card-title"),
+            dcc.Dropdown(id="dropdown-resumen", className="dropdowns",
+                            options = [
+                                {"label": 'Predio', "value": 'predio'},
+                                {"label": 'Material', "value": 'material'},
+                                {"label": 'Tipo de Cartonere', "value": 'tipoCartonero'}
+                            ], multi=True, placeholder="Seleccionar", value=["predio","material","tipoCartonero"]),
             html.Div(children=[
-                tabla_resumen],
+                tabla_posta],
                 id="tabla-resumen-parent")]
 
     )], className="card"
@@ -138,7 +147,6 @@ def layout(predios, rutas, materiales, cartoneres):
 
 dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
 
-
 @app.callback(
     [
         Output("grafico-historico", "figure"),
@@ -148,12 +156,13 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
         Output("header-error3", "children"),
         Output("body-error3", "children"),
         Output("tabla-Resumen", "data"),
-
+        Output("tabla-Posta", "titulos_columnas"),
     ],
     [
         Input("btn-filtro", "n_clicks"),
         Input("close-modal-error3-button", "n_clicks"),
         Input("dropdown_clasificador_vistas", "value"),
+        Input("dropdown-resumen", "value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
@@ -164,9 +173,9 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
     ],
     prevent_initial_call=True
 )
-def filtrar(filtrar_button, close_modal, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
+def filtrar(filtrar_button, close_modal, clasificador, columnas_resumen, predios, rutas, materiales, cartonere, fecha_inicio,
             fecha_fin):
     trigger = callback_context.triggered[0]
-
-    return dash_handler_panel.callback(trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
-                                       fecha_fin)
+    titulos_columnas = {k:dic_labels_columnas[k] for k in columnas_resumen}
+    titulos_columnas["peso"] = "Peso (kg)"
+    return dash_handler_panel.callback(trigger, clasificador, columnas_resumen, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin), titulos_columnas
