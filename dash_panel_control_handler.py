@@ -5,20 +5,23 @@ import plotly.graph_objs as go
 from dash_handler import DashHandler
 from exceptions import *
 from mte_dataframe import MTEDataFrame
-from utils.utils import crear_df_filtrado
-from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla
-
+from utils.utils import crear_df_filtrado, crear_tabla
+from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla, crear_titulos
 
 class DashPanelControlHandler(DashHandler):
 
-    def __init__(self, tabla_resumen):
+    def __init__(self):
         super().__init__()
         self.fig_hist = go.Figure()
         self.fig_torta = go.Figure()
         self.fig_barras = go.Figure()
-        self.tabla_resumen = tabla_resumen
+        self.tabla_resumen = crear_tabla(id="tabla-Resumen",
+                                         titulos_columnas=crear_titulos([]),
+                                         tipos={"peso": "numeric"},
+                                         dimensiones=("auto", "200px"))
 
-    def _execute_callback(self, trigger, clasificador, columnas_resumen, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
+
+    def _execute_callback(self, trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin, columnas_resumen):
         fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen = self._get_response()
 
         if trigger["prop_id"] == "btn-filtro.n_clicks" or trigger["prop_id"].split('.')[0] == "dropdown_clasificador_vistas":
@@ -32,9 +35,17 @@ class DashPanelControlHandler(DashHandler):
                 fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
                 fig_torta = torta(df_filtrado, clasificador)
                 fig_barras = pesos_historico_predios(df_filtrado, clasificador)
-                tabla_resumen = datos_tabla(df_filtrado, clasificador)
-                tabla_resumen = tabla_resumen.to_dict('records')
-                print(df_filtrado.groupby(by=columnas_resumen).sum(numeric_only=True).reset_index())
+                try:
+                    data=df_filtrado.groupby(by=columnas_resumen).sum(numeric_only=True).reset_index()
+                    tabla_resumen = crear_tabla(id="tabla-Resumen",
+                            titulos_columnas=crear_titulos(columnas_resumen),
+                            tipos={"peso": "numeric"},
+                            dimensiones=("auto", "200px"),
+                           )
+                    tabla_resumen.data=data.to_dict("records")
+                except Exception as err:
+                    print(err)
+                    print("Las columnas están vacías y son:",columnas_resumen)
 
         self._save_response(fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen)
 
@@ -45,7 +56,8 @@ class DashPanelControlHandler(DashHandler):
                 self.show_modal,
                 self.title_modal,
                 self.descr_modal,
-                self.tabla_resumen]
+                self.tabla_resumen,
+                ]
 
     def _save_response(self, fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen):
         self.fig_hist = fig_hist

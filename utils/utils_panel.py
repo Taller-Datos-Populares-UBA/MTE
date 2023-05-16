@@ -39,6 +39,17 @@ def pesos_historico_materiales(data, tipo):
     return fig
 
 
+def crear_titulos(columnas_resumen):
+    dic_labels_columnas = {'predio': 'Predio',
+                           'material': 'Material',
+                           'tipoCartonero': 'Tipo de Cartonere'}
+    try:
+        titulos_columnas = {k: dic_labels_columnas[k] for k in columnas_resumen}
+    except Exception:
+        titulos_columnas = {}
+    titulos_columnas["peso"] = "Peso (kg)"
+    return titulos_columnas
+
 def pesos_historico_promedio(data, tipo='predio'):
     '''
     Prueba. Grafica el "rolling average" (en cada dia muestra el promedio de los últimos 7 dias).
