@@ -6,7 +6,7 @@ from dash_handler import DashHandler
 from exceptions import *
 from mte_dataframe import MTEDataFrame
 from utils.utils import crear_df_filtrado, crear_tabla
-from utils.utils_panel import pesos_historico_promedio, torta, pesos_historico_predios, datos_tabla, crear_titulos
+from utils.utils_panel import pesos_historico_promedio, crear_tabla_resumen, torta, pesos_historico_predios, datos_tabla, crear_titulos
 
 class DashPanelControlHandler(DashHandler):
 
@@ -23,8 +23,9 @@ class DashPanelControlHandler(DashHandler):
 
     def _execute_callback(self, trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin, columnas_resumen):
         fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen = self._get_response()
-
-        if trigger["prop_id"] == "btn-filtro.n_clicks" or trigger["prop_id"].split('.')[0] == "dropdown_clasificador_vistas":
+        if (trigger["prop_id"] in ["btn-filtro.n_clicks",
+                                   "dropdown_clasificador_vistas.value",
+                                   "dropdown-resumen.value"]):
             df = MTEDataFrame.get_instance()
             df_filtrado = crear_df_filtrado(df, predios, rutas, datetime.fromisoformat(fecha_inicio),
                                             datetime.fromisoformat(fecha_fin), materiales, cartonere)
@@ -35,19 +36,11 @@ class DashPanelControlHandler(DashHandler):
                 fig_hist = pesos_historico_promedio(df_filtrado, clasificador)
                 fig_torta = torta(df_filtrado, clasificador)
                 fig_barras = pesos_historico_predios(df_filtrado, clasificador)
-                try:
-                    data=df_filtrado.groupby(by=columnas_resumen).sum(numeric_only=True).reset_index()
-                    tabla_resumen = crear_tabla(id="tabla-Resumen",
-                            titulos_columnas=crear_titulos(columnas_resumen),
-                            tipos={"peso": "numeric"},
-                            dimensiones=("auto", "200px"),
-                           )
-                    tabla_resumen.data=data.to_dict("records")
-                except Exception as err:
-                    print(err)
-                    print("Las columnas están vacías y son:",columnas_resumen)
+                tabla_resumen = crear_tabla_resumen(df_filtrado,
+                                                    columnas_resumen)
 
         self._save_response(fig_hist, fig_torta, fig_barras, show_modal, title_modal, descr_modal, tabla_resumen)
+
 
     def _get_response(self):
         return [self.fig_hist,

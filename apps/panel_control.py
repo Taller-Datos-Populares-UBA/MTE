@@ -148,19 +148,18 @@ dash_handler_panel = DashPanelControlHandler()
         Input("btn-filtro", "n_clicks"),
         Input("close-modal-error3-button", "n_clicks"),
         Input("dropdown_clasificador_vistas", "value"),
+        Input("dropdown-resumen", "value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
         State("date-range", "start_date"),
         State("date-range", "end_date"),
-        State("dropdown-resumen", "value"),
     ],
     prevent_initial_call=True
 )
-def filtrar(filtrar_button, close_modal, clasificador, predios,
-            rutas, materiales, cartonere, fecha_inicio, fecha_fin,
-            columnas_resumen):
+def filtrar(filtrar_button, close_modal, clasificador, columnas_resumen,
+            predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
     trigger = callback_context.triggered[0]
     return dash_handler_panel.callback(trigger, clasificador,
                                        predios, rutas, materiales,
