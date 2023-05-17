@@ -2,22 +2,13 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import State
 
-from apps.base import *
+from apps.base import dbc, Input, Output, app, callback_context
 from dash_panel_control_handler import DashPanelControlHandler
 from elements import CreateButton, CreateModal, CreateFilters, EmptyFigure
 from utils.utils import crear_tabla
-
+from utils.utils_panel import crear_titulos, dic_labels_columnas
 # Cards
 
-tabla_resumen = crear_tabla(
-    id="tabla-Resumen",
-    titulos_columnas={
-        "clasificacion": "Clasificación",
-        "peso": "Peso (kg)"
-    },
-    tipos={"peso": "numeric"},
-    dimensiones=("auto", "200px")
-)
 
 fig = EmptyFigure()
 
@@ -32,8 +23,12 @@ card_resumen = dbc.Card([
     dbc.CardBody(
         [
             html.H6("Resumen", id="monto-card-saldo", className="card-title"),
-            html.Div(children=[
-                tabla_resumen],
+            dcc.Dropdown(id="dropdown-resumen", className="dropdowns",
+                         options=[{"label": v, "value": k} for k,v in dic_labels_columnas.items()],
+                         multi=True,
+                         placeholder="Seleccionar",
+                         value=["predio", "material", "tipoCartonero"]),
+            html.Div(children=[],
                 id="tabla-resumen-parent")]
 
     )], className="card"
@@ -74,12 +69,10 @@ cards_panel = html.Div(
             children=[
                 dbc.Col(
                     children=[
-                        dbc.Row(children=[
-                            dbc.Col(card_resumen, width=6
-                                    ),
-                            dbc.Col(card_torta, width=6
-                                    )
-                        ]),
+                        dbc.Col(card_resumen,
+                                ),
+                        dbc.Col(card_torta,
+                                ),
                         dbc.Col(card_barras,
                                 ),
                         dbc.Col(card_historico
@@ -136,8 +129,7 @@ def layout(predios, rutas, materiales, cartoneres):
     ])
 
 
-dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
-
+dash_handler_panel = DashPanelControlHandler()
 
 @app.callback(
     [
@@ -147,26 +139,26 @@ dash_handler_panel = DashPanelControlHandler(tabla_resumen.columns)
         Output("error3-modal", "is_open"),
         Output("header-error3", "children"),
         Output("body-error3", "children"),
-        Output("tabla-Resumen", "data"),
-
+        Output("tabla-resumen-parent", "children"),
     ],
     [
         Input("btn-filtro", "n_clicks"),
         Input("close-modal-error3-button", "n_clicks"),
         Input("dropdown_clasificador_vistas", "value"),
+        Input("dropdown-resumen", "value"),
         State("dropdown-predios", "value"),
         State("dropdown-rutas", "value"),
         State("dropdown-materiales", "value"),
         State("dropdown-cartonere", "value"),
         State("date-range", "start_date"),
         State("date-range", "end_date"),
-
     ],
     prevent_initial_call=True
 )
-def filtrar(filtrar_button, close_modal, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
-            fecha_fin):
+def filtrar(filtrar_button, close_modal, clasificador, columnas_resumen,
+            predios, rutas, materiales, cartonere, fecha_inicio, fecha_fin):
     trigger = callback_context.triggered[0]
-
-    return dash_handler_panel.callback(trigger, clasificador, predios, rutas, materiales, cartonere, fecha_inicio,
-                                       fecha_fin)
+    return dash_handler_panel.callback(trigger, clasificador,
+                                       predios, rutas, materiales,
+                                       cartonere, fecha_inicio,
+                                       fecha_fin, columnas_resumen)

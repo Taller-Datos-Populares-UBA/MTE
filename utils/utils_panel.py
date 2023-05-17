@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
+from utils.utils import crear_tabla
 
 def pesos_historico_predios(data, tipo='predio'):
     '''
@@ -38,6 +38,42 @@ def pesos_historico_materiales(data, tipo):
     )
     return fig
 
+
+dic_labels_columnas = {'predio': 'Predio',
+                       'material': 'Material',
+                       'tipoCartonero': 'Tipo de Cartonere'}
+
+
+def crear_titulos(columnas_resumen):
+    try:
+        titulos_columnas = {k: dic_labels_columnas[k] for k in columnas_resumen}
+    except Exception:
+        titulos_columnas = {}
+    titulos_columnas["peso"] = "Peso (kg)"
+    return titulos_columnas
+
+def crear_tabla_resumen(df, columnas_resumen):
+    '''
+    Dados un dataframe y unas columnas este función devuelve una tabla para desplegar.
+    '''
+    try:
+        data=df.groupby(by=columnas_resumen).sum(numeric_only=True).reset_index()
+        tabla_resumen = crear_tabla(id="tabla-Resumen",
+                                    titulos_columnas=crear_titulos(columnas_resumen),
+                                    tipos={"peso": "numeric"},
+                                    dimensiones=("auto", "200px"),
+                                    )
+        tabla_resumen.data=data.to_dict("records")
+    except ValueError:
+        data = df.sum(numeric_only=True)
+        tabla_resumen = crear_tabla(id="tabla-Resumen",
+                                    titulos_columnas=crear_titulos([]),
+                                    tipos={"peso": "numeric"},
+                                    dimensiones=("auto", "200px"),
+                                    )
+        tabla_resumen.data = [data.to_dict()]
+
+    return tabla_resumen
 
 def pesos_historico_promedio(data, tipo='predio'):
     '''
