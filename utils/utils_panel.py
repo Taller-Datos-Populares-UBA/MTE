@@ -39,10 +39,12 @@ def pesos_historico_materiales(data, tipo):
     return fig
 
 
+dic_labels_columnas = {'predio': 'Predio',
+                       'material': 'Material',
+                       'tipoCartonero': 'Tipo de Cartonere'}
+
+
 def crear_titulos(columnas_resumen):
-    dic_labels_columnas = {'predio': 'Predio',
-                           'material': 'Material',
-                           'tipoCartonero': 'Tipo de Cartonere'}
     try:
         titulos_columnas = {k: dic_labels_columnas[k] for k in columnas_resumen}
     except Exception:

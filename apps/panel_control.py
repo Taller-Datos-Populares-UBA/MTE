@@ -6,7 +6,7 @@ from apps.base import dbc, Input, Output, app, callback_context
 from dash_panel_control_handler import DashPanelControlHandler
 from elements import CreateButton, CreateModal, CreateFilters, EmptyFigure
 from utils.utils import crear_tabla
-from utils.utils_panel import crear_titulos
+from utils.utils_panel import crear_titulos, dic_labels_columnas
 # Cards
 
 
@@ -24,11 +24,8 @@ card_resumen = dbc.Card([
         [
             html.H6("Resumen", id="monto-card-saldo", className="card-title"),
             dcc.Dropdown(id="dropdown-resumen", className="dropdowns",
-                            options=[
-                                {"label": 'Predio', "value": 'predio'},
-                                {"label": 'Material', "value": 'material'},
-                                {"label": 'Tipo de Cartonere', "value": 'tipoCartonero'}
-                            ], multi=True,
+                         options=[{"label": v, "value": k} for k,v in dic_labels_columnas.items()],
+                         multi=True,
                          placeholder="Seleccionar",
                          value=["predio", "material", "tipoCartonero"]),
             html.Div(children=[],
