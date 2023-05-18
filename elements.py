@@ -79,10 +79,12 @@ def SelectDates(identificacion, indentificacion_radio):
             dcc.DatePickerRange(
                 id=identificacion,
                 display_format="D/M/Y",
-                min_date_allowed=date(1995, 8, 5),
-                max_date_allowed=date(2022, 12, 31),
+                start_date_placeholder_text="Fecha inicio",
+                end_date_placeholder_text="Fecha fin",
+                min_date_allowed=date(2010, 8, 5),
+                max_date_allowed=date.today(),
                 start_date=date(2019, 5, 15),
-                end_date=date(2021, 8, 10),
+                end_date=date.today(),
                 className="date-range"
             )
         ], className="dates-container"
